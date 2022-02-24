@@ -1,5 +1,5 @@
 {
-  "name": "codemirror-lang-rel",
+  "name": "@relationalai/codemirror-lang-rel",
   "version": "0.1.2",
   "description": "CodeMirror 6 language support for Rel",
   "scripts": {
