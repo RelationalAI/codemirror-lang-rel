@@ -1,0 +1,211 @@
+/*
+  Description: Very limitted Lezer (https://lezer.codemirror.net/) format Rel parser for Code Mirror 6
+  Supports only limitted sets of Rel features and it is a placeholder for a full featured lezer Rel parser
+*/
+
+@precedence {
+  cond,
+  trail,
+  power @right,
+  union @left,
+  prefix,
+  times @left,
+  plus @left,
+  shift @left,
+  bitand @left,
+  xor @left,
+  bitor @left,
+  compare @left,
+  and @left,
+  or @left
+}
+
+@top Rel { (statement)+ }
+
+@skip { space | LineComment | BlockComment }
+
+statement {
+  InlineStatement { "@" kw<"inline"> VariableName? } |
+  IfStatement { kw<"if"> Body (kw<"then"> Body)* elseClause? kw<"end"> } |
+  ModuleStatement { kw<"module"> VariableName Body kw<"end"> } |
+  ForallStatement { kw<"forall"> statement "(" statement ")" } |
+  ImpliesStatement { kw<"implies"> statement } |
+  DefineStatement { kw<"def"> VariableName AssignOp{"="}? | "(" | "[" | "{" } |
+  OutputDefinitionStatement { kw<"def"> kw<"output"> AssignOp{"="}? VariableName? } |
+  WithUseStatement { kw<"with"> VariableName kw<"use"> VariableName} |
+  ConstraintStatement { kw<"ic"> VariableName "=" | kw<"ic"> VariableName "{" VariableName "}" } |
+  DocstringStatement { kw<"doc"> DocstringLiteral } |
+  ExpressionStatement { expression } |
+  TypeStatement { type }
+}
+
+expression[@isGroup=Expression] {
+  boolean |
+  Number |
+  StringLiteral |
+  RelnameLiteral |
+  RelnameStringLiteral
+}
+
+type[@isGroup=Type] {
+  IntType { kw<"Int"> VariableName? } |
+  StringType { kw<"String"> VariableName? } |
+  AnyType { kw<"Any"> VariableName? } |
+  NumberType { kw<"Number"> VariableName? } |
+  CharType { kw<"Char"> VariableName? } |
+  MissingType { kw<"Missing"> VariableName? } |
+  FloatingType { kw<"Floating"> VariableName? } |
+  UnsignedIntType { kw<"UnsignedInt"> VariableName? } |
+  SignedIntType { kw<"SignedInt"> VariableName? } |
+  RationalType { kw<"Rational"> VariableName? } |
+  FixedDecimalType { kw<"FixedDecimal"> VariableName? } |
+  RelNameType { kw<"RelName"> VariableName? } |
+  EntityType { kw<"Entity"> VariableName? } |
+  AutoNumberType { kw<"AutoNumber"> VariableName? } |
+  HashType { kw<"Hash"> VariableName? } |
+  FilePosType { kw<"FilePos"> VariableName? } |
+  DateType { kw<"Date"> VariableName? } |
+  DateTimeType { kw<"DateTime"> VariableName? } |
+  YearType { kw<"Year"> VariableName? } |
+  MonthType { kw<"Month"> VariableName? } |
+  WeekType { kw<"Week"> VariableName? } |
+  DayType { kw<"Day"> VariableName? } |
+  HourType { kw<"Hour"> VariableName? } |
+  MinuteType { kw<"Minute"> VariableName? } |
+  SecondType { kw<"Second"> VariableName? } |
+  MillisecondType { kw<"Millisecond"> VariableName? } |
+  MicrosecondType { kw<"Microsecond"> VariableName? } |
+  NanosecondType { kw<"Nanosecond"> VariableName? }
+}
+
+VariableName { identifier }
+
+elseClause { kw<"else"> Body }
+
+boolean { @specialize[@name=BooleanLiteral]<identifier, "true" | "false"> }
+
+Body { statement+ }
+
+kw<term> { @specialize[@name={term}]<identifier, term> }
+
+@tokens {
+  space {
+    $[ \t\n\r]+
+  }
+  id_char_single {
+    $[a-zA-Zα-ωΑ-Ω]
+  }
+  id_char_init {
+    $[a-zA-Zα-ωΑ-Ω_]
+  }
+  id_char {
+    $[a-zA-Zα-ωΑ-Ω_0-9]
+  }
+  escape_sequence {
+    '\\' ('\\' |
+    $[abefnrtv0-7] |
+    $[0-7]$[0-7] |
+    $[0123]$[0-7]$[0-7] |
+    'x' $[0-9a-fA-F]$[0-9a-fA-F] |
+    'u' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F] |
+    'U' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F])
+  }
+  string_literal {
+    '"' ( $[^"\r\n\\] | escape_sequence)* '"'
+  }
+  decimal_digit {
+    $[0-9]
+  }
+  decimal_literal {
+    decimal_digit+
+  }
+  octal_digit {
+    $[0-7]
+  }
+  octal_literal {
+    '0o' octal_digit+
+  }
+  hex_digit {
+    $[0-9A-Fa-f]
+  }
+  hex_literal {
+    '0x' hex_digit+
+  }
+  exponent {
+    $[eE] $[+-]? decimal_literal
+  }
+  float_literal_1 {
+    decimal_literal '.' decimal_literal? exponent
+  }
+  float_literal_2 {
+    decimal_literal exponent
+  }
+  float_literal_3 {
+    '.' decimal_literal exponent?
+  }
+  // two_digits {
+  //   $[0-9]$[0-9]
+  // }
+  // time_digits {
+  //   two_digits ':' two_digits ':' two_digits
+  // }
+  // time_zone {
+  //   'Z' | $[+-]? two_digits ':' two_digits
+  // }
+  identifier {
+    id_char_single | id_char_init id_char+
+  }
+  RelnameLiteral {
+    (':' id_char_init id_char* | ':[]')
+  }
+  RelnameStringLiteral {
+    ':' string_literal
+  }
+  // RelnameMultilineStringLiteral {
+  //   '"""' (  '"'? '"'? $[^"\\] | escape_sequence )* '"""'
+  // }
+  StringLiteral {
+    '"' (![\\\n"] | "\\" _)* '"'? |
+    "'" (![\\\n'] | "\\" _)* "'"?
+  }
+  // DateLiteral {
+  //   $[0-9]$[0-9]$[0-9]$[0-9]'-'$[0-9]$[0-9]'-'$[0-9]$[0-9]
+  // }
+  // DatetimeLiteral {
+  //   DateLiteral 'T' time_digits time_zone
+  // }
+  Number {
+    decimal_literal | octal_literal | hex_literal | float_literal_1 | float_literal_2 | float_literal_3
+  }
+  DocstringLiteral {
+    '"' ( $[^"\r\n\\] | escape_sequence )* '"'
+  }
+  // MultilineDocstringLiteral {
+  //   '"""' (  '"'? '"'? $[^"\\] | escape_sequence )* '"""'
+  // }
+
+  LineComment { "//" ![\n]* }
+
+  BlockComment { "/*" blockCommentRest }
+
+  blockCommentRest { ![*] blockCommentRest | "*" blockCommentAfterStar }
+
+  blockCommentAfterStar { "/" | "*" blockCommentAfterStar | ![/*] blockCommentRest }
+
+  @precedence { BlockComment, LineComment }
+
+  // Operator {
+  //   ("." | "^" | "/" | "%" | "*" | "÷" | "×" | "⊗" | "⊙" | "-" | "+" | "⊕" | "∩" | "∪" | "⊔" | "⊓" | "=" | "!=" | "≈" | "∼" | "≠" | "<" | ">" | "<=" | "≤" | ">=" | "≥" | "⊆" | "⊇" | "⊂" | "⊃" | "≼" | "≽" | "≺" | "≻" | "¬" | "∧" | "∨" | "→" | "←" | "⇒" | "⇐" | "≡" | "⇔" | "⊻" | "≢" | "⇎" | "<:" | ":>" | "<++" | "++>")
+  // }
+  // ParenOperator {
+  //   '(' Operator ')'
+  // }
+  // qualified_name {
+  //   Identifier | ParenOperator
+  // }
+  // QualifiedName {
+  //   qualified_name (':' qualified_name)+
+  // }
+}
+
+@detectDelim

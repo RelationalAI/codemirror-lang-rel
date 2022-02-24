@@ -1,0 +1,101 @@
+# Numbers
+
+101
+01010101001
+0x1ABCDEFabcdef
+0o7632157312
+1e+3
+
+==>
+
+Rel(ExpressionStatement(Number),
+    ExpressionStatement(Number),
+    ExpressionStatement(Number),
+    ExpressionStatement(Number),
+    ExpressionStatement(Number))
+
+# Booleans
+
+true
+false
+
+==>
+
+Rel(ExpressionStatement(BooleanLiteral),
+  ExpressionStatement(BooleanLiteral))
+
+# Strings
+
+"A string with \"double\" and 'single' quotes"
+'A string with "double" and \'single\' quotes'
+'\\'
+"\\"
+
+'A string with new \
+line'
+
+==>
+
+Rel(ExpressionStatement(StringLiteral),
+    ExpressionStatement(StringLiteral),
+    ExpressionStatement(StringLiteral),
+    ExpressionStatement(StringLiteral),
+    ExpressionStatement(StringLiteral))
+
+# Rel
+
+:test
+:[]
+
+==>
+
+Rel(ExpressionStatement(RelnameLiteral),
+  ExpressionStatement(RelnameLiteral))
+
+# If Statement
+
+if 1 then 2 else 3 end
+
+==>
+
+Rel(IfStatement(if,Body(ExpressionStatement(Number)),then,Body(ExpressionStatement(Number)),else,Body(ExpressionStatement(Number)),end))
+
+# Inline Statement
+
+@inline
+
+==>
+
+Rel(InlineStatement(inline))
+
+# Def Statement
+
+def a = 1
+
+==>
+
+Rel(DefineStatement(def, VariableName, AssignOp), ExpressionStatement(Number))
+
+# Output Statement
+
+def output = A
+
+==>
+
+Rel(OutputDefinitionStatement(def, output, AssignOp, VariableName))
+
+# Module Statement
+
+module store def a = 1 end
+
+==>
+
+Rel(ModuleStatement(module, VariableName, Body(DefineStatement(def, VariableName, AssignOp), ExpressionStatement(Number)), end))
+
+# Type Statement
+
+Int a
+
+==>
+
+Rel(TypeStatement(IntType(Int, VariableName)))
