@@ -30,7 +30,7 @@ statement {
   ModuleStatement { kw<"module"> VariableName Body kw<"end"> } |
   ForallStatement { kw<"forall"> statement "(" statement ")" } |
   ImpliesStatement { kw<"implies"> statement } |
-  DefineStatement { kw<"def"> VariableName AssignOp{"="}? | "(" | "[" | "{" } |
+  DefineStatement { kw<"def"> VariableName } |
   OutputDefinitionStatement { kw<"def"> kw<"output"> AssignOp{"="}? VariableName? } |
   WithUseStatement { kw<"with"> VariableName kw<"use"> VariableName} |
   ConstraintStatement { kw<"ic"> VariableName "=" | kw<"ic"> VariableName "{" VariableName "}" } |
