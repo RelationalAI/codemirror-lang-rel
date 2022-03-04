@@ -13,9 +13,9 @@ export const relLanguage = LRLanguage.define({
       //   Application: foldInside
       // }),
       styleTags({
-        'use forall for iff if then else end where with select implies': t.controlKeyword,
-        'in not and or xor': t.operatorKeyword,
-        'as from output inline ic doc': t.keyword,
+        'use forall for in iff if then else end where with select implies': t.controlKeyword,
+        'not and or xor': t.operatorKeyword,
+        'as from output inline ic doc entity': t.keyword,
         'def': t.definitionKeyword,
         'module': t.moduleKeyword,
         'Any String Int Number Char Missing Floating UnsignedInt SignedInt Rational FixedDecimal RelName Entity AutoNumber Hash FilePos Date DateTime Year Month Week Day Hour Minute Second Millisecond Microsecond Nanosecond Boolean':
