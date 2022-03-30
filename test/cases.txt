@@ -31,8 +31,9 @@ Rel(ExpressionStatement(BooleanLiteral),
 '\\'
 "\\"
 
-'A string with new \
-line'
+"""
+asd
+"""
 
 ==>
 
@@ -40,7 +41,7 @@ Rel(ExpressionStatement(StringLiteral),
     ExpressionStatement(StringLiteral),
     ExpressionStatement(StringLiteral),
     ExpressionStatement(StringLiteral),
-    ExpressionStatement(StringLiteral))
+    ExpressionStatement(DocStringLiteral))
 
 # Rel
 
