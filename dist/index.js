@@ -49,7 +49,7 @@ const relLanguage = LRLanguage.define({
                 AssignOp: tags.definitionOperator,
                 LineComment: tags.lineComment,
                 BlockComment: tags.blockComment,
-                DocStringLiteral: tags.blockComment,
+                MultilineStringLiteral: tags.blockComment,
                 VariableName: tags.definition(tags.variableName),
                 Atom: tags.atom,
                 RelnameLiteral: tags.atom,

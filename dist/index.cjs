@@ -53,7 +53,7 @@ const relLanguage = language.LRLanguage.define({
                 AssignOp: highlight.tags.definitionOperator,
                 LineComment: highlight.tags.lineComment,
                 BlockComment: highlight.tags.blockComment,
-                DocStringLiteral: highlight.tags.blockComment,
+                MultilineStringLiteral: highlight.tags.blockComment,
                 VariableName: highlight.tags.definition(highlight.tags.variableName),
                 Atom: highlight.tags.atom,
                 RelnameLiteral: highlight.tags.atom,
