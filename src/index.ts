@@ -28,6 +28,7 @@ export const relLanguage = LRLanguage.define({
         AssignOp: t.definitionOperator,
         LineComment: t.lineComment,
         BlockComment: t.blockComment,
+        MultilineStringLiteral: t.blockComment,
         VariableName: t.definition(t.variableName),
         Atom: t.atom,
         RelnameLiteral: t.atom,

@@ -32,11 +32,11 @@ statement {
   ForallStatement { kw<"forall"> statement "(" statement ")" } |
   ForInStatement { kw<"for"> VariableName kw<"in"> VariableName } |
   ImpliesStatement { kw<"implies"> statement } |
-  DefineStatement { kw<"def"> VariableName } |
+  DefineStatement { kw<"def"> VariableName AssignOp{"="}? } |
   OutputDefinitionStatement { kw<"def"> kw<"output"> AssignOp{"="}? VariableName? } |
   WithUseStatement { kw<"with"> VariableName kw<"use"> VariableName} |
   ConstraintStatement { kw<"ic"> VariableName "=" | kw<"ic"> VariableName "{" VariableName "}" } |
-  DocstringStatement { kw<"doc"> DocstringLiteral } |
+  DocStringStatement { kw<"doc"> MultilineStringLiteral | kw<"doc">MultilineStringLiteral } |
   EntityStatement { kw<"entity"> VariableName } |
   ExpressionStatement { expression } |
   TypeStatement { type }
@@ -47,7 +47,8 @@ expression[@isGroup=Expression] {
   Number |
   StringLiteral |
   RelnameLiteral |
-  RelnameStringLiteral
+  RelnameStringLiteral |
+  MultilineStringLiteral
 }
 
 type[@isGroup=Type] {
@@ -164,12 +165,12 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
   RelnameStringLiteral {
     ':' string_literal
   }
-  // RelnameMultilineStringLiteral {
-  //   '"""' (  '"'? '"'? $[^"\\] | escape_sequence )* '"""'
-  // }
   StringLiteral {
     '"' (![\\\n"] | "\\" _)* '"'? |
     "'" (![\\\n'] | "\\" _)* "'"?
+  }
+  MultilineStringLiteral {
+    '"""' (![\"] | '\\' _)* '"""'
   }
   // DateLiteral {
   //   $[0-9]$[0-9]$[0-9]$[0-9]'-'$[0-9]$[0-9]'-'$[0-9]$[0-9]
@@ -179,9 +180,6 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
   // }
   Number {
     decimal_literal | octal_literal | hex_literal | float_literal_1 | float_literal_2 | float_literal_3
-  }
-  DocstringLiteral {
-    '"' ( $[^"\r\n\\] | escape_sequence )* '"'
   }
   // MultilineDocstringLiteral {
   //   '"""' (  '"'? '"'? $[^"\\] | escape_sequence )* '"""'
@@ -196,6 +194,7 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
   blockCommentAfterStar { "/" | "*" blockCommentAfterStar | ![/*] blockCommentRest }
 
   @precedence { BlockComment, LineComment }
+  @precedence { MultilineStringLiteral, StringLiteral }
 
   // Operator {
   //   ("." | "^" | "/" | "%" | "*" | "÷" | "×" | "⊗" | "⊙" | "-" | "+" | "⊕" | "∩" | "∪" | "⊔" | "⊓" | "=" | "!=" | "≈" | "∼" | "≠" | "<" | ">" | "<=" | "≤" | ">=" | "≥" | "⊆" | "⊇" | "⊂" | "⊃" | "≼" | "≽" | "≺" | "≻" | "¬" | "∧" | "∨" | "→" | "←" | "⇒" | "⇐" | "≡" | "⇔" | "⊻" | "≢" | "⇎" | "<:" | ":>" | "<++" | "++>")
