@@ -41,7 +41,7 @@ Rel(ExpressionStatement(StringLiteral),
     ExpressionStatement(StringLiteral),
     ExpressionStatement(StringLiteral),
     ExpressionStatement(StringLiteral),
-    ExpressionStatement(DocStringLiteral))
+    ExpressionStatement(MultilineStringLiteral))
 
 # Rel
 

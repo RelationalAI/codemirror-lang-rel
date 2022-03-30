@@ -36,7 +36,7 @@ statement {
   OutputDefinitionStatement { kw<"def"> kw<"output"> AssignOp{"="}? VariableName? } |
   WithUseStatement { kw<"with"> VariableName kw<"use"> VariableName} |
   ConstraintStatement { kw<"ic"> VariableName "=" | kw<"ic"> VariableName "{" VariableName "}" } |
-  DocStringStatement { kw<"doc"> DocStringLiteral | kw<"doc">DocStringLiteral } |
+  DocStringStatement { kw<"doc"> MultilineStringLiteral | kw<"doc">MultilineStringLiteral } |
   EntityStatement { kw<"entity"> VariableName } |
   ExpressionStatement { expression } |
   TypeStatement { type }
@@ -48,7 +48,7 @@ expression[@isGroup=Expression] {
   StringLiteral |
   RelnameLiteral |
   RelnameStringLiteral |
-  DocStringLiteral
+  MultilineStringLiteral
 }
 
 type[@isGroup=Type] {
@@ -165,12 +165,12 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
   RelnameStringLiteral {
     ':' string_literal
   }
-  DocStringLiteral {
-    '"""' (![\"] | '\\' _)* '"""'
-  }
   StringLiteral {
     '"' (![\\\n"] | "\\" _)* '"'? |
     "'" (![\\\n'] | "\\" _)* "'"?
+  }
+  MultilineStringLiteral {
+    '"""' (![\"] | '\\' _)* '"""'
   }
   // DateLiteral {
   //   $[0-9]$[0-9]$[0-9]$[0-9]'-'$[0-9]$[0-9]'-'$[0-9]$[0-9]
@@ -194,7 +194,7 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
   blockCommentAfterStar { "/" | "*" blockCommentAfterStar | ![/*] blockCommentRest }
 
   @precedence { BlockComment, LineComment }
-  @precedence { DocStringLiteral, StringLiteral }
+  @precedence { MultilineStringLiteral, StringLiteral }
 
   // Operator {
   //   ("." | "^" | "/" | "%" | "*" | "÷" | "×" | "⊗" | "⊙" | "-" | "+" | "⊕" | "∩" | "∪" | "⊔" | "⊓" | "=" | "!=" | "≈" | "∼" | "≠" | "<" | ">" | "<=" | "≤" | ">=" | "≥" | "⊆" | "⊇" | "⊂" | "⊃" | "≼" | "≽" | "≺" | "≻" | "¬" | "∧" | "∨" | "→" | "←" | "⇒" | "⇐" | "≡" | "⇔" | "⊻" | "≢" | "⇎" | "<:" | ":>" | "<++" | "++>")
