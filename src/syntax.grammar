@@ -27,9 +27,10 @@
 statement {
   InlineStatement { "@" kw<"inline"> VariableName? } |
   IfStatement { kw<"if"> Body (kw<"then"> Body)* elseClause? kw<"end"> } |
+  IffStatement { kw<"iff"> statement } |
   FromStatement { kw<"from"> VariableName } |
   ModuleStatement { kw<"module"> VariableName Body kw<"end"> } |
-  ForallStatement { kw<"forall"> statement "(" statement ")" } |
+  ForallStatement { kw<"forall"> statement ( statement ) } |
   ForInStatement { kw<"for"> VariableName kw<"in"> VariableName } |
   ImpliesStatement { kw<"implies"> statement } |
   DefineStatement { kw<"def"> VariableName AssignOp{"="}? } |
