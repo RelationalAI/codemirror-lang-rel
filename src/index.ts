@@ -23,29 +23,29 @@ export const relLanguage = LRLanguage.define({
         Number: t.number,
         BooleanLiteral: t.bool,
         StringLiteral: t.string,
-        // DateLiteral: t.string,
-        // DateTimeLiteral: t.string,
+        MultilineStringLiteral: t.string,
         AssignOp: t.definitionOperator,
         LineComment: t.lineComment,
         BlockComment: t.blockComment,
-        MultilineStringLiteral: t.blockComment,
         VariableName: t.definition(t.variableName),
         Atom: t.atom,
-        RelnameLiteral: t.atom,
-        RelnameStringLiteral: t.atom,
+        RelnameLiteral: t.literal,
+        RelnameStringLiteral: t.literal,
         DefineStatement: t.atom,
+        DateLiteral: t.string,
+        DateTimeLiteral: t.string,
         '( )': t.paren,
         '[ ]': t.squareBracket,
         '{ }': t.brace,
-        '.': t.derefOperator,
-        ', ;': t.separator,
+        ':': t.derefOperator,
+        ', ;': t.separator
       })
     ]
   }),
   languageData: {
-    closeBrackets: {brackets: ["(", "[", "{", "'", '"', "`"]},
+    closeBrackets: {brackets: ["(", "[", "{", "'", '"', "`", '"""']},
     commentTokens: {line: "//", block: {open: "/*", close: "*/"}},
-    // indentOnInput: /^\s*(?:case |default:|\{|\}|<\/)$/,
+    indentOnInput: /^\s*(?:case |default:|\{|\}|<\/)$/,
     wordChars: "$"
   }
 })

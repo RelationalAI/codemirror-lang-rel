@@ -22,12 +22,17 @@
 
 @top Rel { (statement)+ }
 
-@skip { space | LineComment | BlockComment }
+@skip { space | LineComment | BlockComment | StringLiteral }
+
+@skip {} {
+  MultilineStringLiteral { textBlockBoundry textBlockContent* textBlockBoundry }
+}
 
 statement {
   InlineStatement { "@" kw<"inline"> VariableName? } |
   IfStatement { kw<"if"> Body (kw<"then"> Body)* elseClause? kw<"end"> } |
   IffStatement { kw<"iff"> statement } |
+  AndOrStatement { kw<"and"> statement | kw<"or"> statement } |
   FromStatement { kw<"from"> VariableName } |
   ModuleStatement { kw<"module"> VariableName Body kw<"end"> } |
   ForallStatement { kw<"forall"> statement ( statement ) } |
@@ -37,19 +42,20 @@ statement {
   OutputDefinitionStatement { kw<"def"> kw<"output"> AssignOp{"="}? VariableName? } |
   WithUseStatement { kw<"with"> VariableName kw<"use"> VariableName} |
   ConstraintStatement { kw<"ic"> VariableName "=" | kw<"ic"> VariableName "{" VariableName "}" } |
-  DocStringStatement { kw<"doc"> MultilineStringLiteral | kw<"doc">MultilineStringLiteral } |
+  DocStringLiteral { kw<"doc"> MultilineStringLiteral | kw<"doc">MultilineStringLiteral } |
   EntityStatement { kw<"entity"> VariableName } |
   ExpressionStatement { expression } |
   TypeStatement { type }
 }
 
 expression[@isGroup=Expression] {
-  boolean |
   Number |
-  StringLiteral |
+  boolean |
+  DateLiteral |
+  DatetimeLiteral |
+  MultilineStringLiteral |
   RelnameLiteral |
-  RelnameStringLiteral |
-  MultilineStringLiteral
+  RelnameStringLiteral
 }
 
 type[@isGroup=Type] {
@@ -148,15 +154,15 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
   float_literal_3 {
     '.' decimal_literal exponent?
   }
-  // two_digits {
-  //   $[0-9]$[0-9]
-  // }
-  // time_digits {
-  //   two_digits ':' two_digits ':' two_digits
-  // }
-  // time_zone {
-  //   'Z' | $[+-]? two_digits ':' two_digits
-  // }
+  two_digits {
+    $[0-9]$[0-9]
+  }
+  time_digits {
+    two_digits ':' two_digits ':' two_digits
+  }
+  time_zone {
+    'Z' | $[+-]? two_digits ':' two_digits
+  }
   identifier {
     id_char_single | id_char_init id_char+
   }
@@ -170,21 +176,21 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
     '"' (![\\\n"] | "\\" _)* '"'? |
     "'" (![\\\n'] | "\\" _)* "'"?
   }
-  MultilineStringLiteral {
-    '"""' (![\"] | '\\' _)* '"""'
+  DateLiteral {
+    $[0-9]$[0-9]$[0-9]$[0-9]'-'$[0-9]$[0-9]'-'$[0-9]$[0-9]
   }
-  // DateLiteral {
-  //   $[0-9]$[0-9]$[0-9]$[0-9]'-'$[0-9]$[0-9]'-'$[0-9]$[0-9]
-  // }
-  // DatetimeLiteral {
-  //   DateLiteral 'T' time_digits time_zone
-  // }
+  DatetimeLiteral {
+    DateLiteral 'T' time_digits time_zone
+  }
+
+  textBlockBoundry { '"""' }
+  textBlockContent { "\n" | !["\n] textBlockContent? | '"' textBlockQuote }
+  textBlockQuote { !["\n] textBlockContent | "\n" | '"' textBlockQuote2 }
+  textBlockQuote2 { !["\n] textBlockContent | "\n" }
+
   Number {
     decimal_literal | octal_literal | hex_literal | float_literal_1 | float_literal_2 | float_literal_3
   }
-  // MultilineDocstringLiteral {
-  //   '"""' (  '"'? '"'? $[^"\\] | escape_sequence )* '"""'
-  // }
 
   LineComment { "//" ![\n]* }
 
@@ -194,8 +200,8 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
 
   blockCommentAfterStar { "/" | "*" blockCommentAfterStar | ![/*] blockCommentRest }
 
-  @precedence { BlockComment, LineComment }
-  @precedence { MultilineStringLiteral, StringLiteral }
+  @precedence { BlockComment, LineComment, DatetimeLiteral, DateLiteral, Number }
+  @precedence { textBlockBoundry, StringLiteral }
 
   // Operator {
   //   ("." | "^" | "/" | "%" | "*" | "÷" | "×" | "⊗" | "⊙" | "-" | "+" | "⊕" | "∩" | "∪" | "⊔" | "⊓" | "=" | "!=" | "≈" | "∼" | "≠" | "<" | ">" | "<=" | "≤" | ">=" | "≥" | "⊆" | "⊇" | "⊂" | "⊃" | "≼" | "≽" | "≺" | "≻" | "¬" | "∧" | "∨" | "→" | "←" | "⇒" | "⇐" | "≡" | "⇔" | "⊻" | "≢" | "⇎" | "<:" | ":>" | "<++" | "++>")
