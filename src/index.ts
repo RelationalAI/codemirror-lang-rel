@@ -45,7 +45,7 @@ export const relLanguage = LRLanguage.define({
   languageData: {
     closeBrackets: {brackets: ["(", "[", "{", "'", '"', "`", '"""']},
     commentTokens: {line: "//", block: {open: "/*", close: "*/"}},
-    indentOnInput: /^\s*(?:case |default:|\{|\}|<\/)$/,
+    // indentOnInput: /^\s*(?:case |default:|\{|\}|<\/)$/,
     wordChars: "$"
   }
 })
