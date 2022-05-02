@@ -32,6 +32,7 @@ statement {
   InlineStatement { "@" kw<"inline"> VariableName? } |
   IfStatement { kw<"if"> Body (kw<"then"> Body)* elseClause? kw<"end"> } |
   IffStatement { kw<"iff"> statement } |
+  NotStatement { kw<"not"> statement } |
   AndOrStatement { kw<"and"> statement | kw<"or"> statement } |
   FromStatement { kw<"from"> VariableName } |
   ModuleStatement { kw<"module"> VariableName Body kw<"end"> } |
