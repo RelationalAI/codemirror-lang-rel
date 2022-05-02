@@ -202,7 +202,7 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
   blockCommentAfterStar { "/" | "*" blockCommentAfterStar | ![/*] blockCommentRest }
 
   @precedence { BlockComment, LineComment, DatetimeLiteral, DateLiteral, Number }
-  @precedence { textBlockBoundry, StringLiteral }
+  @precedence { textBlockBoundry, textBlockContent, StringLiteral }
 
   // Operator {
   //   ("." | "^" | "/" | "%" | "*" | "÷" | "×" | "⊗" | "⊙" | "-" | "+" | "⊕" | "∩" | "∪" | "⊔" | "⊓" | "=" | "!=" | "≈" | "∼" | "≠" | "<" | ">" | "<=" | "≤" | ">=" | "≥" | "⊆" | "⊇" | "⊂" | "⊃" | "≼" | "≽" | "≺" | "≻" | "¬" | "∧" | "∨" | "→" | "←" | "⇒" | "⇐" | "≡" | "⇔" | "⊻" | "≢" | "⇎" | "<:" | ":>" | "<++" | "++>")
