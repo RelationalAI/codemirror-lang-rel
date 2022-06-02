@@ -45,7 +45,7 @@ statement {
   ForInStatement { kw<"for"> VariableName kw<"in"> VariableName } |
   ImpliesStatement { kw<"implies"> statement } |
   DefineStatement { kw<"def"> VariableName AssignOp{"="}? } |
-  ImportDefinitionStatement { kw<"def"> kw<"import"> statement } |
+  ImportDefinitionStatement { kw<"def"> kw<"abort"> statement } |
   ExportDefinitionStatement { kw<"def"> kw<"export"> statement } |
   ConfigDefinitionStatement { kw<"def"> kw<"config"> statement } |
   DeleteDefinitionStatement { kw<"def"> kw<"delete"> statement } |
