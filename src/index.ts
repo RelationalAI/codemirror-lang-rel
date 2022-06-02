@@ -15,7 +15,7 @@ export const relLanguage = LRLanguage.define({
       styleTags({
         'use forall for in iff if then else end where with select implies': t.controlKeyword,
         'not and or xor': t.operatorKeyword,
-        'as from inline ic doc entity type': t.keyword,
+        'as from inline ic doc entity type value': t.keyword,
         'output insert delete config import export': t.emphasis,
         'def': t.definitionKeyword,
         'module': t.moduleKeyword,

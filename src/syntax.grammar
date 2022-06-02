@@ -56,6 +56,7 @@ statement {
   DocStringLiteral { kw<"doc"> MultilineStringLiteral | kw<"doc">MultilineStringLiteral } |
   EntityStatement { kw<"entity"> VariableName } |
   EntityTypeStatement { kw<"entity"> kw<"type"> VariableName } |
+  ValueTypeStatement { kw<"value"> kw<"type"> VariableName } |
   ExpressionStatement { expression } |
   TypeStatement { type }
 }
