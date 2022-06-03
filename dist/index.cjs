@@ -42,7 +42,7 @@ const relLanguage = language.LRLanguage.define({
                 'use forall for in iff if then else end where with select implies': highlight.tags.controlKeyword,
                 'not and or xor': highlight.tags.operatorKeyword,
                 'as from inline ic doc entity type value': highlight.tags.keyword,
-                'output insert delete config import export': highlight.tags.emphasis,
+                'output insert delete import export': highlight.tags.emphasis,
                 'def': highlight.tags.definitionKeyword,
                 'module': highlight.tags.moduleKeyword,
                 'Any String Int Number Char Missing Floating UnsignedInt SignedInt Rational FixedDecimal RelName Entity AutoNumber Hash FilePos Date DateTime Year Month Week Day Hour Minute Second Millisecond Microsecond Nanosecond Boolean': highlight.tags.typeName,

@@ -16,7 +16,7 @@ export const relLanguage = LRLanguage.define({
         'use forall for in iff if then else end where with select implies': t.controlKeyword,
         'not and or xor': t.operatorKeyword,
         'as from inline ic doc entity type value': t.keyword,
-        'output insert delete config import export': t.emphasis,
+        'output insert delete import export': t.emphasis,
         'def': t.definitionKeyword,
         'module': t.moduleKeyword,
         'Any String Int Number Char Missing Floating UnsignedInt SignedInt Rational FixedDecimal RelName Entity AutoNumber Hash FilePos Date DateTime Year Month Week Day Hour Minute Second Millisecond Microsecond Nanosecond Boolean':
