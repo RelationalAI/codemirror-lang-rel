@@ -1,6 +1,6 @@
 {
   "name": "@relationalai/codemirror-lang-rel",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "CodeMirror 6 language support for Rel",
   "scripts": {
     "test": "mocha test/test.js",
