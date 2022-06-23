@@ -19,7 +19,7 @@ export const relLanguage = LRLanguage.define({
         'output insert delete abort export': t.emphasis,
         'def': t.definitionKeyword,
         'module': t.moduleKeyword,
-        'Any String Int Number Char Missing Floating UnsignedInt SignedInt Rational FixedDecimal RelName Entity AutoNumber Hash FilePos Date DateTime Year Month Week Day Hour Minute Second Millisecond Microsecond Nanosecond Boolean':
+        'Any String Int Number Char Missing Float Floating UnsignedInt SignedInt Rational FixedDecimal RelName Entity AutoNumber Hash FilePos Date DateTime Year Month Week Day Hour Minute Second Millisecond Microsecond Nanosecond Boolean':
           t.typeName,
         Number: t.number,
         BooleanLiteral: t.bool,
