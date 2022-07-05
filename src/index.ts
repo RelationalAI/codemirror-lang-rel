@@ -1,6 +1,6 @@
 import {parser} from "./syntax.grammar"
 import {LRLanguage, LanguageSupport, indentNodeProp, foldNodeProp, foldInside, delimitedIndent} from "@codemirror/language"
-import {styleTags, tags as t} from "@codemirror/highlight"
+import {styleTags, tags as t} from "@lezer/highlight"
 import {completeFromList, completionKeymap} from "@codemirror/autocomplete"
 import {autocompleteList} from './autocompleteList'
 
