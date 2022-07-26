@@ -51,9 +51,9 @@ statement {
   DeleteDefinitionStatement { kw<"def"> kw<"delete"> statement } |
   InsertDefinitionStatement { kw<"def"> kw<"insert"> statement } |
   OutputDefinitionStatement { kw<"def"> kw<"output"> AssignOp{"="}? VariableName? } |
-  WithUseStatement { kw<"with"> VariableName kw<"use"> VariableName} |
+  WithUseStatement { kw<"with"> VariableName kw<"use"> VariableName } |
   ConstraintStatement { kw<"ic"> VariableName "=" | kw<"ic"> VariableName "{" VariableName "}" } |
-  DocStringLiteral { kw<"doc"> MultilineStringLiteral | kw<"doc">MultilineStringLiteral } |
+  DocStringLiteral { LineStarter kw<"doc"> MultilineStringLiteral } |
   EntityStatement { kw<"entity"> VariableName } |
   EntityTypeStatement { kw<"entity"> kw<"type"> VariableName } |
   ValueTypeStatement { kw<"value"> kw<"type"> VariableName } |
@@ -209,6 +209,10 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
 
   ValueTypeLiteral {
     '^' identifier
+  }
+
+  LineStarter {
+    $[$]
   }
 
   LineComment { "//" ![\n]* }
