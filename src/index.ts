@@ -39,6 +39,7 @@ export const relLanguage = LRLanguage.define({
         DefineStatement: t.atom,
         DateLiteral: t.string,
         DateTimeLiteral: t.string,
+        Operator: t.operatorKeyword,
         '( )': t.paren,
         '[ ]': t.squareBracket,
         '{ }': t.brace,
