@@ -32,6 +32,10 @@
   MultilineStringLiteral { textBlockBoundry textBlockContent* textBlockBoundry }
 }
 
+@skip {} {
+  MultilineRawStringLiteral { rawTextBlockBoundry textBlockContent* rawTextBlockBoundry }
+}
+
 statement {
   InlineStatement { "@" kw<"inline"> VariableName? } |
   IfStatement { kw<"if"> Body (kw<"then"> Body)* elseClause? kw<"end"> } |
@@ -53,6 +57,7 @@ statement {
   OutputDefinitionStatement { kw<"def"> kw<"output"> AssignOp{"="}? VariableName? } |
   WithUseStatement { kw<"with"> VariableName kw<"use"> VariableName } |
   ConstraintStatement { kw<"ic"> VariableName "=" | kw<"ic"> VariableName "{" VariableName "}" } |
+  RawStringLiteral { LineStarter kw<"raw"> MultilineRawStringLiteral } |
   DocStringLiteral { LineStarter kw<"doc"> MultilineStringLiteral } |
   EntityStatement { kw<"entity"> VariableName } |
   EntityTypeStatement { kw<"entity"> kw<"type"> VariableName } |
@@ -68,6 +73,7 @@ expression[@isGroup=Expression] {
   DatetimeLiteral |
   MultilineBlockComment |
   MultilineStringLiteral |
+  MultilineRawStringLiteral |
   RelnameLiteral |
   RelnameStringLiteral |
   ValueTypeLiteral
@@ -199,7 +205,8 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
   }
 
   textBlockBoundry { '"""' }
-  textBlockContent { "\n" | !["\n] textBlockContent? | '"' textBlockQuote }
+  rawTextBlockBoundry { '"'('""')*!["] }
+  textBlockContent { "\n" | !["\n] textBlockContent? | '"' textBlockQuote | space }
   textBlockQuote { !["\n] textBlockContent | "\n" | '"' textBlockQuote2 }
   textBlockQuote2 { !["\n] textBlockContent | "\n" }
 
@@ -225,7 +232,8 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
 
   @precedence { BlockComment, LineComment, DatetimeLiteral, DateLiteral, Number }
   @precedence { textBlockBoundry, textBlockContent, StringLiteral }
-  @precedence { blockCommentBoundry, textBlockContent, blockCommentEndBoundry, StringLiteral }
+  @precedence { rawTextBlockBoundry , textBlockContent, StringLiteral}
+  @precedence { blockCommentBoundry, rawTextBlockBoundry, textBlockBoundry, textBlockContent, blockCommentEndBoundry, StringLiteral }
 
   // Operator {
   //   ("." | "^" | "/" | "%" | "*" | "÷" | "×" | "⊗" | "⊙" | "-" | "+" | "⊕" | "∩" | "∪" | "⊔" | "⊓" | "=" | "!=" | "≈" | "∼" | "≠" | "<" | ">" | "<=" | "≤" | ">=" | "≥" | "⊆" | "⊇" | "⊂" | "⊃" | "≼" | "≽" | "≺" | "≻" | "¬" | "∧" | "∨" | "→" | "←" | "⇒" | "⇐" | "≡" | "⇔" | "⊻" | "≢" | "⇎" | "<:" | ":>" | "<++" | "++>")

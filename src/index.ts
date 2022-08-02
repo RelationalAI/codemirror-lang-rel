@@ -16,7 +16,7 @@ export const relLanguage = LRLanguage.define({
       styleTags({
         'use forall for in iff if then else end where with select implies': t.controlKeyword,
         'not and or xor': t.operatorKeyword,
-        'as from inline ic doc entity type value': t.keyword,
+        'as from inline ic doc raw entity type value': t.keyword,
         'output insert delete abort export': t.emphasis,
         'def': t.definitionKeyword,
         'module': t.moduleKeyword,
@@ -26,6 +26,7 @@ export const relLanguage = LRLanguage.define({
         BooleanLiteral: t.bool,
         StringLiteral: t.string,
         MultilineStringLiteral: t.string,
+        MultilineRawStringLiteral: t.string,
         AssignOp: t.definitionOperator,
         LineComment: t.lineComment,
         BlockComment: t.blockComment,
