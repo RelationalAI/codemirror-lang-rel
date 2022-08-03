@@ -25,9 +25,24 @@ npm run test
 
 For local development and testing you can:
 
-- Compile the `dist` via running the `prepare` script mentioned above
-- Copy the contents of the `/dist/index.js` into a `rel.js` file for example
-- Import `rel.js` file into CM6 via changing the `raiSetup.ts` extensions array in the Rai Console Repo.
+- Install [fswatch](https://github.com/emcrisostomo/fswatch), then run the following script to auto "prepare", watch and copy to the console `code editor` folder the `rel.ts` file:
+
+```
+fswatch -or src | xargs -I{} sh -c "npm run prepare && cp dist/index.js <ENTER PATH HERE>/rel.ts"
+```
+
+e.g.
+
+```
+fswatch -or src | xargs -I{} sh -c "npm run prepare && cp dist/index.js ../../Dev/rai-ux/packages/code-editor/src/rel.ts"
+```
+
+- Once the `fswatch` has generated the output file (`rel.ts`) import it into consore/code editor via changing the `CodeEditor.tsx` file `rel` import. E.g:
+
+```
+import { rel } from './rel'; //'@relationalai/codemirror-lang-rel';
+```
+- If all done correctly on any change to the parser files the code editor would refresh and reflect the changes
 
 
 **Note**: Make sure you bump the `package.json` version on every release ready for consumption by CM6.
