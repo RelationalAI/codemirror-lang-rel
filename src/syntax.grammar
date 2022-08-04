@@ -38,38 +38,35 @@
 
 statement {
   InlineStatement { "@" kw<"inline"> VariableName? } |
+  InlineFunction { "@" kw<"function"> VariableName? } |
   InStatement { kw<"in"> VariableName | kw<"in"> VariableName kw<"where"> statement } |
   IfStatement { kw<"if"> Body (kw<"then"> Body)* elseClause? kw<"end"> } |
   IffStatement { kw<"iff"> statement } |
   NotStatement { kw<"not"> statement } |
   XorStatement { kw<"xor"> statement } |
   AndOrStatement { kw<"and"> statement | kw<"or"> statement } |
-  FromStatement { kw<"from"> MultipleVariables } |
+  FromStatement { kw<"from"> MultipleArguments } |
   ModuleStatement { kw<"module"> VariableName Body kw<"end"> } |
   ForallStatement { kw<"forall"> statement ( statement ) } |
-  ForEachStatement { kw<"foreach"> "[" MultipleVariables "]" } |
+  ForEachStatement { kw<"foreach"> "[" MultipleArguments "]" } |
   ForInStatement { kw<"for"> VariableName kw<"in"> VariableName } |
   ImpliesStatement { kw<"implies"> statement } |
-  DefineStatement {
-    kw<"def"> VariableName |
-    kw<"def"> VariableName "(" MultipleVariables ")" |
-    kw<"def"> VariableName "[" MultipleVariables "]"
-  } |
+  DefineStatement { kw<"def"> VariableName? } |
   ImportDefinitionStatement { kw<"def"> kw<"abort"> statement } |
   ExportDefinitionStatement { kw<"def"> kw<"export"> statement } |
   ConfigDefinitionStatement { kw<"def"> kw<"config"> statement } |
   DeleteDefinitionStatement { kw<"def"> kw<"delete"> statement } |
   InsertDefinitionStatement { kw<"def"> kw<"insert"> statement } |
   OutputDefinitionStatement { kw<"def"> kw<"output"> statement } |
-  WithUseStatement { kw<"with"> VariableName kw<"use"> MultipleVariables } |
+  WithUseStatement { kw<"with"> VariableName kw<"use"> MultipleArguments } |
   ConstraintStatement { kw<"ic"> VariableName "=" | kw<"ic"> VariableName "{" VariableName "}" } |
-  RawStringLiteral { LineStarter kw<"raw"> MultilineRawStringLiteral } |
-  DocStringLiteral { LineStarter kw<"doc"> MultilineStringLiteral } |
+  RawStringLiteral { LineStart kw<"raw"> MultilineRawStringLiteral } |
+  DocStringLiteral { LineStart kw<"doc"> MultilineStringLiteral } |
   EntityStatement { kw<"entity"> VariableName } |
   EntityTypeStatement { kw<"entity"> kw<"type"> VariableName } |
   ValueTypeStatement { kw<"value"> kw<"type"> VariableName } |
   ExpressionStatement { expression } |
-  ArtityStatement { Operator VariableName "(" MultipleVariables ")" } |
+  ParenStatement { ("("|"[") MultipleArguments ("]"|")") } |
   TypeStatement { type }
 }
 
@@ -126,7 +123,15 @@ boolean { @specialize[@name=BooleanLiteral]<identifier, "true" | "false"> }
 
 Body { statement+ }
 
-MultipleVariables { VariableName ("," VariableName)+ }
+EmptyRelation {
+  "{}"
+}
+
+RelArgument {
+  VariableName | RelnameLiteral | EmptyRelation
+}
+
+MultipleArguments { RelArgument (("," | ";") RelArgument)+ }
 
 kw<term> { @specialize[@name={term}]<identifier, term> }
 
@@ -228,8 +233,8 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
     '^' identifier
   }
 
-  LineStarter {
-    $[$]
+  LineStart {
+    $[^]
   }
 
   LineComment { "//" ![\n]* }
@@ -246,7 +251,7 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
 
   @precedence { textBlockBoundry, textBlockContent, StringLiteral }
   @precedence { rawTextBlockBoundry, textBlockContent, StringLiteral}
-  @precedence { BlockComment, LineComment, Number, Operator, ValueTypeLiteral, identifier }
+  @precedence { BlockComment, LineComment, Number, identifier, ValueTypeLiteral, Operator, LineStart }
   @precedence { BlockComment, LineComment, DatetimeLiteral, DateLiteral, Number }
   @precedence { blockCommentBoundry, rawTextBlockBoundry, textBlockBoundry, textBlockContent, blockCommentEndBoundry, StringLiteral }
 
