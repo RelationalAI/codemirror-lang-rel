@@ -66,7 +66,6 @@ statement {
   EntityTypeStatement { kw<"entity"> kw<"type"> VariableName } |
   ValueTypeStatement { kw<"value"> kw<"type"> VariableName } |
   ExpressionStatement { expression } |
-  ParenStatement { ("("|"[") MultipleArguments ("]"|")") } |
   TypeStatement { type }
 }
 
