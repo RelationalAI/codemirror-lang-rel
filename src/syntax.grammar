@@ -48,7 +48,7 @@ statement {
   FromStatement { kw<"from"> MultipleArguments } |
   ModuleStatement { kw<"module"> VariableName Body kw<"end"> } |
   ForallStatement { kw<"forall"> statement ( statement ) } |
-  ForEachStatement { kw<"foreach"> "[" MultipleArguments "]" } |
+  ForEachStatement { kw<"foreach"> statement } |
   ForInStatement { kw<"for"> VariableName kw<"in"> VariableName } |
   ImpliesStatement { kw<"implies"> statement } |
   DefineStatement { kw<"def"> VariableName? } |
