@@ -1,6 +1,6 @@
 {
   "name": "@relationalai/codemirror-lang-rel",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "CodeMirror 6 language support for Rel",
   "scripts": {
     "test": "mocha test/test.js",
@@ -16,9 +16,9 @@
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "dependencies": {
-    "@codemirror/language": "6.2.0",
-    "@codemirror/autocomplete": "6.0.2",
-    "@lezer/lr": "1.1.0"
+    "@codemirror/language": "6.2.1",
+    "@codemirror/autocomplete": "6.3.0",
+    "@lezer/lr": "1.2.3"
   },
   "devDependencies": {
     "@lezer/generator": "^1.1.0",
