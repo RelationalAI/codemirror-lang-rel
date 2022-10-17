@@ -153,6 +153,38 @@ type {
  * Literals
  */
 
+
+/*
+ * Raw strings can't be recognized as in ANTLR parser
+ * since commands are not supported in lezer parser,
+ * so the implementation here is limited to a maximum of 7 quotes
+ */
+RawStringSequence {
+    quote1 (rawChar)* quote1 |
+    quote3 (rawChar | quote1)* quote3 |
+    quote5 (rawChar | quote1 | quote3)* quote5 |
+    quote7 (rawChar | quote1 | quote3 | quote5)* quote7
+}
+
+RawStringLiteral {
+    kw<"raw"> RawStringSequence
+}
+
+InterpolationId { "%" basicIdentifier }
+
+Interpolation {
+    InterpolationId |
+    "%(" Expression ")"
+}
+
+InterpolationLiteral {
+    quote1 staticStringPart? Interpolation (staticStringPart | Interpolation)* quote1
+}
+
+InterpolationMultilineLiteral {
+    quote3 staticMultilineStringPart? Interpolation (staticMultilineStringPart | Interpolation)* quote3
+}
+
 RelnameLiteral { ( !relname ":" "^"? (basicIdentifier | "_") | ":[]" ) }
 RelnameStringLiteral { !relname ":" StaticStringLiteral }
 RelnameMultilineStringLiteral { !relname ":" StaticMultilineStringLiteral }
@@ -167,15 +199,16 @@ BaseLiteral {
     StaticMultilineStringLiteral |
     CharLiteral |
     DateLiteral |
-    DateTimeLiteral
-    // TODO add RAWSTRING_LITERAL
+    DateTimeLiteral |
+    RawStringLiteral
 }
 
 Literal {
     BaseLiteral |
     BooleanLiteral |
-    SpecializeIntLiteral
-    // TODO add Interpolation Literals
+    SpecializeIntLiteral |
+    InterpolationLiteral |
+    InterpolationMultilineLiteral
 }
 
 BasicExpression {
@@ -414,16 +447,25 @@ FormalParamsParen { "(" FormalParams? ")" }
     StaticStringLiteral { '"' staticSequence* '"' }
     StaticMultilineStringLiteral { '"""' multiStaticSequence* '"""' }
 
+    staticStringPart { staticSequence+ }
+    staticMultilineStringPart { multiStaticSequence+ }
+
     DocstringLiteral { '"' (!["\r\n\\] | EscapeChar)* '"' }
     MultilineDocstringLiteral { '"""' ( '"'? '"'? (!["\\] | EscapeChar))* '"""' }
+
+    quote1 { '"' }
+    quote3 { '"""' }
+    quote5 { '"""""' }
+    quote7 { '"""""""' }
+    rawChar { !["] }
 
     CharLiteral { "'" ( !['\\] | EscapeChar ) "'" }
 
     LineComment { "//" ![\r\n]* }
     BlockComment { "/*" ( ![*] | "*"+ ![/*] )* "*"+ "/" }
 
-    @precedence { space BlockComment LineComment DocstringLiteral }
-    @precedence { space BlockComment LineComment MultilineDocstringLiteral }
+    @precedence { rawChar space BlockComment LineComment DocstringLiteral staticStringPart }
+    @precedence { rawChar space BlockComment LineComment MultilineDocstringLiteral staticMultilineStringPart }
     @precedence { DateTimeLiteral DateLiteral FloatLiteral IntLiteral }
     @precedence { BooleanLiteral BasicId }
     @precedence { BasicId Operator }
