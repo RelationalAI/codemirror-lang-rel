@@ -1,269 +1,457 @@
-/*
-  Description: Very limitted Lezer (https://lezer.codemirror.net/) format Rel parser for Code Mirror 6
-  Supports only limitted sets of Rel features and it is a placeholder for a full featured lezer Rel parser
-*/
+@top Program { declaration+ }
+
+@skip { space | LineComment | BlockComment }
 
 @precedence {
-  cond,
-  trail,
-  power @right,
-  union @left,
-  prefix,
-  times @left,
-  plus @left,
-  shift @left,
-  bitand @left,
-  xor @left,
-  bitor @left,
-  compare @left,
-  and @left,
-  or @left
+    field @left,
+    appl @left,
+    power @right,
+    unary,
+    param @left,
+    mul @left,
+    add @left,
+    join @left,
+    union @left,
+    compL @left,
+    compR @right,
+    not,
+    quant,
+    and @left,
+    or @left,
+    impliesR @right,
+    impliesL @left,
+    iff @right,
+    xor @right,
+    relname @right,
+    abstract @left,
+    parenOp
 }
 
-@top Rel { (statement)+ }
-
-@skip { space | LineComment | BlockComment | StringLiteral }
-
-@skip {} {
-  MultilineBlockComment { blockCommentBoundry textBlockContent* blockCommentEndBoundry }
+declaration[@isGroup=Declaration] {
+    DefinitionStatement |
+    ValueTypeStatement |
+    EntityTypeStatement |
+    ConstraintStatement |
+    ModuleStatement |
+    UseStatement
 }
 
-@skip {} {
-  MultilineStringLiteral { textBlockBoundry textBlockContent* textBlockBoundry }
+/*
+ * Docstring Statement
+ */
+
+Docstring {
+    kw<"doc"> DocstringLiteral |
+    kw<"doc"> MultilineDocstringLiteral
 }
 
-@skip {} {
-  MultilineRawStringLiteral { rawTextBlockBoundry textBlockContent* rawTextBlockBoundry }
+/*
+ * Attribute Statement
+ */
+
+attributeKeyword {
+    attrKw<"inline"> |
+    attrKw<"function"> |
+    attrKw<"ondemand">
 }
 
-statement {
-  InlineStatement { "@" kw<"inline"> VariableName? } |
-  InlineFunction { "@" kw<"function"> VariableName? } |
-  InStatement { kw<"in"> VariableName | kw<"in"> VariableName kw<"where"> statement } |
-  IfStatement { kw<"if"> Body (kw<"then"> Body)* elseClause? kw<"end"> } |
-  IffStatement { kw<"iff"> statement } |
-  NotStatement { kw<"not"> statement } |
-  XorStatement { kw<"xor"> statement } |
-  AndOrStatement { kw<"and"> statement | kw<"or"> statement } |
-  FromStatement { kw<"from"> MultipleArguments } |
-  ModuleStatement { kw<"module"> VariableName Body kw<"end"> } |
-  ForallStatement { kw<"forall"> statement ( statement ) } |
-  ForEachStatement { kw<"foreach"> statement } |
-  ForInStatement { kw<"for"> VariableName kw<"in"> VariableName } |
-  ImpliesStatement { kw<"implies"> statement } |
-  DefineStatement { kw<"def"> VariableName? } |
-  ImportDefinitionStatement { kw<"def"> kw<"abort"> statement } |
-  ExportDefinitionStatement { kw<"def"> kw<"export"> statement } |
-  ConfigDefinitionStatement { kw<"def"> kw<"config"> statement } |
-  DeleteDefinitionStatement { kw<"def"> kw<"delete"> statement } |
-  InsertDefinitionStatement { kw<"def"> kw<"insert"> statement } |
-  OutputDefinitionStatement { kw<"def"> kw<"output"> statement } |
-  WithUseStatement { kw<"with"> VariableName kw<"use"> MultipleArguments } |
-  ConstraintStatement { kw<"ic"> VariableName "=" | kw<"ic"> VariableName "{" VariableName "}" } |
-  RawStringLiteral { LineStart kw<"raw"> MultilineRawStringLiteral } |
-  DocStringLiteral { LineStart kw<"doc"> MultilineStringLiteral } |
-  EntityStatement { kw<"entity"> VariableName } |
-  EntityTypeStatement { kw<"entity"> kw<"type"> VariableName } |
-  ValueTypeStatement { kw<"value"> kw<"type"> VariableName } |
-  ExpressionStatement { expression } |
-  TypeStatement { type }
+AttributeParams { commaSep1<BaseLiteral> }
+
+Attribute { "@" attributeKeyword ( "(" AttributeParams ")" )? }
+
+/*
+ * Declaration Statements
+ */
+prelude { Docstring? Attribute* }
+
+params { FormalParamsBracket* FormalParamsParen? }
+
+DefinitionStatement {
+    prelude kw<"def"> LhsId params ( "=" Expression | "{" Expression "}" )
 }
 
-expression[@isGroup=Expression] {
-  Number |
-  boolean |
-  Operator |
-  DateLiteral |
-  DatetimeLiteral |
-  MultilineBlockComment |
-  MultilineStringLiteral |
-  MultilineRawStringLiteral |
-  RelnameLiteral |
-  RelnameStringLiteral |
-  ValueTypeLiteral
+ValueTypeStatement {
+    prelude kw<"value"> kw<"type"> LhsId ( params ( "=" Expression | "{" Expression "}" ) )?
 }
 
-type[@isGroup=Type] {
-  IntType { kw<"Int"> VariableName? } |
-  StringType { kw<"String"> VariableName? } |
-  AnyType { kw<"Any"> VariableName? } |
-  NumberType { kw<"Number"> VariableName? } |
-  CharType { kw<"Char"> VariableName? } |
-  MissingType { kw<"Missing"> VariableName? } |
-  FloatingType { kw<"Floating"> VariableName? } |
-  UnsignedIntType { kw<"UnsignedInt"> VariableName? } |
-  SignedIntType { kw<"SignedInt"> VariableName? } |
-  RationalType { kw<"Rational"> VariableName? } |
-  FixedDecimalType { kw<"FixedDecimal"> VariableName? } |
-  RelNameType { kw<"RelName"> VariableName? } |
-  EntityType { kw<"Entity"> VariableName? } |
-  AutoNumberType { kw<"AutoNumber"> VariableName? } |
-  HashType { kw<"Hash"> VariableName? } |
-  FilePosType { kw<"FilePos"> VariableName? } |
-  DateType { kw<"Date"> VariableName? } |
-  DateTimeType { kw<"DateTime"> VariableName? } |
-  YearType { kw<"Year"> VariableName? } |
-  MonthType { kw<"Month"> VariableName? } |
-  WeekType { kw<"Week"> VariableName? } |
-  DayType { kw<"Day"> VariableName? } |
-  HourType { kw<"Hour"> VariableName? } |
-  MinuteType { kw<"Minute"> VariableName? } |
-  SecondType { kw<"Second"> VariableName? } |
-  MillisecondType { kw<"Millisecond"> VariableName? } |
-  MicrosecondType { kw<"Microsecond"> VariableName? } |
-  NanosecondType { kw<"Nanosecond"> VariableName? }
+EntityTypeStatement {
+    prelude kw<"entity"> kw<"type"> LhsId ( params ( "=" Expression | "{" Expression "}" ) )?
 }
 
-VariableName { identifier }
-
-elseClause { kw<"else"> Body }
-
-boolean { @specialize[@name=BooleanLiteral]<identifier, "true" | "false"> }
-
-Body { statement+ }
-
-EmptyRelation {
-  "{}"
+ConstraintStatement {
+    prelude kw<"ic"> LhsId? params ( "=" Expression | "{" Expression "}" )
 }
 
-RelArgument {
-  VariableName | RelnameLiteral | EmptyRelation
+ModuleStatement {
+    prelude kw<"module"> LhsId FormalParamsBracket* declaration* kw<"end">
 }
 
-MultipleArguments { RelArgument (("," | ";") RelArgument)+ }
+UseStatement {
+    kw<"with"> Expression kw<"use"> ("..." | commaSep1<Alias>)
+}
 
-kw<term> { @specialize[@name={term}]<identifier, term> }
+id { BasicId | type | kw<"type"> | kw<"entity"> | kw<"value"> }
+
+ParenOpId { "(" Operator !parenOp ")" }
+
+LhsId {
+    id |
+    ParenOpId |
+    QualifiedName |
+    emphasisKeyword
+}
+
+Alias { ( id | Operator ) ( kw<"as"> ( id | Operator ) )? }
+
+QualifiedNameElem { BasicId ~idConflict | ParenOpId ~parenOpConflict }
+
+QualifiedName { (QualifiedNameElem | emphasisKeyword | type ) !relname (":" QualifiedNameElem)+ }
+
+emphasisKeyword {
+    emp<"output"> |
+    emp<"insert"> |
+    emp<"delete"> |
+    emp<"abort"> |
+    emp<"export">
+}
+
+type {
+    relType<"Any"> |
+    relType<"String"> |
+    relType<"Int"> |
+    relType<"Number"> |
+    relType<"Char"> |
+    relType<"Missing"> |
+    relType<"Float"> |
+    relType<"Floating"> |
+    relType<"UnsignedInt"> |
+    relType<"SignedInt"> |
+    relType<"Rational"> |
+    relType<"FixedDecimal"> |
+    relType<"RelName"> |
+    relType<"Entity"> |
+    relType<"AutoNumber"> |
+    relType<"Hash"> |
+    relType<"FilePos"> |
+    relType<"Date"> |
+    relType<"DateTime"> |
+    relType<"Year"> |
+    relType<"Month"> |
+    relType<"Week"> |
+    relType<"Day"> |
+    relType<"Hour"> |
+    relType<"Minute"> |
+    relType<"Second"> |
+    relType<"Millisecond"> |
+    relType<"Microsecond"> |
+    relType<"Nanosecond"> |
+    relType<"Pattern"> |
+    relType<"Boolean">
+}
+
+/*
+ * Literals
+ */
+
+StaticSequence { staticChar | EscapeChar }
+MultiStaticSequence { '"'? '"'? ( multiStaticChar | EscapeChar ) }
+StaticStringLiteral { '"' StaticSequence* '"' }
+StaticMultilineStringLiteral { '"""' MultiStaticSequence* '"""' }
+
+RelnameLiteral { ( !relname ":" "^"? (basicIdentifier | "_") | ":[]" ) }
+RelnameStringLiteral { !relname ":" StaticStringLiteral }
+RelnameMultilineStringLiteral { !relname ":" StaticMultilineStringLiteral }
+
+BaseLiteral {
+    IntLiteral |
+    FloatLiteral |
+    RelnameLiteral |
+    RelnameStringLiteral |
+    RelnameMultilineStringLiteral |
+    StaticStringLiteral |
+    StaticMultilineStringLiteral |
+    CharLiteral |
+    DateLiteral |
+    DateTimeLiteral
+    // TODO add RAWSTRING_LITERAL
+}
+
+Literal {
+    BaseLiteral |
+    BooleanLiteral |
+    SpecializeIntLiteral
+    // TODO add Interpolation Literals
+}
+
+BasicExpression {
+    id "..."? ~idConflict |
+    ParenOpId ~parenOpConflict |
+    QualifiedName |
+    Literal ~literalConflict |
+    SpecializeExpression |
+    "_" |
+    BasicExpression !field op<"."> BasicExpression |
+    BasicExpression !appl "[" NocommaParam? "]" |
+    BasicExpression !appl "(" NocommaParam? ")" |
+    BasicExpression !appl "[" commaSep2<LogicalParam> "]" |
+    BasicExpression !appl "(" commaSep2<LogicalParam> ")" |
+    BasicExpression !power op<"^"> BasicExpression |
+    !unary op<"-"> BasicExpression |
+    BasicExpression !mul op<"/"> BasicExpression |
+    BasicExpression !mul op<"%"> BasicExpression |
+    BasicExpression !mul op<"*"> BasicExpression |
+    BasicExpression !mul op<"÷"> BasicExpression |
+    BasicExpression !mul op<"×"> BasicExpression |
+    BasicExpression !mul op<"⊗"> BasicExpression |
+    BasicExpression !mul op<"⊙"> BasicExpression |
+    BasicExpression !add op<"+"> BasicExpression |
+    BasicExpression !add op<"-"> BasicExpression |
+    BasicExpression !add op<"∩"> BasicExpression |
+    BasicExpression !add op<"⊕"> BasicExpression |
+    BasicExpression !union op<"∪"> BasicExpression |
+    BasicExpression !add op<"⊓"> BasicExpression |
+    BasicExpression !union op<"⊔"> BasicExpression |
+    BasicExpression !compL op<"="> BasicExpression |
+    BasicExpression !compL op<"!="> BasicExpression |
+    BasicExpression !compL op<"≈"> BasicExpression |
+    BasicExpression !compL op<"∼"> BasicExpression |
+    BasicExpression !compR op<"→"> BasicExpression |
+    BasicExpression !compL op<"←"> BasicExpression |
+    BasicExpression !compL op<"≼"> BasicExpression |
+    BasicExpression !compL op<"≽"> BasicExpression |
+    BasicExpression !compL op<"≺"> BasicExpression |
+    BasicExpression !compL op<"≻"> BasicExpression |
+    BasicExpression !compL op<"≠"> BasicExpression |
+    BasicExpression !compL op<"<"> BasicExpression |
+    BasicExpression !compL op<">"> BasicExpression |
+    BasicExpression !compL op<"<="> BasicExpression |
+    BasicExpression !compL op<"≤"> BasicExpression |
+    BasicExpression !compL op<">="> BasicExpression |
+    BasicExpression !compL op<"≥"> BasicExpression |
+    BasicExpression !compL op<"⊆"> BasicExpression |
+    BasicExpression !compL op<"⊇"> BasicExpression |
+    BasicExpression !compL op<"⊂"> BasicExpression |
+    BasicExpression !compL op<"⊃"> BasicExpression |
+    "(" Expression? ( "," | ";" )? ")" |
+    "{" Expression? ( "," | ";" )? "}" |
+    kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression kw<"end"> |
+    ( kw<"forall"> | "∀" ) "(" Bindings ":" Expression ")"
+}
+
+LogicalExpression {
+    BasicExpression |
+    !quant (kw<"exists"> | "∃") LogicalExpression |
+    !quant (kw<"exists"> | "∃") LogicalAbstractExpression |
+    LogicalExpression !and ( kw<"and"> | op<"∧"> ) LogicalExpression |
+    LogicalExpression !or ( kw<"or"> | op<"∨"> ) LogicalExpression |
+    LogicalExpression !impliesR ( kw<"implies"> | op<"⇒"> ) LogicalExpression |
+    LogicalExpression !impliesL op<"⇐"> LogicalExpression |
+    !not ( kw<"not"> | op<"¬"> ) LogicalExpression |
+    LogicalExpression !iff ( kw<"iff"> | op<"≡"> | op<"⇔"> ) LogicalExpression |
+    LogicalExpression !xor ( kw<"xor"> | op<"≢"> | op<"⇎"> | op<"⊻"> ) LogicalExpression
+}
+
+Bindings {
+    FormalParams ( kw<"where"> LogicalExpression )? |
+    "(" Bindings ")"
+}
+
+AbstractExpression {
+    Bindings !abstract ":" Expression |
+    UnionExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+}
+
+LogicalAbstractExpression {
+    Bindings !abstract ":" LogicalExpression |
+    LogicalExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+}
+
+NocommaAbstractExpression {
+    Bindings !abstract ":" NocommaExpression |
+    NocommaUnionExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+}
+
+RestrictExpression {
+    LogicalExpression |
+    RestrictExpression ( op<"<:"> | op<":>"> ) LogicalExpression
+}
+
+OverrideExpression {
+    RestrictExpression |
+    OverrideExpression ( op<"<++"> | op<"++>"> ) RestrictExpression
+}
+
+JoinExpression {
+    OverrideExpression |
+    JoinExpression !join "," OverrideExpression
+}
+
+UnionExpression { paramUnionExpr<UnionExpression, JoinExpression> }
+
+Expression { UnionExpression | AbstractExpression }
+
+SpecializeExpression { "#(" Expression ")" }
+
+NocommaUnionExpression { paramUnionExpr<NocommaUnionExpression, OverrideExpression> }
+
+NocommaExpression { NocommaUnionExpression | NocommaAbstractExpression }
+
+LogicalParam { Operator ~operatorConflict | LogicalExpression }
+
+NocommaParam { Operator ~operatorConflict | NocommaExpression }
+
+FormalParam {
+    Literal ~literalConflict |
+    Operator ~operatorConflict |
+    (id "..."? ~idConflict ) (( kw<"in"> | op<"∈"> ) BasicExpression)?
+}
+
+FormalParams { FormalParam ( !param "," FormalParam )* }
+
+FormalParamsBracket { "[" FormalParams? "]" }
+
+FormalParamsParen { "(" FormalParams? ")" }
 
 @tokens {
-  space {
-    $[ \t\n\r]+
-  }
-  id_char_single {
-    $[a-zA-Zα-ωΑ-Ω]
-  }
-  id_char_init {
-    $[a-zA-Zα-ωΑ-Ω_]
-  }
-  id_char {
-    $[a-zA-Zα-ωΑ-Ω_0-9]
-  }
-  escape_sequence {
-    '\\' ('\\' |
-    $[abefnrtv0-7] |
-    $[0-7]$[0-7] |
-    $[0123]$[0-7]$[0-7] |
-    'x' $[0-9a-fA-F]$[0-9a-fA-F] |
-    'u' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F] |
-    'U' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F])
-  }
-  string_literal {
-    '"' ( $[^"\r\n\\] | escape_sequence)* '"'
-  }
-  decimal_digit {
-    $[0-9]
-  }
-  decimal_literal {
-    decimal_digit+
-  }
-  octal_digit {
-    $[0-7]
-  }
-  octal_literal {
-    '0o' octal_digit+
-  }
-  hex_digit {
-    $[0-9A-Fa-f]
-  }
-  hex_literal {
-    '0x' hex_digit+
-  }
-  exponent {
-    $[eE] $[+-]? decimal_literal
-  }
-  float_literal_1 {
-    decimal_literal '.' decimal_literal? exponent
-  }
-  float_literal_2 {
-    decimal_literal exponent
-  }
-  float_literal_3 {
-    '.' decimal_literal exponent?
-  }
-  two_digits {
-    $[0-9]$[0-9]
-  }
-  time_digits {
-    two_digits ':' two_digits ':' two_digits
-  }
-  time_zone {
-    'Z' | $[+-]? two_digits ':' two_digits
-  }
-  identifier {
-    id_char_single | id_char_init id_char+
-  }
-  RelnameLiteral {
-    (':' id_char_init id_char* | ':[]')
-  }
-  RelnameStringLiteral {
-    ':' string_literal
-  }
-  StringLiteral {
-    '"' (![\\\n"] | "\\" _)* '"'? |
-    "'" (![\\\n'] | "\\" _)* "'"?
-  }
-  DateLiteral {
-    $[0-9]$[0-9]$[0-9]$[0-9]'-'$[0-9]$[0-9]'-'$[0-9]$[0-9]
-  }
-  DatetimeLiteral {
-    DateLiteral 'T' time_digits time_zone
-  }
+    space { $[ \r\t\n]+ }
 
-  textBlockBoundry { '"""' }
-  rawTextBlockBoundry { '"'('""')*!["] }
-  textBlockContent { "\n" | !["\n] textBlockContent? | '"' textBlockQuote | space }
-  textBlockQuote { !["\n] textBlockContent | "\n" | '"' textBlockQuote2 }
-  textBlockQuote2 { !["\n] textBlockContent | "\n" }
+    idCharSingle {
+        $[a-zA-Zα-ωΑ-Ω]
+    }
+    idCharInit {
+        $[a-zA-Zα-ωΑ-Ω_]
+    }
+    idChar {
+        $[a-zA-Zα-ωΑ-Ω_0-9]
+    }
+    basicIdentifier { idCharSingle | idCharInit idChar+ }
+    BasicId { "^"? basicIdentifier }
 
-  Number {
-    decimal_literal | octal_literal | hex_literal | float_literal_1 | float_literal_2 | float_literal_3
-  }
+    Operator {
+        "." |
+        "^" |
+        "/" |
+        "%" |
+        "*" |
+        "÷" |
+        "×" |
+        "⊗" |
+        "⊙" |
+        "-" |
+        "+" |
+        "⊕" |
+        "∩" |
+        "∪" |
+        "⊔" |
+        "⊓" |
+        "=" |
+        "!=" |
+        "≈" |
+        "∼" |
+        "≠" |
+        "<" |
+        ">" |
+        "<=" |
+        "≤" |
+        ">=" |
+        "≥" |
+        "∈" |
+        "⊆" |
+        "⊇" |
+        "⊂" |
+        "⊃" |
+        "≼" |
+        "≽" |
+        "≺" |
+        "≻" |
+        "¬" |
+        "∧" |
+        "∨" |
+        "→" |
+        "←" |
+        "⇒" |
+        "⇐" |
+        "≡" |
+        "⇔" |
+        "⊻" |
+        "≢" |
+        "⇎" |
+        "<:" |
+        ":>" |
+        "<++" |
+        "++>"
+    }
 
-  ValueTypeLiteral {
-    '^' identifier
-  }
+    decimalLiteral { $[0-9]+ }
+    octalLiteral { "0o" $[0-7]+ }
+    hexadecimalLiteral { "0x" $[0-9A-Fa-f]+ }
+    IntLiteral { decimalLiteral | octalLiteral | hexadecimalLiteral }
+    SpecializeIntLiteral { "#" IntLiteral }
 
-  LineStart {
-    $[^]
-  }
+    exponent { $[eE] $[+-]? decimalLiteral }
+    floatLiteral1 { decimalLiteral "." decimalLiteral? exponent? }
+    floatLiteral2 { decimalLiteral exponent }
+    floatLiteral3 { "." decimalLiteral exponent? }
+    FloatLiteral { floatLiteral1 | floatLiteral2 | floatLiteral3 }
 
-  LineComment { "//" ![\n]* }
-  BlockComment { "/*" blockCommentRest }
+    DateLiteral { $[0-9] $[0-9] $[0-9] $[0-9] "-" $[0-9] $[0-9] "-" $[0-9] $[0-9] }
+    hourMinuteDigits { $[0-9] $[0-9] ":" $[0-9] $[0-9] }
+    timeDigits { $[0-9] $[0-9] ":" $[0-9] $[0-9] ":" $[0-9] $[0-9] }
+    timezone { "Z" | $[+-]? hourMinuteDigits }
+    DateTimeLiteral { DateLiteral "T" timeDigits timezone }
 
-  blockCommentBoundry { '/*' }
-  blockCommentEndBoundry { '/*' }
-  blockCommentRest { ![*] blockCommentRest | "*" blockCommentAfterStar }
-  blockCommentAfterStar { "/" | "*" blockCommentAfterStar | ![/*] blockCommentRest }
+    BooleanLiteral { "true" | "false" }
 
-  Operator {
-    ( "and" | "or" | "∈" | "." | "..." | "^" | "/" | "%" | "*" | "÷" | "×" | "⊗" | "⊙" | "-" | "+" | "⊕" | "∩" | "∪" | "⊔" | "⊓" | "=" | "!=" | "≈" | "∼" | "≠" | "<" | ">" | "<=" | "≤" | ">=" | "≥" | "⊆" | "⊇" | "⊂" | "⊃" | "≼" | "≽" | "≺" | "≻" | "¬" | "∧" | "∨" | "→" | "←" | "⇒" | "⇐" | "≡" | "⇔" | "⊻" | "≢" | "⇎" | "<:" | ":>" | "<++" | "++>")
-  }
+    EscapeChar {
+        '\\' ('\\' | '%' |
+            $['"abefnrtv0-7] |
+            $[0-7]$[0-7] |
+            $[0123]$[0-7]$[0-7] |
+            'x' $[0-9a-fA-F]$[0-9a-fA-F] |
+            'u' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F] |
+            'U' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F])
+    }
+    staticChar { !["\r\n\\%] }
+    multiStaticChar { !["\\%] }
 
-  @precedence { textBlockBoundry, textBlockContent, StringLiteral }
-  @precedence { rawTextBlockBoundry, textBlockContent, StringLiteral}
-  @precedence { BlockComment, LineComment, Number, identifier, ValueTypeLiteral, Operator, LineStart }
-  @precedence { BlockComment, LineComment, DatetimeLiteral, DateLiteral, Number }
-  @precedence { blockCommentBoundry, rawTextBlockBoundry, textBlockBoundry, textBlockContent, blockCommentEndBoundry, StringLiteral }
+    DocstringLiteral { '"' (!["\r\n\\] | EscapeChar)* '"' }
+    MultilineDocstringLiteral { '"""' ( '"'? '"'? (!["\\] | EscapeChar))* '"""' }
 
+    CharLiteral { "'" ( !['\\] | EscapeChar ) "'" }
 
-  // ParenOperator {
-  //   '(' Operator ')'
-  // }
-  // qualified_name {
-  //   Identifier | ParenOperator
-  // }
-  // QualifiedName {
-  //   qualified_name (':' qualified_name)+
-  // }
+    LineComment { "//" ![\r\n]* }
+    BlockComment { "/*" ( ![*] | "*"+ ![/*] )* "*"+ "/" }
+
+    @precedence { space BlockComment LineComment DocstringLiteral staticChar }
+    @precedence { space BlockComment LineComment MultilineDocstringLiteral multiStaticChar }
+    @precedence { DateTimeLiteral DateLiteral FloatLiteral IntLiteral }
+    @precedence { BooleanLiteral BasicId }
+    @precedence { BasicId Operator }
+    @precedence { FloatLiteral Operator }
+    @precedence { "..." Operator ":" }
+    @precedence { basicIdentifier "_" }
+    @precedence { BasicId "_" }
+    @precedence { LineComment Operator }
+
+}
+
+kw<term> { @specialize[@name=Keyword]<BasicId, term> }
+
+attrKw<term> { @extend[@name=AttributeKeyword]<BasicId, term> }
+
+emp<term> { @specialize[@name=Emphasis]<BasicId, term> }
+
+relType<term> { @specialize[@name=Type]<BasicId, term> }
+
+op<oper> { @extend[@name=OperatorKeyword]<Operator, oper> }
+
+commaSep1<rule> { rule ( !param "," rule )* }
+
+commaSep2<rule> { rule !param "," rule ( !param "," rule )* }
+
+paramUnionExpr<expr, argExpr> {
+    argExpr |
+    expr !union ";" argExpr
 }
 
 @detectDelim
