@@ -105,9 +105,9 @@ Alias { ( id | Operator ) ( kw<"as"> ( id | Operator ) )? }
 
 QualifiedNameElem { BasicId ~idConflict | ParenOpId ~parenOpConflict }
 
-QualifiedName { (QualifiedNameElem | emphasisKeyword | type ) !relname (":" QualifiedNameElem)+ }
+QualifiedName { ( type | emphasisKeyword | QualifiedNameElem ) !relname (":" QualifiedNameElem)+ }
 
-emphasisKeyword {
+emphasisKeyword[@dynamicPrecedence=1] {
     emp<"output"> |
     emp<"insert"> |
     emp<"delete"> |
@@ -152,11 +152,6 @@ type {
 /*
  * Literals
  */
-
-StaticSequence { staticChar | EscapeChar }
-MultiStaticSequence { '"'? '"'? ( multiStaticChar | EscapeChar ) }
-StaticStringLiteral { '"' StaticSequence* '"' }
-StaticMultilineStringLiteral { '"""' MultiStaticSequence* '"""' }
 
 RelnameLiteral { ( !relname ":" "^"? (basicIdentifier | "_") | ":[]" ) }
 RelnameStringLiteral { !relname ":" StaticStringLiteral }
@@ -414,6 +409,11 @@ FormalParamsParen { "(" FormalParams? ")" }
     staticChar { !["\r\n\\%] }
     multiStaticChar { !["\\%] }
 
+    staticSequence { staticChar | EscapeChar }
+    multiStaticSequence { '"'? '"'? ( multiStaticChar | EscapeChar ) }
+    StaticStringLiteral { '"' staticSequence* '"' }
+    StaticMultilineStringLiteral { '"""' multiStaticSequence* '"""' }
+
     DocstringLiteral { '"' (!["\r\n\\] | EscapeChar)* '"' }
     MultilineDocstringLiteral { '"""' ( '"'? '"'? (!["\\] | EscapeChar))* '"""' }
 
@@ -422,8 +422,8 @@ FormalParamsParen { "(" FormalParams? ")" }
     LineComment { "//" ![\r\n]* }
     BlockComment { "/*" ( ![*] | "*"+ ![/*] )* "*"+ "/" }
 
-    @precedence { space BlockComment LineComment DocstringLiteral staticChar }
-    @precedence { space BlockComment LineComment MultilineDocstringLiteral multiStaticChar }
+    @precedence { space BlockComment LineComment DocstringLiteral }
+    @precedence { space BlockComment LineComment MultilineDocstringLiteral }
     @precedence { DateTimeLiteral DateLiteral FloatLiteral IntLiteral }
     @precedence { BooleanLiteral BasicId }
     @precedence { BasicId Operator }
@@ -439,7 +439,7 @@ kw<term> { @specialize[@name=Keyword]<BasicId, term> }
 
 attrKw<term> { @extend[@name=AttributeKeyword]<BasicId, term> }
 
-emp<term> { @specialize[@name=Emphasis]<BasicId, term> }
+emp<term> { @extend[@name=Emphasis]<BasicId, term> }
 
 relType<term> { @specialize[@name=Type]<BasicId, term> }
 
