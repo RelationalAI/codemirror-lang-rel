@@ -260,10 +260,14 @@ BasicExpression {
     BasicExpression !compL op<"⊇"> BasicExpression |
     BasicExpression !compL op<"⊂"> BasicExpression |
     BasicExpression !compL op<"⊃"> BasicExpression |
-    "(" Expression? ( "," | ";" )? ")" |
-    "{" Expression? ( "," | ";" )? "}" |
+    BoundedExpression |
     kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression kw<"end"> |
     ( kw<"forall"> | "∀" ) "(" Bindings ":" Expression ")"
+}
+
+BoundedExpression {
+    "(" Expression? ( "," | ";" )? ")" |
+    "{" Expression? ( "," | ";" )? "}"
 }
 
 LogicalExpression {

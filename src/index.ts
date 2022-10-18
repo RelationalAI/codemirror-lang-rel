@@ -7,12 +7,6 @@ import {autocompleteList} from './autocompleteList'
 export const relLanguage = LRLanguage.define({
   parser: parser.configure({
     props: [
-      // indentNodeProp.add({
-      //   Application: delimitedIndent({closing: ")", align: false})
-      // }),
-      // foldNodeProp.add({
-      //   Application: foldInside
-      // }),
       styleTags({
         Keyword: tags.keyword,
         AttributeKeyword: tags.keyword,
@@ -25,7 +19,6 @@ export const relLanguage = LRLanguage.define({
         DocstringLiteral: tags.string,
         MultilineDocstringLiteral: tags.string,
         "StaticStringLiteral/...": tags.string,
-        "StaticStringLiteral/StaticSequence/EscapeChar": tags.escape,
         StaticMultilineStringLiteral: tags.string,
         RawStringSequence: tags.string,
         InterpolationLiteral: tags.string,
@@ -51,13 +44,22 @@ export const relLanguage = LRLanguage.define({
         ':': tags.derefOperator,
         ', ;': tags.separator
       }),
+      // indentNodeProp.add({
+      //     BasicExpression: context => context.column(context.node.from) + context.unit
+      // }),
+      foldNodeProp.add({
+        MultilineDocstringLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
+        InterpolationMultilineLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
+        StaticMultilineStringLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
+        RawStringSequence(tree) { return {from: tree.from + 1, to: tree.to - 1} },
+        BlockComment(tree) { return {from: tree.from + 2, to: tree.to - 2} },
+        BoundedExpression(tree) { return {from: tree.from + 1, to: tree.to - 1} }
+      })
     ]
   }),
   languageData: {
-    closeBrackets: {brackets: ["(", "[", "{", "'", '"', "`", '"""']},
+    closeBrackets: {brackets: ["(", "[", "{", "'", '"', "`", '"""', '"""""']},
     commentTokens: {line: "//", block: {open: "/*", close: "*/"}},
-    // indentOnInput: /^\s*(?:case |default:|\{|\}|<\/)$/,
-    wordChars: "$"
   }
 })
 
