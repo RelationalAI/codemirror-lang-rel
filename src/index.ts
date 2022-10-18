@@ -1,8 +1,7 @@
 import {parser} from "./syntax.grammar"
 import {LRLanguage, LanguageSupport, indentNodeProp, foldNodeProp, foldInside, delimitedIndent} from "@codemirror/language"
 import {styleTags, tags} from "@lezer/highlight"
-import {completeFromList, completionKeymap} from "@codemirror/autocomplete"
-import {autocompleteList} from './autocompleteList'
+import {completeRel} from "./autoCompletion";
 
 export const relLanguage = LRLanguage.define({
   parser: parser.configure({
@@ -65,7 +64,7 @@ export const relLanguage = LRLanguage.define({
 
 // Autocomplete
 export const relCompletion = relLanguage.data.of({
-  autocomplete: completeFromList(autocompleteList)
+  autocomplete: completeRel
 })
 
 export function rel() {
