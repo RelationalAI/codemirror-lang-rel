@@ -1,4 +1,5 @@
 import {Completion} from "@codemirror/autocomplete";
+import {functionsInfo} from "./constants.info";
 
 const attributeKeywordOptions: Completion[] = [
   "function",
@@ -478,7 +479,10 @@ const functionOptions: Completion[] = [
   "zip",
 ].map(tag => ({
   label: tag,
-  type: "function"
+  type: "function",
+  boost: 0,
+  detail: '(stdlib)',
+  info: functionsInfo[tag]
 }));
 
 export {

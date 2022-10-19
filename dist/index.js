@@ -25,6 +25,24 @@ const parser = LRParser.deserialize({
   tokenPrec: 14167
 });
 
+const functionsInfo = {
+    abs: `abs[x]
+  
+The absolute value of x.`,
+    table: `table[R]
+
+Display a structured (overloaded) relation that represents tabular data as a table, if it's supported by the client.\n
+The input is expected to be a relation that represents a table *column-wise*, such as the result of importing a CSV file, or i.e. a module. The module provided as input can be thought of like a dataframe in other systems. The client will attempt to display a table from whatever module you pass in, even if the data is sparse, or not all of the same arity.
+    
+Includes the original relation together with a MIME-type indicating the relation represents a table, in order to be rendered on the client.
+  `,
+    tan: `tan[x]
+
+Tangent of x (given in radians).
+
+Defined for non-infinite \`x\`.`
+};
+
 const attributeKeywordOptions = [
     "function",
     "inline",
@@ -466,9 +484,13 @@ const functionOptions = [
     "zip",
 ].map(tag => ({
     label: tag,
-    type: "function"
+    type: "function",
+    boost: 0,
+    detail: '(stdlib)',
+    info: functionsInfo[tag]
 }));
 
+let lhsCompletionList = [];
 function completeAttribute(context, nodeBefore, textBefore) {
     let attrBefore = /@\w*$/.exec(textBefore);
     if (!attrBefore && !context.explicit) {
@@ -487,7 +509,10 @@ function completeLhs(context, nodeBefore, textBefore) {
     }
     return {
         from: attrBefore ? nodeBefore.from + attrBefore.index : context.pos,
-        options: functionOptions,
+        options: [
+            ...lhsCompletionList,
+            ...functionOptions
+        ],
         validFor: /^(\w*)?$/
     };
 }
@@ -519,12 +544,20 @@ function completeRel(context) {
     const nodeBefore = tree.resolveInner(context.pos, -1);
     const nodeName = nodeBefore.name;
     const parentName = (_a = nodeBefore.parent) === null || _a === void 0 ? void 0 : _a.name;
-    const grandParentName = (_c = (_b = nodeBefore.parent) === null || _b === void 0 ? void 0 : _b.parent) === null || _c === void 0 ? void 0 : _c.name;
+    (_c = (_b = nodeBefore.parent) === null || _b === void 0 ? void 0 : _b.parent) === null || _c === void 0 ? void 0 : _c.name;
+    lhsCompletionList = [];
     tree.iterate({
         enter: (nodeRef) => {
-            if (nodeRef.name === 'LhsId') {
-                console.log(context.state.sliceDoc(nodeRef.from, nodeRef.to));
+            var _a;
+            if (nodeRef.name === 'LhsId' && ((_a = nodeRef.node.firstChild) === null || _a === void 0 ? void 0 : _a.name) === 'BasicId') {
+                lhsCompletionList.push({
+                    label: context.state.sliceDoc(nodeRef.from, nodeRef.to),
+                    type: "variable",
+                    boost: 1
+                });
             }
+            if (nodeRef.name === 'Expression')
+                return false;
         }
     });
     switch (nodeName) {
@@ -535,24 +568,20 @@ function completeRel(context) {
         case 'RawStringSequence':
             return null;
     }
-    console.log(grandParentName, parentName, nodeName);
     // Complete Attribute keywords
     let textBefore = context.state.sliceDoc(nodeBefore.from, context.pos);
     if (textBefore.match(/@\w*$/) &&
         ['Attribute', 'BasicId'].indexOf(nodeName) != -1) {
-        console.log('attr');
         return completeAttribute(context, nodeBefore, textBefore);
     }
-    if (parentName === 'BasicExpression' && nodeName === 'BasicId') {
-        console.log('func');
+    if ((parentName === 'BasicExpression' && nodeName === 'BasicId') ||
+        nodeName === 'InterpolationId') {
         return completeLhs(context, nodeBefore, textBefore);
     }
     if (parentName === '⚠' && nodeName === 'BasicId') {
-        console.log('kw');
         return completeKeyword(context, nodeBefore, textBefore);
     }
     if (parentName === 'LhsId' && nodeName === 'BasicId') {
-        console.log('emp');
         return completeEmphasis(context, nodeBefore, textBefore);
     }
 }
