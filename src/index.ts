@@ -1,7 +1,7 @@
 import {parser} from "./syntax.grammar"
-import {LRLanguage, LanguageSupport, indentNodeProp, foldNodeProp, foldInside, delimitedIndent} from "@codemirror/language"
+import {LRLanguage, LanguageSupport, foldNodeProp} from "@codemirror/language"
 import {styleTags, tags} from "@lezer/highlight"
-import {completeFromList, completionKeymap} from "@codemirror/autocomplete"
+import {completeFromList} from "@codemirror/autocomplete"
 import {autocompleteList} from './autocompleteList'
 
 export const relLanguage = LRLanguage.define({
@@ -32,9 +32,6 @@ export const relLanguage = LRLanguage.define({
         ':': tags.derefOperator,
         ', ;': tags.separator
       }),
-      // indentNodeProp.add({
-      //     BasicExpression: context => context.column(context.node.from) + context.unit
-      // }),
       foldNodeProp.add({
         MultilineDocstringLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
         InterpolationMultilineLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
@@ -46,7 +43,7 @@ export const relLanguage = LRLanguage.define({
     ]
   }),
   languageData: {
-    closeBrackets: {brackets: ["(", "[", "{", "'", '"', "`", '"""', '"""""']},
+    closeBrackets: {brackets: ["(", "[", "{", "'", '"', "`", '"""']},
     commentTokens: {line: "//", block: {open: "/*", close: "*/"}},
   }
 })

@@ -1,6 +1,6 @@
-@top Program { declaration+ }
+@top Rel { declaration+ }
 
-@skip { space | LineComment | BlockComment }
+@skip { spaces | newLine | LineComment | BlockComment }
 
 @precedence {
     field @left,
@@ -50,9 +50,11 @@ Docstring {
  */
 
 attributeKeyword {
-    attrKw<"inline"> |
     attrKw<"function"> |
-    attrKw<"ondemand">
+    attrKw<"inline"> |
+    attrKw<"ondemand"> |
+    attrKw<"outline"> |
+    attrKw<"static">
 }
 
 AttributeParams { commaSep1<BaseLiteral> }
@@ -62,28 +64,25 @@ Attribute { "@" attributeKeyword ( "(" AttributeParams ")" )? }
 /*
  * Declaration Statements
  */
-prelude { Docstring? Attribute* }
-
-params { FormalParamsBracket* FormalParamsParen? }
 
 DefinitionStatement {
-    prelude kw<"def"> LhsId params ( "=" Expression | "{" Expression "}" )
+    Docstring? Attribute* kw<"def"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
 }
 
 ValueTypeStatement {
-    prelude kw<"value"> kw<"type"> LhsId ( params ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Attribute* kw<"value"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
 EntityTypeStatement {
-    prelude kw<"entity"> kw<"type"> LhsId ( params ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Attribute* kw<"entity"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
 ConstraintStatement {
-    prelude kw<"ic"> LhsId? params ( "=" Expression | "{" Expression "}" )
+    Docstring? Attribute* kw<"ic"> LhsId? FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
 }
 
 ModuleStatement {
-    prelude kw<"module"> LhsId FormalParamsBracket* declaration* kw<"end">
+    Docstring? Attribute* kw<"module"> LhsId FormalParamsBracket* declaration* kw<"end">
 }
 
 UseStatement {
@@ -125,6 +124,7 @@ type {
     relType<"Float"> |
     relType<"Floating"> |
     relType<"UnsignedInt"> |
+    relType<"UInt"> |
     relType<"SignedInt"> |
     relType<"Rational"> |
     relType<"FixedDecimal"> |
@@ -145,7 +145,6 @@ type {
     relType<"Millisecond"> |
     relType<"Microsecond"> |
     relType<"Nanosecond"> |
-    relType<"Pattern"> |
     relType<"Boolean">
 }
 
@@ -158,6 +157,7 @@ type {
  * Raw strings can't be recognized as in ANTLR parser
  * since commands are not supported in lezer parser,
  * so the implementation here is limited to a maximum of 7 quotes
+ * TODO generalize to support N quotes
  */
 RawStringSequence {
     quote1 (rawChar)* quote1 |
@@ -210,6 +210,10 @@ Literal {
     InterpolationLiteral |
     InterpolationMultilineLiteral
 }
+
+/*
+ * Expressions
+ */
 
 BasicExpression {
     id "..."? ~idConflict |
@@ -345,7 +349,8 @@ FormalParamsBracket { "[" FormalParams? "]" }
 FormalParamsParen { "(" FormalParams? ")" }
 
 @tokens {
-    space { $[ \r\t\n]+ }
+    spaces[@export] { $[\u0009 \u000b\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]+ }
+    newLine[@export] { $[\r\n\u2028\u2029] }
 
     idCharSingle {
         $[a-zA-Zα-ωΑ-Ω]
@@ -465,11 +470,11 @@ FormalParamsParen { "(" FormalParams? ")" }
 
     CharLiteral { "'" ( !['\\] | EscapeChar ) "'" }
 
-    LineComment { "//" ![\r\n]* }
+    LineComment { "//" ![\n]* }
     BlockComment { "/*" ( ![*] | "*"+ ![/*] )* "*"+ "/" }
 
-    @precedence { rawChar space BlockComment LineComment DocstringLiteral staticStringPart }
-    @precedence { rawChar space BlockComment LineComment MultilineDocstringLiteral staticMultilineStringPart }
+    @precedence { rawChar spaces newLine BlockComment LineComment DocstringLiteral staticStringPart }
+    @precedence { rawChar spaces newLine BlockComment LineComment MultilineDocstringLiteral staticMultilineStringPart }
     @precedence { DateTimeLiteral DateLiteral FloatLiteral IntLiteral }
     @precedence { BooleanLiteral BasicId }
     @precedence { BasicId Operator }
