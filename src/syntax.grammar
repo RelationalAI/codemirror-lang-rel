@@ -22,7 +22,7 @@
     impliesL @left,
     iff @right,
     xor @right,
-    relname @right,
+    relname @left,
     abstract @left,
     parenOp
 }
@@ -89,7 +89,7 @@ UseStatement {
     kw<"with"> Expression kw<"use"> ("..." | commaSep1<Alias>)
 }
 
-id { BasicId | type | kw<"type"> | kw<"entity"> | kw<"value"> }
+id { BasicId | type ~typeConflict | kw<"type"> | kw<"entity"> | kw<"value"> }
 
 ParenOpId { "(" Operator !parenOp ")" }
 
@@ -100,11 +100,15 @@ LhsId {
     emphasisKeyword
 }
 
-Alias { ( id | Operator ) ( kw<"as"> ( id | Operator ) )? }
+AliasId { ( id | Operator ) }
+
+Alias { ( id | Operator ) ( kw<"as"> AliasId )? }
 
 QualifiedNameElem { BasicId ~idConflict | ParenOpId ~parenOpConflict }
 
-QualifiedName { ( type | emphasisKeyword | QualifiedNameElem ) !relname (":" QualifiedNameElem)+ }
+QualifiedNameId { emphasisKeyword | BasicId ~idConflict | ParenOpId ~parenOpConflict | type ~typeConflict }
+
+QualifiedName { QualifiedNameId ( !relname ":" QualifiedNameElem)+ }
 
 emphasisKeyword[@dynamicPrecedence=1] {
     emp<"output"> |
@@ -223,10 +227,8 @@ BasicExpression {
     SpecializeExpression |
     "_" |
     BasicExpression !field op<"."> BasicExpression |
-    BasicExpression !appl "[" NocommaParam? "]" |
-    BasicExpression !appl "(" NocommaParam? ")" |
-    BasicExpression !appl "[" commaSep2<LogicalParam> "]" |
-    BasicExpression !appl "(" commaSep2<LogicalParam> ")" |
+    PartialApplicationExpression |
+    ApplicationExpression |
     BasicExpression !power op<"^"> BasicExpression |
     !unary op<"-"> BasicExpression |
     BasicExpression !mul op<"/"> BasicExpression |
@@ -267,6 +269,16 @@ BasicExpression {
     BoundedExpression |
     kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression kw<"end"> |
     ( kw<"forall"> | "∀" ) "(" Bindings ":" Expression ")"
+}
+
+PartialApplicationExpression {
+    BasicExpression !appl "[" NocommaParam? "]" |
+    BasicExpression !appl "[" commaSep2<LogicalParam> "]"
+}
+
+ApplicationExpression {
+    BasicExpression !appl "(" NocommaParam? ")" |
+    BasicExpression !appl "(" commaSep2<LogicalParam> ")"
 }
 
 BoundedExpression {
@@ -322,13 +334,19 @@ JoinExpression {
     JoinExpression !join "," OverrideExpression
 }
 
-UnionExpression { paramUnionExpr<UnionExpression, JoinExpression> }
+UnionExpression {
+    JoinExpression |
+    UnionExpression !union ";" JoinExpression
+}
 
 Expression { UnionExpression | AbstractExpression }
 
 SpecializeExpression { "#(" Expression ")" }
 
-NocommaUnionExpression { paramUnionExpr<NocommaUnionExpression, OverrideExpression> }
+NocommaUnionExpression {
+    OverrideExpression |
+    NocommaUnionExpression !union ";" OverrideExpression
+}
 
 NocommaExpression { NocommaUnionExpression | NocommaAbstractExpression }
 
@@ -499,10 +517,5 @@ op<oper> { @extend[@name=OperatorKeyword]<Operator, oper> }
 commaSep1<rule> { rule ( !param "," rule )* }
 
 commaSep2<rule> { rule !param "," rule ( !param "," rule )* }
-
-paramUnionExpr<expr, argExpr> {
-    argExpr |
-    expr !union ";" argExpr
-}
 
 @detectDelim
