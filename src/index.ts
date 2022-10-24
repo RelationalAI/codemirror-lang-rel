@@ -1,58 +1,53 @@
 import {parser} from "./syntax.grammar"
-import {LRLanguage, LanguageSupport, indentNodeProp, foldNodeProp, foldInside, delimitedIndent} from "@codemirror/language"
-import {styleTags, tags as t} from "@lezer/highlight"
-import {completeFromList, completionKeymap} from "@codemirror/autocomplete"
+import {LRLanguage, LanguageSupport, foldNodeProp} from "@codemirror/language"
+import {styleTags, tags} from "@lezer/highlight"
+import {completeFromList} from "@codemirror/autocomplete"
 import {autocompleteList} from './autocompleteList'
 
 export const relLanguage = LRLanguage.define({
   parser: parser.configure({
     props: [
-      // indentNodeProp.add({
-      //   Application: delimitedIndent({closing: ")", align: false})
-      // }),
-      // foldNodeProp.add({
-      //   Application: foldInside
-      // }),
       styleTags({
-        'use forall for in iff if then else end where with select implies': t.controlKeyword,
-        'not and or xor': t.operatorKeyword,
-        'as from inline function ic doc raw entity type value': t.keyword,
-        'output insert delete abort export': t.emphasis,
-        'def': t.definitionKeyword,
-        'module': t.moduleKeyword,
-        'Any String Int Number Char Missing Float Floating UnsignedInt SignedInt Rational FixedDecimal RelName Entity AutoNumber Hash FilePos Date DateTime Year Month Week Day Hour Minute Second Millisecond Microsecond Nanosecond Boolean':
-          t.typeName,
-        Number: t.number,
-        BooleanLiteral: t.bool,
-        StringLiteral: t.string,
-        MultilineStringLiteral: t.string,
-        MultilineRawStringLiteral: t.string,
-        AssignOp: t.definitionOperator,
-        LineComment: t.lineComment,
-        BlockComment: t.blockComment,
-        MultilineBlockComment: t.blockComment,
-        VariableName: t.definition(t.variableName),
-        Atom: t.atom,
-        RelnameLiteral: t.literal,
-        RelnameStringLiteral: t.literal,
-        ValueTypeLiteral: t.literal,
-        DefineStatement: t.atom,
-        DateLiteral: t.string,
-        DateTimeLiteral: t.string,
-        Operator: t.operatorKeyword,
-        '( )': t.paren,
-        '[ ]': t.squareBracket,
-        '{ }': t.brace,
-        ':': t.derefOperator,
-        ', ;': t.separator
+        "Keyword AttributeKeyword": tags.keyword,
+        Type: tags.typeName,
+        Emphasis: tags.emphasis,
+        "IntLiteral FloatLiteral": tags.number,
+        BooleanLiteral: tags.bool,
+        CharLiteral: tags.character,
+        "DocstringLiteral MultilineDocstringLiteral": tags.docString,
+        "StaticStringLiteral/...": tags.string,
+        "StaticMultilineStringLiteral RawStringSequence InterpolationLiteral InterpolationMultilineLiteral": tags.string,
+        LineComment: tags.lineComment,
+        BlockComment: tags.blockComment,
+        BasicId: tags.attributeName,
+        "LhsId/BasicId": tags.definition(tags.variableName),
+        "PartialApplicationExpression/BasicExpression/BasicId": tags.variableName,
+        "ApplicationExpression/BasicExpression/BasicId": tags.variableName,
+        "LogicalParam/LogicalExpression/BasicExpression/BasicId": tags.attributeName,
+        "FormalId/BasicId": tags.attributeName,
+        "InterpolationId AliasId/BasicId": tags.labelName,
+        "QualifiedNameElem/BasicId RelnameLiteral ValueTypeLiteral": tags.literal,
+        "DateLiteral DateTimeLiteral": tags.string,
+        "Operator OperatorKeyword": tags.operatorKeyword,
+        '( )': tags.paren,
+        '[ ]': tags.squareBracket,
+        '{ }': tags.brace,
+        ':': tags.derefOperator,
+        ', ;': tags.separator
+      }),
+      foldNodeProp.add({
+        MultilineDocstringLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
+        InterpolationMultilineLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
+        StaticMultilineStringLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
+        RawStringSequence(tree) { return {from: tree.from + 1, to: tree.to - 1} },
+        BlockComment(tree) { return {from: tree.from + 2, to: tree.to - 2} },
+        BoundedExpression(tree) { return {from: tree.from + 1, to: tree.to - 1} }
       })
     ]
   }),
   languageData: {
     closeBrackets: {brackets: ["(", "[", "{", "'", '"', "`", '"""']},
     commentTokens: {line: "//", block: {open: "/*", close: "*/"}},
-    // indentOnInput: /^\s*(?:case |default:|\{|\}|<\/)$/,
-    wordChars: "$"
   }
 })
 

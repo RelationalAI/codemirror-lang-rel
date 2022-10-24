@@ -1,89 +1,229 @@
 # Numbers
 
-101
-01010101001
-0x1ABCDEFabcdef
-0o7632157312
+def a = 101,
+01010101001,
+0x1ABCDEFabcdef,
+0o7632157312,
 1e+3
 
 ==>
 
-Rel(ExpressionStatement(Number),
-    ExpressionStatement(Number),
-    ExpressionStatement(Number),
-    ExpressionStatement(Number),
-    ExpressionStatement(Number))
+Rel(
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    JoinExpression(
+                        JoinExpression(
+                            JoinExpression(
+                                JoinExpression(
+                                    OverrideExpression(
+                                        RestrictExpression(
+                                            LogicalExpression(
+                                                BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
+                                OverrideExpression(
+                                    RestrictExpression(
+                                        LogicalExpression(
+                                            BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
+                            OverrideExpression(
+                                RestrictExpression(
+                                    LogicalExpression(
+                                        BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
+                        OverrideExpression(
+                            RestrictExpression(
+                                LogicalExpression(
+                                    BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(FloatLiteral)))))))))))
+
 
 # Booleans
 
-true
-false
+def a = true
+def b = false
 
 ==>
 
-Rel(ExpressionStatement(BooleanLiteral),
-  ExpressionStatement(BooleanLiteral))
+Rel(
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BooleanLiteral))))))))),
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BooleanLiteral))))))))))
 
-# Strings
 
-"A string with \"double\" and 'single' quotes"
-'A string with "double" and \'single\' quotes'
-'\\'
-"\\"
+# Strings & Char
 
+
+def a = "A string with \"double\" and 'single' quotes"
+def b = """A Multi-line string
+New line
 """
-asd
-"""
+def c = 'A'
+def d = raw"""""""
+A raw string with "quotes" & """Multi-line quotes"""
+"""""""
 
 ==>
 
-Rel(StringLiteral,
-    StringLiteral,
-    StringLiteral,
-    StringLiteral,
-    ExpressionStatement(MultilineStringLiteral))
+Rel(
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(StaticStringLiteral)))))))))),
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(StaticMultilineStringLiteral)))))))))),
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(CharLiteral)))))))))),
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(
+                                    Literal(
+                                        BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))))
 
-# Rel
 
-:test
-:[]
+# Relnames
+
+def a = :test
+def b = :[]
 
 ==>
 
-Rel(ExpressionStatement(RelnameLiteral),
-  ExpressionStatement(RelnameLiteral))
+Rel(
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))))),
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))))))
 
-# If Statement
-
-if 1 then 2 else 3 end
-
-==>
-
-Rel(IfStatement(if,Body(ExpressionStatement(Number)),then,Body(ExpressionStatement(Number)),else,Body(ExpressionStatement(Number)),end))
-
-# Inline Statement
+# Attribute Statement
 
 @inline
-
-==>
-
-Rel(InlineStatement(inline))
-
-# Def Statement
-
+@function
+@static
+@inline
+@ondemand
 def a = 1
 
 ==>
 
-Rel(DefineStatement(def, VariableName, AssignOp), ExpressionStatement(Number))
+Rel(
+    DefinitionStatement(
+        Attribute(AttributeKeyword),
+        Attribute(AttributeKeyword),
+        Attribute(AttributeKeyword),
+        Attribute(AttributeKeyword),
+        Attribute(AttributeKeyword),
+        Keyword,
+        LhsId(BasicId),
+        Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
 
-# Output Statement
+
+# Emphasis Keywords
 
 def output = A
+def insert = B
+def delete = C
+def abort = D
+def export = E
+
 
 ==>
 
-Rel(OutputDefinitionStatement(def, output, AssignOp, VariableName))
+Rel(
+    DefinitionStatement(
+        Keyword, LhsId(Emphasis), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(BasicId)))))))),
+    DefinitionStatement(
+        Keyword, LhsId(Emphasis), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(BasicId)))))))),
+    DefinitionStatement(
+        Keyword, LhsId(Emphasis), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(BasicId)))))))),
+    DefinitionStatement(
+        Keyword, LhsId(Emphasis), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(BasicId)))))))),
+
+    DefinitionStatement(
+        Keyword, LhsId(Emphasis), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(BasicId)))))))))
+
 
 # Module Statement
 
@@ -91,12 +231,74 @@ module store def a = 1 end
 
 ==>
 
-Rel(ModuleStatement(module, VariableName, Body(DefineStatement(def, VariableName, AssignOp), ExpressionStatement(Number)), end))
+Rel(
+    ModuleStatement(
+        Keyword, LhsId(BasicId), DefinitionStatement(
+            Keyword, LhsId(BasicId), Expression(
+                UnionExpression(
+                    JoinExpression(
+                        OverrideExpression(
+                            RestrictExpression(
+                                LogicalExpression(
+                                    BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+        Keyword))
 
-# Type Statement
+# Value-Type Statement
 
-Int a
+value type Distance = Float
 
 ==>
 
-Rel(TypeStatement(IntType(Int, VariableName)))
+Rel(
+    ValueTypeStatement(
+        Keyword, Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Type)))))))))
+
+# Entity-Type Statement
+
+entity type Professional = String, String
+
+==>
+
+Rel(
+    EntityTypeStatement(
+        Keyword, Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    JoinExpression(
+                        OverrideExpression(
+                            RestrictExpression(
+                                LogicalExpression(
+                                    BasicExpression(Type))))),
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Type)))))))))
+
+# Constraint Statement
+
+ic() {
+    student ⊆ person
+    // Can also be written as `subset(student, person)`.
+}
+
+==>
+
+Rel(
+    ConstraintStatement(
+        Keyword, FormalParamsParen, Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(
+                                    BasicExpression(BasicId),
+                                    OperatorKeyword,
+                                    BasicExpression(BasicId)))))))),
+        LineComment))
