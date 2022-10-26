@@ -104,11 +104,9 @@ AliasId { ( id | Operator ) }
 
 Alias { ( id | Operator ) ( kw<"as"> AliasId )? }
 
-QualifiedNameElem { BasicId ~idConflict | ParenOpId ~parenOpConflict }
-
 QualifiedNameId { emphasisKeyword | BasicId ~idConflict | ParenOpId ~parenOpConflict | type ~typeConflict }
 
-QualifiedName { QualifiedNameId ( !relname ":" QualifiedNameElem)+ }
+QualifiedName { QualifiedNameId QualifiedNameElem+ }
 
 emphasisKeyword[@dynamicPrecedence=1] {
     emp<"output"> |
@@ -173,8 +171,6 @@ RawStringSequence {
 RawStringLiteral {
     kw<"raw"> RawStringSequence
 }
-
-InterpolationId { "%" basicIdentifier }
 
 Interpolation {
     InterpolationId |
@@ -480,6 +476,9 @@ FormalParamsParen { "(" FormalParams? ")" }
     DocstringLiteral { '"' (!["\r\n\\] | EscapeChar)* '"' }
     MultilineDocstringLiteral { '"""' ( '"'? '"'? (!["\\] | EscapeChar))* '"""' }
 
+    QualifiedNameElem { ":" BasicId | ":(" Operator ")" }
+    InterpolationId { "%" basicIdentifier }
+
     quote1 { '"' }
     quote3 { '"""' }
     quote5 { '"""""' }
@@ -498,6 +497,7 @@ FormalParamsParen { "(" FormalParams? ")" }
     @precedence { BasicId Operator }
     @precedence { FloatLiteral Operator }
     @precedence { "..." Operator ":" }
+    @precedence { QualifiedNameElem ":" }
     @precedence { basicIdentifier "_" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
