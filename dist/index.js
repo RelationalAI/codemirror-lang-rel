@@ -657,7 +657,7 @@ const relLanguage = LRLanguage.define({
                 "LogicalParam/LogicalExpression/BasicExpression/BasicId": tags.attributeName,
                 "FormalId/BasicId": tags.attributeName,
                 "InterpolationId AliasId/BasicId": tags.labelName,
-                "QualifiedNameElem RelnameLiteral ValueTypeLiteral": tags.literal,
+                "QualifiedNameElem RelnameLiteral RelnameStringLiteral RelnameMultilineStringLiteral ValueTypeLiteral": tags.literal,
                 "DateLiteral DateTimeLiteral": tags.string,
                 "Operator OperatorKeyword": tags.operatorKeyword,
                 '( )': tags.paren,

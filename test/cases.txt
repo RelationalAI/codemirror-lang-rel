@@ -120,6 +120,7 @@ Rel(
 
 def a = :test
 def b = :[]
+def c = :"A string relname literal"
 
 ==>
 
@@ -139,7 +140,15 @@ Rel(
                     OverrideExpression(
                         RestrictExpression(
                             LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))))))
+                                BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))))),
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(RelnameStringLiteral)))))))))))
 
 # Attribute Statement
 

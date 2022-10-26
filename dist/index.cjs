@@ -661,7 +661,7 @@ const relLanguage = language.LRLanguage.define({
                 "LogicalParam/LogicalExpression/BasicExpression/BasicId": highlight.tags.attributeName,
                 "FormalId/BasicId": highlight.tags.attributeName,
                 "InterpolationId AliasId/BasicId": highlight.tags.labelName,
-                "QualifiedNameElem RelnameLiteral ValueTypeLiteral": highlight.tags.literal,
+                "QualifiedNameElem RelnameLiteral RelnameStringLiteral RelnameMultilineStringLiteral ValueTypeLiteral": highlight.tags.literal,
                 "DateLiteral DateTimeLiteral": highlight.tags.string,
                 "Operator OperatorKeyword": highlight.tags.operatorKeyword,
                 '( )': highlight.tags.paren,
