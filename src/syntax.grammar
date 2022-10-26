@@ -104,11 +104,9 @@ AliasId { ( id | Operator ) }
 
 Alias { ( id | Operator ) ( kw<"as"> AliasId )? }
 
-QualifiedNameElem { BasicId ~idConflict | ParenOpId ~parenOpConflict }
-
 QualifiedNameId { emphasisKeyword | BasicId ~idConflict | ParenOpId ~parenOpConflict | type ~typeConflict }
 
-QualifiedName { QualifiedNameId ( !relname ":" QualifiedNameElem)+ }
+QualifiedName { QualifiedNameId QualifiedNameElem+ }
 
 emphasisKeyword[@dynamicPrecedence=1] {
     emp<"output"> |
@@ -174,8 +172,6 @@ RawStringLiteral {
     kw<"raw"> RawStringSequence
 }
 
-InterpolationId { "%" basicIdentifier }
-
 Interpolation {
     InterpolationId |
     "%(" Expression ")"
@@ -188,10 +184,6 @@ InterpolationLiteral {
 InterpolationMultilineLiteral {
     quote3 staticMultilineStringPart? Interpolation (staticMultilineStringPart | Interpolation)* quote3
 }
-
-RelnameLiteral { ( !relname ":" "^"? (basicIdentifier | "_") | ":[]" ) }
-RelnameStringLiteral { !relname ":" StaticStringLiteral }
-RelnameMultilineStringLiteral { !relname ":" StaticMultilineStringLiteral }
 
 BaseLiteral {
     IntLiteral |
@@ -480,6 +472,13 @@ FormalParamsParen { "(" FormalParams? ")" }
     DocstringLiteral { '"' (!["\r\n\\] | EscapeChar)* '"' }
     MultilineDocstringLiteral { '"""' ( '"'? '"'? (!["\\] | EscapeChar))* '"""' }
 
+    RelnameLiteral { ( ":" "^"? (basicIdentifier | "_") | ":[]" ) }
+    RelnameStringLiteral { ":" StaticStringLiteral }
+    RelnameMultilineStringLiteral { ":" StaticMultilineStringLiteral }
+
+    QualifiedNameElem { ":" BasicId | ":(" Operator ")" }
+    InterpolationId { "%" basicIdentifier }
+
     quote1 { '"' }
     quote3 { '"""' }
     quote5 { '"""""' }
@@ -498,7 +497,8 @@ FormalParamsParen { "(" FormalParams? ")" }
     @precedence { BasicId Operator }
     @precedence { FloatLiteral Operator }
     @precedence { "..." Operator ":" }
-    @precedence { basicIdentifier "_" }
+    @precedence { QualifiedNameElem ":" }
+    @precedence { RelnameLiteral ":" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
 
