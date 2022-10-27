@@ -4,7 +4,8 @@
   "description": "CodeMirror 6 language support for Rel",
   "scripts": {
     "test": "mocha test/test.js",
-    "prepare": "rollup -c"
+    "generate": "lezer-generator src/syntax.grammar -o src/parser.js",
+    "prepare": "npm run generate && rollup -c"
   },
   "type": "module",
   "main": "dist/index.cjs",

@@ -1,8 +1,10 @@
-import {parser} from "./syntax.grammar"
 import {LRLanguage, LanguageSupport, foldNodeProp} from "@codemirror/language"
 import {styleTags, tags} from "@lezer/highlight"
 import {completeFromList} from "@codemirror/autocomplete"
 import {autocompleteList} from './autocompleteList'
+import {parser} from "./parser.js"
+import * as relTerms from './parser.terms.js';
+
 
 export const relLanguage = LRLanguage.define({
   parser: parser.configure({
@@ -59,3 +61,7 @@ export const relCompletion = relLanguage.data.of({
 export function rel() {
   return new LanguageSupport(relLanguage, [relCompletion])
 }
+
+export {
+  relTerms
+};
