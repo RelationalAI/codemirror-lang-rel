@@ -147,7 +147,7 @@ const relLanguage = LRLanguage.define({
     }
 });
 function rel() {
-    return new LanguageSupport(relLanguage);
+    return new LanguageSupport(relLanguage, []);
 }
 
 export { rel, relLanguage, parser_terms as relTerms };
