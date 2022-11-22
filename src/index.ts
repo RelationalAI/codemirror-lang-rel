@@ -14,7 +14,7 @@ export const relLanguage = LRLanguage.define({
         "IntLiteral FloatLiteral": tags.number,
         BooleanLiteral: tags.bool,
         CharLiteral: tags.character,
-        "DocstringLiteral MultilineDocstringLiteral": tags.docString,
+        "DocstringLiteral MultilineDocstringLiteral MultilineDocstringRawLiteral": tags.docString,
         "StaticStringLiteral/...": tags.string,
         "StaticMultilineStringLiteral RawStringSequence InterpolationLiteral InterpolationMultilineLiteral": tags.string,
         LineComment: tags.lineComment,
@@ -52,7 +52,7 @@ export const relLanguage = LRLanguage.define({
 })
 
 export function rel() {
-  return new LanguageSupport(relLanguage, [])
+  return new LanguageSupport(relLanguage)
 }
 
 export {
