@@ -42,7 +42,8 @@ declaration[@isGroup=Declaration] {
 
 Docstring {
     kw<"doc"> DocstringLiteral |
-    kw<"doc"> MultilineDocstringLiteral
+    kw<"doc"> MultilineDocstringLiteral |
+    kw<"doc"> MultilineDocstringRawLiteral
 }
 
 /*
@@ -469,8 +470,11 @@ FormalParamsParen { "(" FormalParams? ")" }
     staticStringPart { staticSequence+ }
     staticMultilineStringPart { multiStaticSequence+ }
 
-    DocstringLiteral { '"' (!["\r\n\\] | EscapeChar)* '"' }
-    MultilineDocstringLiteral { '"""' ( '"'? '"'? (!["\\] | EscapeChar))* '"""' }
+    DocstringLiteral { quote1 (!["\r\n\\] | EscapeChar)* quote1 }
+    MultilineDocstringLiteral {
+        quote3 ( quote1? quote1? (!["\\] | EscapeChar))* quote3
+    }
+    MultilineDocstringRawLiteral { quote5 rawChar* quote5 }
 
     RelnameLiteral { ( ":" "^"? (basicIdentifier | "_") | ":[]" ) }
     RelnameStringLiteral { ":" StaticStringLiteral }
@@ -501,6 +505,7 @@ FormalParamsParen { "(" FormalParams? ")" }
     @precedence { RelnameLiteral ":" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
+    @precedence { MultilineDocstringRawLiteral MultilineDocstringLiteral DocstringLiteral }
 
 }
 
