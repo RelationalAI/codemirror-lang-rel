@@ -151,7 +151,7 @@ const relLanguage = language.LRLanguage.define({
     }
 });
 function rel() {
-    return new language.LanguageSupport(relLanguage, []);
+    return new language.LanguageSupport(relLanguage);
 }
 
 exports.rel = rel;

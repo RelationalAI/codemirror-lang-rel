@@ -52,7 +52,7 @@ export const relLanguage = LRLanguage.define({
 })
 
 export function rel() {
-  return new LanguageSupport(relLanguage, [])
+  return new LanguageSupport(relLanguage)
 }
 
 export {
