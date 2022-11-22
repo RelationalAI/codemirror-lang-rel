@@ -311,3 +311,47 @@ Rel(
                                     OperatorKeyword,
                                     BasicExpression(BasicId)))))))),
         LineComment))
+
+# DocStrings
+
+
+doc"A single-line docstring"
+def a = 1
+
+doc"""
+    A multi-line docstring with escape sequence \\ \n
+"""
+def a = 1
+
+doc"""""
+    A multi-line raw docstring \
+"""""
+def a = 1
+
+==>
+
+Rel(
+    DefinitionStatement(
+        Docstring(Keyword, DocstringLiteral), Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+    DefinitionStatement(
+        Docstring(Keyword, MultilineDocstringLiteral), Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+    DefinitionStatement(
+        Docstring(Keyword, MultilineDocstringRawLiteral), Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
