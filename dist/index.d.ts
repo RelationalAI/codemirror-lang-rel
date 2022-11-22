@@ -71,6 +71,5 @@ declare namespace relTerms {
     const AliasId: 187;
 }
 declare const relLanguage: LRLanguage;
-declare const relCompletion: import("@codemirror/state").Extension;
 declare function rel(): LanguageSupport;
-export { relLanguage, relCompletion, rel, relTerms };
+export { relLanguage, rel, relTerms };
