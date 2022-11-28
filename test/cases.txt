@@ -74,8 +74,12 @@ New line
 """
 def c = 'A'
 def d = raw"""""""
-A raw string with "quotes" & """Multi-line quotes"""
+A raw string with "quotes" & """Multi-line quotes""" \\ Slashes
 """""""
+def e = raw"""""""""""
+A raw string with 11 quotes
+"""""""""""
+def f = raw""
 
 ==>
 
@@ -113,7 +117,27 @@ Rel(
                             LogicalExpression(
                                 BasicExpression(
                                     Literal(
-                                        BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))))
+                                        BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))),
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(
+                                    Literal(
+                                        BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))),
+    DefinitionStatement(
+            Keyword, LhsId(BasicId), Expression(
+                UnionExpression(
+                    JoinExpression(
+                        OverrideExpression(
+                            RestrictExpression(
+                                LogicalExpression(
+                                    BasicExpression(
+                                        Literal(
+                                            BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))))
 
 
 # Relnames
@@ -311,3 +335,47 @@ Rel(
                                     OperatorKeyword,
                                     BasicExpression(BasicId)))))))),
         LineComment))
+
+# DocStrings
+
+
+doc"A single-line docstring"
+def a = 1
+
+doc"""
+    A multi-line docstring with escape sequence \\ \n
+"""
+def a = 1
+
+doc"""""
+    A multi-line raw docstring \
+"""""
+def a = 1
+
+==>
+
+Rel(
+    DefinitionStatement(
+        Docstring(Keyword, DocstringLiteral), Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+    DefinitionStatement(
+        Docstring(Keyword, MultilineDocstringLiteral), Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+    DefinitionStatement(
+        Docstring(Keyword, MultilineDocstringRawLiteral), Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))

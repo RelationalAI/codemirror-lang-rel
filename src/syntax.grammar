@@ -42,7 +42,8 @@ declaration[@isGroup=Declaration] {
 
 Docstring {
     kw<"doc"> DocstringLiteral |
-    kw<"doc"> MultilineDocstringLiteral
+    kw<"doc"> MultilineDocstringLiteral |
+    kw<"doc"> MultilineDocstringRawLiteral
 }
 
 /*
@@ -154,18 +155,8 @@ type {
  * Literals
  */
 
-
-/*
- * Raw strings can't be recognized as in ANTLR parser
- * since commands are not supported in lezer parser,
- * so the implementation here is limited to a maximum of 7 quotes
- * TODO generalize to support N quotes
- */
-RawStringSequence {
-    quote1 (rawChar)* quote1 |
-    quote3 (rawChar | quote1)* quote3 |
-    quote5 (rawChar | quote1 | quote3)* quote5 |
-    quote7 (rawChar | quote1 | quote3 | quote5)* quote7
+@external tokens rawString from "./tokenizers.js" {
+  RawStringSequence
 }
 
 RawStringLiteral {
@@ -469,8 +460,11 @@ FormalParamsParen { "(" FormalParams? ")" }
     staticStringPart { staticSequence+ }
     staticMultilineStringPart { multiStaticSequence+ }
 
-    DocstringLiteral { '"' (!["\r\n\\] | EscapeChar)* '"' }
-    MultilineDocstringLiteral { '"""' ( '"'? '"'? (!["\\] | EscapeChar))* '"""' }
+    DocstringLiteral { quote1 (!["\r\n\\] | EscapeChar)* quote1 }
+    MultilineDocstringLiteral {
+        quote3 ( quote1? quote1? (!["\\] | EscapeChar))* quote3
+    }
+    MultilineDocstringRawLiteral { quote5 rawChar* quote5 }
 
     RelnameLiteral { ( ":" "^"? (basicIdentifier | "_") | ":[]" ) }
     RelnameStringLiteral { ":" StaticStringLiteral }
@@ -482,7 +476,6 @@ FormalParamsParen { "(" FormalParams? ")" }
     quote1 { '"' }
     quote3 { '"""' }
     quote5 { '"""""' }
-    quote7 { '"""""""' }
     rawChar { !["] }
 
     CharLiteral { "'" ( !['\\] | EscapeChar ) "'" }
@@ -490,8 +483,8 @@ FormalParamsParen { "(" FormalParams? ")" }
     LineComment { "//" ![\n]* }
     BlockComment { "/*" ( ![*] | "*"+ ![/*] )* "*"+ "/" }
 
-    @precedence { rawChar spaces newLine BlockComment LineComment DocstringLiteral staticStringPart }
-    @precedence { rawChar spaces newLine BlockComment LineComment MultilineDocstringLiteral staticMultilineStringPart }
+    @precedence { spaces newLine BlockComment LineComment DocstringLiteral staticStringPart }
+    @precedence { spaces newLine BlockComment LineComment MultilineDocstringLiteral staticMultilineStringPart }
     @precedence { DateTimeLiteral DateLiteral FloatLiteral IntLiteral }
     @precedence { BooleanLiteral BasicId }
     @precedence { BasicId Operator }
@@ -501,6 +494,7 @@ FormalParamsParen { "(" FormalParams? ")" }
     @precedence { RelnameLiteral ":" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
+    @precedence { MultilineDocstringRawLiteral MultilineDocstringLiteral DocstringLiteral }
 
 }
 
