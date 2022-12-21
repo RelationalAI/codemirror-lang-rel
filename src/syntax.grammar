@@ -29,6 +29,7 @@
 
 declaration[@isGroup=Declaration] {
     DefinitionStatement |
+    BoundStatement |
     ValueTypeStatement |
     EntityTypeStatement |
     ConstraintStatement |
@@ -68,6 +69,10 @@ Attribute { "@" attributeKeyword ( "(" AttributeParams ")" )? }
 
 DefinitionStatement {
     Docstring? Attribute* kw<"def"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
+}
+
+BoundStatement {
+    Docstring? Attribute* kw<"bound"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )?
 }
 
 ValueTypeStatement {

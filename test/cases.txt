@@ -336,6 +336,24 @@ Rel(
                                     BasicExpression(BasicId)))))))),
         LineComment))
 
+# BoundStatement
+
+bound R = Int
+
+==>
+
+Rel(
+    BoundStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Type)))))))))
+
+
+
 # DocStrings
 
 
