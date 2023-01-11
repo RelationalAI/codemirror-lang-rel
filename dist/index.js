@@ -170,7 +170,7 @@ const relLanguage = LRLanguage.define({
     parser: parser.configure({
         props: [
             styleTags({
-                "Keyword AttributeKeyword": tags.keyword,
+                "Keyword AnnotationKeyword": tags.keyword,
                 Type: tags.typeName,
                 Emphasis: tags.emphasis,
                 "IntLiteral FloatLiteral": tags.number,
