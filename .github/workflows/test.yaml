@@ -31,8 +31,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Prepare
-        run: npm prepare
-
       - name: Run tests
         run: npm run test
