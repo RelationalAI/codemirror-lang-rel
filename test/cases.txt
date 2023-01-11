@@ -187,11 +187,11 @@ def a = 1
 
 Rel(
     DefinitionStatement(
-        Attribute(AttributeKeyword),
-        Attribute(AttributeKeyword),
-        Attribute(AttributeKeyword),
-        Attribute(AttributeKeyword),
-        Attribute(AttributeKeyword),
+        Annotation(AnnotationKeyword),
+        Annotation(AnnotationKeyword),
+        Annotation(AnnotationKeyword),
+        Annotation(AnnotationKeyword),
+        Annotation(AnnotationKeyword),
         Keyword,
         LhsId(BasicId),
         Expression(

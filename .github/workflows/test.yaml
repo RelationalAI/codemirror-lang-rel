@@ -1,0 +1,38 @@
+name: Grammar Test
+
+on:
+  push:
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "rollup.config.js"
+      - "test/**"
+      - "src/**"
+      - "dist/**"
+      - ".github/workflows/test.yaml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: ["14.19.0"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Prepare
+        run: npm prepare
+
+      - name: Run tests
+        run: npm run test
