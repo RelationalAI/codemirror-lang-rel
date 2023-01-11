@@ -1,8 +1,8 @@
 import { LRLanguage, LanguageSupport } from "@codemirror/language";
 declare namespace relTerms {
     const RawStringSequence: 1;
-    const spaces: 196;
-    const newLine: 197;
+    const spaces: 198;
+    const newLine: 199;
     const LineComment: 2;
     const BlockComment: 3;
     const Rel: 4;
@@ -63,13 +63,14 @@ declare namespace relTerms {
     const AbstractExpression: 167;
     const InterpolationMultilineLiteral: 168;
     const FormalParamsParen: 171;
-    const ValueTypeStatement: 172;
-    const EntityTypeStatement: 173;
-    const ConstraintStatement: 174;
-    const ModuleStatement: 176;
-    const UseStatement: 178;
-    const Alias: 181;
-    const AliasId: 183;
+    const BoundStatement: 172;
+    const ValueTypeStatement: 174;
+    const EntityTypeStatement: 175;
+    const ConstraintStatement: 176;
+    const ModuleStatement: 178;
+    const UseStatement: 180;
+    const Alias: 183;
+    const AliasId: 185;
 }
 declare const relLanguage: LRLanguage;
 declare function rel(): LanguageSupport;

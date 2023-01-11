@@ -72,7 +72,7 @@ DefinitionStatement {
 }
 
 BoundStatement {
-    Docstring? Attribute* kw<"bound"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )?
+    Docstring? Annotation* kw<"bound"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )?
 }
 
 ValueTypeStatement {

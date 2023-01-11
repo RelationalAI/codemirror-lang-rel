@@ -336,7 +336,7 @@ Rel(
                                     BasicExpression(BasicId)))))))),
         LineComment))
 
-# BoundStatement
+# Bound Statement
 
 bound R = Int
 
