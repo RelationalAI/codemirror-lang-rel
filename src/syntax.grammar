@@ -29,6 +29,7 @@
 
 declaration[@isGroup=Declaration] {
     DefinitionStatement |
+    BoundStatement |
     ValueTypeStatement |
     EntityTypeStatement |
     ConstraintStatement |
@@ -68,6 +69,10 @@ Annotation { AnnotationKeyword ( "(" AnnotationParams ")" )? }
 
 DefinitionStatement {
     Docstring? Annotation* kw<"def"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
+}
+
+BoundStatement {
+    Docstring? Annotation* kw<"bound"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )?
 }
 
 ValueTypeStatement {
