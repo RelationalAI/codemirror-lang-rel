@@ -48,27 +48,27 @@ Docstring {
 }
 
 /*
- * Attribute Statement
+ * Annotation Statement
  */
 
-attributeKeyword {
-    attrKw<"function"> |
-    attrKw<"inline"> |
-    attrKw<"ondemand"> |
-    attrKw<"outline"> |
-    attrKw<"static">
+AnnotationKeyword {
+    annotationKw<"function"> |
+    annotationKw<"inline"> |
+    annotationKw<"ondemand"> |
+    annotationKw<"outline"> |
+    annotationKw<"static">
 }
 
-AttributeParams { commaSep1<BaseLiteral> }
+AnnotationParams { commaSep1<BaseLiteral> }
 
-Attribute { "@" attributeKeyword ( "(" AttributeParams ")" )? }
+Annotation { AnnotationKeyword ( "(" AnnotationParams ")" )? }
 
 /*
  * Declaration Statements
  */
 
 DefinitionStatement {
-    Docstring? Attribute* kw<"def"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
+    Docstring? Annotation* kw<"def"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
 }
 
 BoundStatement {
@@ -76,19 +76,19 @@ BoundStatement {
 }
 
 ValueTypeStatement {
-    Docstring? Attribute* kw<"value"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
 EntityTypeStatement {
-    Docstring? Attribute* kw<"entity"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
 ConstraintStatement {
-    Docstring? Attribute* kw<"ic"> LhsId? FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
+    Docstring? Annotation* kw<"ic"> LhsId? FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
 }
 
 ModuleStatement {
-    Docstring? Attribute* kw<"module"> LhsId FormalParamsBracket* declaration* kw<"end">
+    Docstring? Annotation* kw<"module"> LhsId FormalParamsBracket* declaration* kw<"end">
 }
 
 UseStatement {
@@ -505,7 +505,7 @@ FormalParamsParen { "(" FormalParams? ")" }
 
 kw<term> { @specialize[@name=Keyword]<BasicId, term> }
 
-attrKw<term> { @extend[@name=AttributeKeyword]<BasicId, term> }
+annotationKw<term> { "@" term }
 
 emp<term> { @extend[@name=Emphasis]<BasicId, term> }
 
