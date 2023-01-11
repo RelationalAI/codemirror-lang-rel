@@ -12,7 +12,8 @@ on:
       - ".github/workflows/test.yaml"
 
 jobs:
-  build:
+  grammar-test:
+    name: Run tests
     runs-on: ubuntu-latest
 
     strategy:
