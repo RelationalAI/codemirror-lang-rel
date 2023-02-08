@@ -56,7 +56,8 @@ AnnotationKeyword {
     annotationKw<"inline"> |
     annotationKw<"ondemand"> |
     annotationKw<"outline"> |
-    annotationKw<"static">
+    annotationKw<"static"> |
+    annotationKw<"no_diagnostics">
 }
 
 AnnotationParams { commaSep1<BaseLiteral> }
@@ -469,7 +470,7 @@ FormalParamsParen { "(" FormalParams? ")" }
     MultilineDocstringLiteral {
         quote3 ( quote1? quote1? (!["\\] | EscapeChar))* quote3
     }
-    MultilineDocstringRawLiteral { quote5 rawChar* quote5 }
+    MultilineDocstringRawLiteral { quote5 (quote1 | rawChar)* quote5 }
 
     RelnameLiteral { ( ":" "^"? (basicIdentifier | "_") | ":[]" ) }
     RelnameStringLiteral { ":" StaticStringLiteral }
