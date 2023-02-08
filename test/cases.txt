@@ -366,7 +366,7 @@ doc"""
 def a = 1
 
 doc"""""
-    A multi-line raw docstring \
+    A multi-line raw docstring """ \ """
 """""
 def a = 1
 
@@ -397,3 +397,25 @@ Rel(
                         RestrictExpression(
                             LogicalExpression(
                                 BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
+
+# Comments
+// A single-line comment
+/****
+    // A multi-line comment
+*****/
+def a = 1
+
+==>
+
+Rel(
+    LineComment,
+    BlockComment,
+    DefinitionStatement(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
+
