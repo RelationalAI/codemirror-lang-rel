@@ -36,12 +36,19 @@ export const relLanguage = LRLanguage.define({
         ', ;': tags.separator
       }),
       foldNodeProp.add({
-        MultilineDocstringLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
-        InterpolationMultilineLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
-        StaticMultilineStringLiteral(tree) { return {from: tree.from + 3, to: tree.to - 3} },
-        RawStringSequence(tree) { return {from: tree.from + 1, to: tree.to - 1} },
-        BlockComment(tree) { return {from: tree.from + 2, to: tree.to - 2} },
-        BoundedExpression(tree) { return {from: tree.from + 1, to: tree.to - 1} }
+        MultilineDocstringLiteral(node) { return {from: node.from + 3, to: node.to - 3} },
+        InterpolationMultilineLiteral(node) { return {from: node.from + 3, to: node.to - 3} },
+        InterpolationExpression(node) { return { from: node.from + 2, to: node.to - 1 } },
+        StaticMultilineStringLiteral(node) { return {from: node.from + 3, to: node.to - 3} },
+        RawStringSequence(node, state) {
+          let quotesNum = 0;
+          while(state.sliceDoc(node.from + quotesNum, node.from + quotesNum + 1) === '"') {
+            ++quotesNum
+          }
+          return {from: node.from + quotesNum, to: node.to - quotesNum}
+        },
+        BlockComment(node) { return {from: node.from + 2, to: node.to - 2} },
+        BoundedExpression(node) { return {from: node.from + 1, to: node.to - 1} }
       })
     ]
   }),

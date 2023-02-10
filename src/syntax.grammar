@@ -41,10 +41,17 @@ declaration[@isGroup=Declaration] {
  * Docstring Statement
  */
 
+// Not ideal since RawStringSequence takes precedence over
+// DocstringLiteral/MultilineDocstringLiteral and reversing the
+// precedence won't catch Raw String
+
+// TODO use local tokens for all strings or define an external tokenizer
+// see https://lezer.codemirror.net/docs/guide/#local-token-groups
+
 Docstring {
     kw<"doc"> DocstringLiteral |
     kw<"doc"> MultilineDocstringLiteral |
-    kw<"doc"> MultilineDocstringRawLiteral
+    kw<"doc"> RawStringSequence
 }
 
 /*
@@ -171,8 +178,10 @@ RawStringLiteral {
 
 Interpolation {
     InterpolationId |
-    "%(" Expression ")"
+    InterpolationExpression
 }
+
+InterpolationExpression { "%(" Expression ")" }
 
 InterpolationLiteral {
     quote1 staticStringPart? Interpolation (staticStringPart | Interpolation)* quote1
@@ -470,7 +479,6 @@ FormalParamsParen { "(" FormalParams? ")" }
     MultilineDocstringLiteral {
         quote3 ( quote1? quote1? (!["\\] | EscapeChar))* quote3
     }
-    MultilineDocstringRawLiteral { quote5 (quote1 | rawChar)* quote5 }
 
     RelnameLiteral { ( ":" "^"? (basicIdentifier | "_") | ":[]" ) }
     RelnameStringLiteral { ":" StaticStringLiteral }
@@ -481,8 +489,6 @@ FormalParamsParen { "(" FormalParams? ")" }
 
     quote1 { '"' }
     quote3 { '"""' }
-    quote5 { '"""""' }
-    rawChar { !["] }
 
     CharLiteral { "'" ( !['\\] | EscapeChar ) "'" }
 
@@ -500,7 +506,7 @@ FormalParamsParen { "(" FormalParams? ")" }
     @precedence { RelnameLiteral ":" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
-    @precedence { MultilineDocstringRawLiteral MultilineDocstringLiteral DocstringLiteral }
+    @precedence { MultilineDocstringLiteral DocstringLiteral }
 
 }
 

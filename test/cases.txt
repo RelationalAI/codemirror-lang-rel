@@ -370,11 +370,16 @@ doc"""""
 """""
 def a = 1
 
+doc"""""
+    Another multi-line raw docstring """ \ """
+"""""
+def a = 1
+
 ==>
 
 Rel(
     DefinitionStatement(
-        Docstring(Keyword, DocstringLiteral), Keyword, LhsId(BasicId), Expression(
+        Docstring(Keyword, RawStringSequence), Keyword, LhsId(BasicId), Expression(
             UnionExpression(
                 JoinExpression(
                     OverrideExpression(
@@ -382,7 +387,7 @@ Rel(
                             LogicalExpression(
                                 BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
     DefinitionStatement(
-        Docstring(Keyword, MultilineDocstringLiteral), Keyword, LhsId(BasicId), Expression(
+        Docstring(Keyword, RawStringSequence), Keyword, LhsId(BasicId), Expression(
             UnionExpression(
                 JoinExpression(
                     OverrideExpression(
@@ -390,7 +395,15 @@ Rel(
                             LogicalExpression(
                                 BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
     DefinitionStatement(
-        Docstring(Keyword, MultilineDocstringRawLiteral), Keyword, LhsId(BasicId), Expression(
+        Docstring(Keyword, RawStringSequence), Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+    DefinitionStatement(
+        Docstring(Keyword, RawStringSequence), Keyword, LhsId(BasicId), Expression(
             UnionExpression(
                 JoinExpression(
                     OverrideExpression(
@@ -419,3 +432,59 @@ Rel(
                             LogicalExpression(
                                 BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
 
+# Interpolation
+def output = """
+    %(
+        string_join["\n", {
+            """
+                def n[x] = %(
+                    x + 1
+                )
+            """
+        }]
+    )
+
+"""
+
+def a = "%b"
+
+==>
+
+Rel(
+    DefinitionStatement(
+        Keyword,
+        LhsId(Emphasis),
+        Expression(UnionExpression(JoinExpression(OverrideExpression(RestrictExpression(LogicalExpression(
+            BasicExpression(Literal(InterpolationMultilineLiteral(Interpolation(InterpolationExpression(
+                Expression(UnionExpression(JoinExpression(OverrideExpression(RestrictExpression(LogicalExpression(
+                    BasicExpression(PartialApplicationExpression(
+                        BasicExpression(BasicId),
+                        LogicalParam(LogicalExpression(BasicExpression(Literal(BaseLiteral(StaticStringLiteral))))),
+                        LogicalParam(LogicalExpression(BasicExpression(BoundedExpression(
+                            Expression(UnionExpression(JoinExpression(OverrideExpression(RestrictExpression(LogicalExpression(
+                                BasicExpression(Literal(InterpolationMultilineLiteral(Interpolation(InterpolationExpression(
+                                    Expression(UnionExpression(JoinExpression(OverrideExpression(RestrictExpression(LogicalExpression(
+                                        BasicExpression(
+                                            BasicExpression(BasicId),
+                                            OperatorKeyword,
+                                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
+                                ))))
+                            ))))))
+                        ))))
+                    ))
+                ))))))
+            )))))
+        ))))))
+    ),
+    DefinitionStatement(
+        Keyword,
+        LhsId(BasicId),
+        Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(
+                                    Literal(InterpolationLiteral(Interpolation(InterpolationId)))))))))))
+)
