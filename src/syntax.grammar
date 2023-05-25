@@ -103,7 +103,7 @@ UseStatement {
     kw<"with"> Expression kw<"use"> ("..." | commaSep1<Alias>)
 }
 
-id { BasicId | type ~typeConflict | kw<"type"> | kw<"entity"> | kw<"value"> }
+id { BasicId | ConstructorId | kw<"type"> | kw<"entity"> | kw<"value"> }
 
 ParenOpId { "(" Operator !parenOp ")" }
 
@@ -118,7 +118,12 @@ AliasId { ( id | Operator ) }
 
 Alias { ( id | Operator ) ( kw<"as"> AliasId )? }
 
-QualifiedNameId { emphasisKeyword | BasicId ~idConflict | ParenOpId ~parenOpConflict | type ~typeConflict }
+QualifiedNameId {
+    emphasisKeyword |
+    BasicId ~idConflict |
+    ConstructorId |
+    ParenOpId ~parenOpConflict
+}
 
 QualifiedName { QualifiedNameId QualifiedNameElem+ }
 
@@ -128,40 +133,6 @@ emphasisKeyword[@dynamicPrecedence=1] {
     emp<"delete"> |
     emp<"abort"> |
     emp<"export">
-}
-
-type {
-    relType<"Any"> |
-    relType<"String"> |
-    relType<"Int"> |
-    relType<"Number"> |
-    relType<"Char"> |
-    relType<"Missing"> |
-    relType<"Float"> |
-    relType<"Floating"> |
-    relType<"UnsignedInt"> |
-    relType<"UInt"> |
-    relType<"SignedInt"> |
-    relType<"Rational"> |
-    relType<"FixedDecimal"> |
-    relType<"RelName"> |
-    relType<"Entity"> |
-    relType<"AutoNumber"> |
-    relType<"Hash"> |
-    relType<"FilePos"> |
-    relType<"Date"> |
-    relType<"DateTime"> |
-    relType<"Year"> |
-    relType<"Month"> |
-    relType<"Week"> |
-    relType<"Day"> |
-    relType<"Hour"> |
-    relType<"Minute"> |
-    relType<"Second"> |
-    relType<"Millisecond"> |
-    relType<"Microsecond"> |
-    relType<"Nanosecond"> |
-    relType<"Boolean">
 }
 
 /*
@@ -378,7 +349,8 @@ FormalParamsParen { "(" FormalParams? ")" }
         $[a-zA-Zα-ωΑ-Ω_0-9]
     }
     basicIdentifier { idCharSingle | idCharInit idChar+ }
-    BasicId { "^"? basicIdentifier }
+    BasicId { basicIdentifier }
+    ConstructorId { "^" basicIdentifier }
 
     Operator {
         "." |
@@ -499,7 +471,7 @@ FormalParamsParen { "(" FormalParams? ")" }
     @precedence { spaces newLine BlockComment LineComment MultilineDocstringLiteral staticMultilineStringPart }
     @precedence { DateTimeLiteral DateLiteral FloatLiteral IntLiteral }
     @precedence { BooleanLiteral BasicId }
-    @precedence { BasicId Operator }
+    @precedence { ConstructorId Operator }
     @precedence { FloatLiteral Operator }
     @precedence { "..." Operator ":" }
     @precedence { QualifiedNameElem ":" }
@@ -515,8 +487,6 @@ kw<term> { @specialize[@name=Keyword]<BasicId, term> }
 annotationKw<term> { "@" term }
 
 emp<term> { @extend[@name=Emphasis]<BasicId, term> }
-
-relType<term> { @specialize[@name=Type]<BasicId, term> }
 
 op<oper> { @extend[@name=OperatorKeyword]<Operator, oper> }
 

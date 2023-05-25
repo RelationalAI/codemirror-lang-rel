@@ -9,7 +9,7 @@ export const relLanguage = LRLanguage.define({
     props: [
       styleTags({
         "Keyword AnnotationKeyword": tags.keyword,
-        Type: tags.typeName,
+        ConstructorId: tags.typeName,
         Emphasis: tags.emphasis,
         "IntLiteral FloatLiteral": tags.number,
         BooleanLiteral: tags.bool,
