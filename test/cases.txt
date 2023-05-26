@@ -290,7 +290,7 @@ Rel(
                     OverrideExpression(
                         RestrictExpression(
                             LogicalExpression(
-                                BasicExpression(Type)))))))))
+                                BasicExpression(BasicId)))))))))
 
 # Entity-Type Statement
 
@@ -307,11 +307,11 @@ Rel(
                         OverrideExpression(
                             RestrictExpression(
                                 LogicalExpression(
-                                    BasicExpression(Type))))),
+                                    BasicExpression(BasicId))))),
                     OverrideExpression(
                         RestrictExpression(
                             LogicalExpression(
-                                BasicExpression(Type)))))))))
+                                BasicExpression(BasicId)))))))))
 
 # Constraint Statement
 
@@ -350,7 +350,7 @@ Rel(
                     OverrideExpression(
                         RestrictExpression(
                             LogicalExpression(
-                                BasicExpression(Type)))))))))
+                                BasicExpression(BasicId)))))))))
 
 
 
@@ -488,3 +488,30 @@ Rel(
                                 BasicExpression(
                                     Literal(InterpolationLiteral(Interpolation(InterpolationId)))))))))))
 )
+
+# Constructors
+
+def ^b = ^B[1, 2]
+
+==>
+
+Rel(
+    DefinitionStatement(
+        Keyword,
+        LhsId(ConstructorId),
+        Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(
+                                    PartialApplicationExpression(
+                                        BasicExpression(ConstructorId),
+                                        LogicalParam(
+                                            LogicalExpression(
+                                                BasicExpression(Literal(BaseLiteral(IntLiteral))))),
+                                        LogicalParam(
+                                            LogicalExpression(
+                                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))))))
+
