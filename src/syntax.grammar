@@ -1,4 +1,4 @@
-@top Rel { declaration+ }
+@top Rel { declaration+ | Annotation* Expression }
 
 @skip { spaces | newLine | LineComment | BlockComment }
 
@@ -24,7 +24,8 @@
     xor @right,
     relname @left,
     abstract @left,
-    parenOp
+    parenOp,
+    annot
 }
 
 declaration[@isGroup=Declaration] {
@@ -69,7 +70,7 @@ AnnotationKeyword {
 
 AnnotationParams { commaSep1<BaseLiteral> }
 
-Annotation { AnnotationKeyword ( "(" AnnotationParams ")" )? }
+Annotation { AnnotationKeyword ( !annot "(" AnnotationParams ")" )? }
 
 /*
  * Declaration Statements
