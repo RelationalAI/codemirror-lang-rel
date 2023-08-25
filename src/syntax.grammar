@@ -1,3 +1,5 @@
+@detectDelim
+
 @top Rel { declaration+ | Annotation* Expression }
 
 @skip { spaces | newLine | LineComment | BlockComment }
@@ -50,9 +52,9 @@ declaration[@isGroup=Declaration] {
 // see https://lezer.codemirror.net/docs/guide/#local-token-groups
 
 Docstring {
-    kw<"doc"> DocstringLiteral |
-    kw<"doc"> MultilineDocstringLiteral |
-    kw<"doc"> RawStringSequence
+    xkw<"doc"> DocstringLiteral |
+    xkw<"doc"> MultilineDocstringLiteral |
+    xkw<"doc"> RawStringSequence
 }
 
 /*
@@ -85,11 +87,11 @@ BoundStatement {
 }
 
 ValueTypeStatement {
-    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Annotation* xkw<"value"> xkw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
 EntityTypeStatement {
-    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Annotation* xkw<"entity"> xkw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
 ConstraintStatement {
@@ -97,14 +99,14 @@ ConstraintStatement {
 }
 
 ModuleStatement {
-    Docstring? Annotation* kw<"module"> LhsId FormalParamsBracket* declaration* kw<"end">
+    Docstring? Annotation* kw<"module"> LhsId FormalParamsBracket* declaration* xkw<"end">
 }
 
 UseStatement {
     kw<"with"> Expression kw<"use"> ("..." | commaSep1<Alias>)
 }
 
-id { BasicId | ConstructorId | kw<"type"> | kw<"entity"> | kw<"value"> }
+id { BasicId | ConstructorId }
 
 ParenOpId { "(" Operator !parenOp ")" }
 
@@ -145,7 +147,7 @@ emphasisKeyword[@dynamicPrecedence=1] {
 }
 
 RawStringLiteral {
-    kw<"raw"> RawStringSequence
+    xkw<"raw"> RawStringSequence
 }
 
 Interpolation {
@@ -237,7 +239,7 @@ BasicExpression {
     BasicExpression !compL op<"⊂"> BasicExpression |
     BasicExpression !compL op<"⊃"> BasicExpression |
     BoundedExpression |
-    kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression kw<"end"> |
+    kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression xkw<"end"> |
     ( kw<"forall"> | "∀" ) "(" Bindings ":" Expression ")"
 }
 
@@ -485,6 +487,8 @@ FormalParamsParen { "(" FormalParams? ")" }
 
 kw<term> { @specialize[@name=Keyword]<BasicId, term> }
 
+xkw<term> { @extend[@name=Keyword]<BasicId, term> }
+
 annotationKw<term> { "@" term }
 
 emp<term> { @extend[@name=Emphasis]<BasicId, term> }
@@ -494,5 +498,3 @@ op<oper> { @extend[@name=OperatorKeyword]<Operator, oper> }
 commaSep1<rule> { rule ( !param "," rule )* }
 
 commaSep2<rule> { rule !param "," rule ( !param "," rule )* }
-
-@detectDelim
