@@ -31,13 +31,13 @@
 }
 
 declaration[@isGroup=Declaration] {
-    DefinitionStatement |
-    BoundStatement |
-    ValueTypeStatement |
-    EntityTypeStatement |
-    ConstraintStatement |
-    ModuleStatement |
-    UseStatement
+    DefinitionDeclaration |
+    BoundDeclaration |
+    ValueTypeDeclaration |
+    EntityTypeDeclaration |
+    ConstraintDeclaration |
+    ModuleDeclaration |
+    WithUseDeclaration
 }
 
 /*
@@ -75,34 +75,34 @@ AnnotationParams { commaSep1<BaseLiteral> }
 Annotation { AnnotationKeyword ( !annot "(" AnnotationParams ")" )? }
 
 /*
- * Declaration Statements
+ * Declarations
  */
 
-DefinitionStatement {
+DefinitionDeclaration {
     Docstring? Annotation* kw<"def"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
 }
 
-BoundStatement {
+BoundDeclaration {
     Docstring? Annotation* kw<"bound"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )?
 }
 
-ValueTypeStatement {
+ValueTypeDeclaration {
     Docstring? Annotation* xkw<"value"> xkw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
-EntityTypeStatement {
+EntityTypeDeclaration {
     Docstring? Annotation* xkw<"entity"> xkw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
-ConstraintStatement {
+ConstraintDeclaration {
     Docstring? Annotation* kw<"ic"> LhsId? FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
 }
 
-ModuleStatement {
-    Docstring? Annotation* kw<"module"> LhsId FormalParamsBracket* declaration* xkw<"end">
+ModuleDeclaration {
+    Docstring? Annotation* kw<"module"> LhsId FormalParamsBracket* declaration* kw<"end">
 }
 
-UseStatement {
+WithUseDeclaration {
     kw<"with"> Expression kw<"use"> ("..." | commaSep1<Alias>)
 }
 
@@ -125,7 +125,35 @@ QualifiedNameId {
     emphasisKeyword |
     BasicId ~idConflict |
     ConstructorId |
-    ParenOpId ~parenOpConflict
+    ParenOpId ~parenOpConflict |
+    QualifiedKeyword
+}
+
+// Keywords have to be hardcoded here since they are specialized
+// in the grammar to avoid using them as identifiers, except for the case of QualifiedNameId
+QualifiedKeyword {
+    kw<"def"> |
+    kw<"bound"> |
+    kw<"ic"> |
+    kw<"module"> |
+    kw<"end"> |
+    kw<"with"> |
+    kw<"use"> |
+    kw<"as"> |
+    kw<"if"> |
+    kw<"then"> |
+    kw<"else"> |
+    kw<"forall"> |
+    kw<"exists"> |
+    kw<"and"> |
+    kw<"or"> |
+    kw<"not"> |
+    kw<"implies"> |
+    kw<"iff"> |
+    kw<"xor"> |
+    kw<"where"> |
+    kw<"for"> |
+    kw<"from">
 }
 
 QualifiedName { QualifiedNameId QualifiedNameElem+ }
@@ -239,7 +267,7 @@ BasicExpression {
     BasicExpression !compL op<"⊂"> BasicExpression |
     BasicExpression !compL op<"⊃"> BasicExpression |
     BoundedExpression |
-    kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression xkw<"end"> |
+    kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression kw<"end"> |
     ( kw<"forall"> | "∀" ) "(" Bindings ":" Expression ")"
 }
 
@@ -477,8 +505,7 @@ FormalParamsParen { "(" FormalParams? ")" }
     @precedence { ConstructorId Operator }
     @precedence { FloatLiteral Operator }
     @precedence { "..." Operator ":" }
-    @precedence { QualifiedNameElem ":" }
-    @precedence { RelnameLiteral ":" }
+    @precedence { RelnameLiteral QualifiedNameElem ":" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
     @precedence { MultilineDocstringLiteral DocstringLiteral }

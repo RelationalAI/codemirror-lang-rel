@@ -21,6 +21,7 @@ export const relLanguage = LRLanguage.define({
         BlockComment: tags.blockComment,
         BasicId: tags.attributeName,
         "LhsId/BasicId LhsId/QualifiedName/QualifiedNameId/BasicId": tags.definition(tags.variableName),
+        "LhsId/QualifiedName/QualifiedNameId/QualifiedKeyword": tags.definition(tags.variableName),
         "PartialApplicationExpression/BasicExpression/BasicId": tags.variableName,
         "ApplicationExpression/BasicExpression/BasicId": tags.variableName,
         "LogicalParam/LogicalExpression/BasicExpression/BasicId": tags.attributeName,
