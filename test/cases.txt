@@ -596,6 +596,9 @@ module a
     def entity = 3
     def type = 4
     def raw = 5
+    def implies = 6
+    def iff = 7
+    def xor = 8
 end
 
 ==>
@@ -616,7 +619,7 @@ Rel(
                                     BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
         DefinitionDeclaration(
             Keyword,
-            LhsId(BasicId),
+            LhsId(Keyword),
             Expression(
                 UnionExpression(
                     JoinExpression(
@@ -626,7 +629,7 @@ Rel(
                                     BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
         DefinitionDeclaration(
             Keyword,
-            LhsId(BasicId),
+            LhsId(Keyword),
             Expression(
                 UnionExpression(
                     JoinExpression(
@@ -636,7 +639,7 @@ Rel(
                                     BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
         DefinitionDeclaration(
             Keyword,
-            LhsId(BasicId),
+            LhsId(Keyword),
             Expression(
                 UnionExpression(
                     JoinExpression(
@@ -654,4 +657,34 @@ Rel(
                         RestrictExpression(
                             LogicalExpression(
                                 BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+        DefinitionDeclaration(
+                    Keyword,
+                    LhsId(Keyword),
+                    Expression(
+                        UnionExpression(
+                            JoinExpression(
+                                OverrideExpression(
+                                    RestrictExpression(
+                                        LogicalExpression(
+                                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+        DefinitionDeclaration(
+                    Keyword,
+                    LhsId(Keyword),
+                    Expression(
+                        UnionExpression(
+                            JoinExpression(
+                                OverrideExpression(
+                                    RestrictExpression(
+                                        LogicalExpression(
+                                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+        DefinitionDeclaration(
+                    Keyword,
+                    LhsId(Keyword),
+                    Expression(
+                        UnionExpression(
+                            JoinExpression(
+                                OverrideExpression(
+                                    RestrictExpression(
+                                        LogicalExpression(
+                                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
         Keyword))

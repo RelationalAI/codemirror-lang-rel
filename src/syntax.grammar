@@ -87,11 +87,11 @@ BoundDeclaration {
 }
 
 ValueTypeDeclaration {
-    Docstring? Annotation* xkw<"value"> xkw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
 EntityTypeDeclaration {
-    Docstring? Annotation* xkw<"entity"> xkw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
 ConstraintDeclaration {
@@ -106,7 +106,7 @@ WithUseDeclaration {
     kw<"with"> Expression kw<"use"> ("..." | commaSep1<Alias>)
 }
 
-id { BasicId | ConstructorId }
+id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
 
 ParenOpId { "(" Operator !parenOp ")" }
 
@@ -114,7 +114,10 @@ LhsId {
     id |
     ParenOpId |
     QualifiedName |
-    emphasisKeyword
+    emphasisKeyword |
+    kw<"implies"> |
+    kw<"iff"> |
+    kw<"xor">
 }
 
 AliasId { ( id | Operator ) }
@@ -153,7 +156,10 @@ QualifiedKeyword {
     kw<"xor"> |
     kw<"where"> |
     kw<"for"> |
-    kw<"from">
+    kw<"from"> |
+    kw<"value"> |
+    kw<"entity"> |
+    kw<"type">
 }
 
 QualifiedName { QualifiedNameId QualifiedNameElem+ }
