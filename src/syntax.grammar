@@ -61,14 +61,7 @@ Docstring {
  * Annotation Statement
  */
 
-AnnotationKeyword {
-    annotationKw<"function"> |
-    annotationKw<"inline"> |
-    annotationKw<"ondemand"> |
-    annotationKw<"outline"> |
-    annotationKw<"static"> |
-    annotationKw<"no_diagnostics">
-}
+AnnotationKeyword { "@" BasicId }
 
 AnnotationParams { commaSep1<BaseLiteral> }
 
@@ -521,8 +514,6 @@ FormalParamsParen { "(" FormalParams? ")" }
 kw<term> { @specialize[@name=Keyword]<BasicId, term> }
 
 xkw<term> { @extend[@name=Keyword]<BasicId, term> }
-
-annotationKw<term> { "@" term }
 
 emp<term> { @extend[@name=Emphasis]<BasicId, term> }
 

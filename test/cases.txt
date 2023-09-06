@@ -187,11 +187,11 @@ def a = 1
 
 Rel(
     DefinitionDeclaration(
-        Annotation(AnnotationKeyword),
-        Annotation(AnnotationKeyword),
-        Annotation(AnnotationKeyword),
-        Annotation(AnnotationKeyword),
-        Annotation(AnnotationKeyword),
+        Annotation(AnnotationKeyword(BasicId)),
+        Annotation(AnnotationKeyword(BasicId)),
+        Annotation(AnnotationKeyword(BasicId)),
+        Annotation(AnnotationKeyword(BasicId)),
+        Annotation(AnnotationKeyword(BasicId)),
         Keyword,
         LhsId(BasicId),
         Expression(
@@ -550,9 +550,9 @@ Rel(
 ==>
 
 Rel(
-    Annotation(AnnotationKeyword),
+    Annotation(AnnotationKeyword(BasicId)),
     Annotation(
-        AnnotationKeyword,
+        AnnotationKeyword(BasicId),
         AnnotationParams(BaseLiteral(IntLiteral), BaseLiteral(RelnameLiteral))
     ),
     Expression(
