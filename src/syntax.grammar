@@ -1,3 +1,5 @@
+@detectDelim
+
 @top Rel { declaration+ | Annotation* Expression }
 
 @skip { spaces | newLine | LineComment | BlockComment }
@@ -29,13 +31,13 @@
 }
 
 declaration[@isGroup=Declaration] {
-    DefinitionStatement |
-    BoundStatement |
-    ValueTypeStatement |
-    EntityTypeStatement |
-    ConstraintStatement |
-    ModuleStatement |
-    UseStatement
+    DefinitionDeclaration |
+    BoundDeclaration |
+    ValueTypeDeclaration |
+    EntityTypeDeclaration |
+    ConstraintDeclaration |
+    ModuleDeclaration |
+    WithUseDeclaration
 }
 
 /*
@@ -50,61 +52,54 @@ declaration[@isGroup=Declaration] {
 // see https://lezer.codemirror.net/docs/guide/#local-token-groups
 
 Docstring {
-    kw<"doc"> DocstringLiteral |
-    kw<"doc"> MultilineDocstringLiteral |
-    kw<"doc"> RawStringSequence
+    xkw<"doc"> DocstringLiteral |
+    xkw<"doc"> MultilineDocstringLiteral |
+    xkw<"doc"> RawStringSequence
 }
 
 /*
  * Annotation Statement
  */
 
-AnnotationKeyword {
-    annotationKw<"function"> |
-    annotationKw<"inline"> |
-    annotationKw<"ondemand"> |
-    annotationKw<"outline"> |
-    annotationKw<"static"> |
-    annotationKw<"no_diagnostics">
-}
+AnnotationKeyword { "@" BasicId }
 
 AnnotationParams { commaSep1<BaseLiteral> }
 
 Annotation { AnnotationKeyword ( !annot "(" AnnotationParams ")" )? }
 
 /*
- * Declaration Statements
+ * Declarations
  */
 
-DefinitionStatement {
+DefinitionDeclaration {
     Docstring? Annotation* kw<"def"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
 }
 
-BoundStatement {
+BoundDeclaration {
     Docstring? Annotation* kw<"bound"> LhsId FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )?
 }
 
-ValueTypeStatement {
+ValueTypeDeclaration {
     Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
-EntityTypeStatement {
+EntityTypeDeclaration {
     Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" ) )?
 }
 
-ConstraintStatement {
+ConstraintDeclaration {
     Docstring? Annotation* kw<"ic"> LhsId? FormalParamsBracket* FormalParamsParen? ( "=" Expression | "{" Expression "}" )
 }
 
-ModuleStatement {
+ModuleDeclaration {
     Docstring? Annotation* kw<"module"> LhsId FormalParamsBracket* declaration* kw<"end">
 }
 
-UseStatement {
+WithUseDeclaration {
     kw<"with"> Expression kw<"use"> ("..." | commaSep1<Alias>)
 }
 
-id { BasicId | ConstructorId | kw<"type"> | kw<"entity"> | kw<"value"> }
+id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
 
 ParenOpId { "(" Operator !parenOp ")" }
 
@@ -112,7 +107,10 @@ LhsId {
     id |
     ParenOpId |
     QualifiedName |
-    emphasisKeyword
+    emphasisKeyword |
+    kw<"implies"> |
+    kw<"iff"> |
+    kw<"xor">
 }
 
 AliasId { ( id | Operator ) }
@@ -123,7 +121,38 @@ QualifiedNameId {
     emphasisKeyword |
     BasicId ~idConflict |
     ConstructorId |
-    ParenOpId ~parenOpConflict
+    ParenOpId ~parenOpConflict |
+    QualifiedKeyword
+}
+
+// Keywords have to be hardcoded here since they are specialized
+// in the grammar to avoid using them as identifiers, except for the case of QualifiedNameId
+QualifiedKeyword {
+    kw<"def"> |
+    kw<"bound"> |
+    kw<"ic"> |
+    kw<"module"> |
+    kw<"end"> |
+    kw<"with"> |
+    kw<"use"> |
+    kw<"as"> |
+    kw<"if"> |
+    kw<"then"> |
+    kw<"else"> |
+    kw<"forall"> |
+    kw<"exists"> |
+    kw<"and"> |
+    kw<"or"> |
+    kw<"not"> |
+    kw<"implies"> |
+    kw<"iff"> |
+    kw<"xor"> |
+    kw<"where"> |
+    kw<"for"> |
+    kw<"from"> |
+    kw<"value"> |
+    kw<"entity"> |
+    kw<"type">
 }
 
 QualifiedName { QualifiedNameId QualifiedNameElem+ }
@@ -145,7 +174,7 @@ emphasisKeyword[@dynamicPrecedence=1] {
 }
 
 RawStringLiteral {
-    kw<"raw"> RawStringSequence
+    xkw<"raw"> RawStringSequence
 }
 
 Interpolation {
@@ -475,8 +504,7 @@ FormalParamsParen { "(" FormalParams? ")" }
     @precedence { ConstructorId Operator }
     @precedence { FloatLiteral Operator }
     @precedence { "..." Operator ":" }
-    @precedence { QualifiedNameElem ":" }
-    @precedence { RelnameLiteral ":" }
+    @precedence { RelnameLiteral QualifiedNameElem ":" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
     @precedence { MultilineDocstringLiteral DocstringLiteral }
@@ -485,7 +513,7 @@ FormalParamsParen { "(" FormalParams? ")" }
 
 kw<term> { @specialize[@name=Keyword]<BasicId, term> }
 
-annotationKw<term> { "@" term }
+xkw<term> { @extend[@name=Keyword]<BasicId, term> }
 
 emp<term> { @extend[@name=Emphasis]<BasicId, term> }
 
@@ -494,5 +522,3 @@ op<oper> { @extend[@name=OperatorKeyword]<Operator, oper> }
 commaSep1<rule> { rule ( !param "," rule )* }
 
 commaSep2<rule> { rule !param "," rule ( !param "," rule )* }
-
-@detectDelim

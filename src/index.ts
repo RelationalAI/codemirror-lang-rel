@@ -8,7 +8,7 @@ export const relLanguage = LRLanguage.define({
   parser: parser.configure({
     props: [
       styleTags({
-        "Keyword AnnotationKeyword": tags.keyword,
+        "Keyword AnnotationKeyword!": tags.keyword,
         ConstructorId: tags.typeName,
         Emphasis: tags.emphasis,
         "IntLiteral FloatLiteral": tags.number,
@@ -21,6 +21,7 @@ export const relLanguage = LRLanguage.define({
         BlockComment: tags.blockComment,
         BasicId: tags.attributeName,
         "LhsId/BasicId LhsId/QualifiedName/QualifiedNameId/BasicId": tags.definition(tags.variableName),
+        "QualifiedKeyword!": tags.definition(tags.variableName),
         "PartialApplicationExpression/BasicExpression/BasicId": tags.variableName,
         "ApplicationExpression/BasicExpression/BasicId": tags.variableName,
         "LogicalParam/LogicalExpression/BasicExpression/BasicId": tags.attributeName,
