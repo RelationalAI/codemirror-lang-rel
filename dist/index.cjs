@@ -177,7 +177,7 @@ const relLanguage = language.LRLanguage.define({
     parser: parser.configure({
         props: [
             highlight.styleTags({
-                "Keyword AnnotationKeyword": highlight.tags.keyword,
+                "Keyword AnnotationKeyword!": highlight.tags.keyword,
                 ConstructorId: highlight.tags.typeName,
                 Emphasis: highlight.tags.emphasis,
                 "IntLiteral FloatLiteral": highlight.tags.number,
@@ -190,7 +190,7 @@ const relLanguage = language.LRLanguage.define({
                 BlockComment: highlight.tags.blockComment,
                 BasicId: highlight.tags.attributeName,
                 "LhsId/BasicId LhsId/QualifiedName/QualifiedNameId/BasicId": highlight.tags.definition(highlight.tags.variableName),
-                "LhsId/QualifiedName/QualifiedNameId/QualifiedKeyword": highlight.tags.definition(highlight.tags.variableName),
+                "QualifiedKeyword!": highlight.tags.definition(highlight.tags.variableName),
                 "PartialApplicationExpression/BasicExpression/BasicId": highlight.tags.variableName,
                 "ApplicationExpression/BasicExpression/BasicId": highlight.tags.variableName,
                 "LogicalParam/LogicalExpression/BasicExpression/BasicId": highlight.tags.attributeName,
