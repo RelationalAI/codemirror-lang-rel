@@ -1,0 +1,21 @@
+# Comments
+// A single-line comment
+/****
+    // A multi-line comment
+*****/
+def a = 1
+
+==>
+
+Rel(
+    LineComment,
+    BlockComment,
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
+

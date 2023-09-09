@@ -24,7 +24,6 @@
     impliesL @left,
     iff @right,
     xor @right,
-    relname @left,
     abstract @left,
     parenOp,
     annot
@@ -133,17 +132,13 @@ QualifiedKeyword {
     kw<"ic"> |
     kw<"module"> |
     kw<"end"> |
-    kw<"with"> |
     kw<"use"> |
     kw<"as"> |
-    kw<"if"> |
     kw<"then"> |
     kw<"else"> |
     kw<"forall"> |
-    kw<"exists"> |
     kw<"and"> |
     kw<"or"> |
-    kw<"not"> |
     kw<"implies"> |
     kw<"iff"> |
     kw<"xor"> |
@@ -504,7 +499,8 @@ FormalParamsParen { "(" FormalParams? ")" }
     @precedence { ConstructorId Operator }
     @precedence { FloatLiteral Operator }
     @precedence { "..." Operator ":" }
-    @precedence { RelnameLiteral QualifiedNameElem ":" }
+    @precedence { QualifiedNameElem ":" }
+    @precedence { RelnameLiteral ":" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
     @precedence { MultilineDocstringLiteral DocstringLiteral }

@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 let caseDir = path.dirname(fileURLToPath(import.meta.url));
 
 for (let file of fs.readdirSync(caseDir)) {
-  if (!/\.txt$/.test(file)) continue;
+  if (!/\.test\.txt$/.test(file)) continue;
 
   let name = /^[^\.]*/.exec(file)[0];
   describe(name, () => {
