@@ -1,0 +1,175 @@
+# Numbers
+
+def a = 101,
+01010101001,
+0x1ABCDEFabcdef,
+0o7632157312,
+1e+3
+
+==>
+
+Rel(
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    JoinExpression(
+                        JoinExpression(
+                            JoinExpression(
+                                JoinExpression(
+                                    OverrideExpression(
+                                        RestrictExpression(
+                                            LogicalExpression(
+                                                BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
+                                OverrideExpression(
+                                    RestrictExpression(
+                                        LogicalExpression(
+                                            BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
+                            OverrideExpression(
+                                RestrictExpression(
+                                    LogicalExpression(
+                                        BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
+                        OverrideExpression(
+                            RestrictExpression(
+                                LogicalExpression(
+                                    BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(FloatLiteral)))))))))))
+
+
+# Booleans
+
+def a = true
+def b = false
+
+==>
+
+Rel(
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BooleanLiteral))))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BooleanLiteral))))))))))
+
+
+# Strings & Char
+
+
+def a = "A string with \"double\" and 'single' quotes"
+def b = """A Multi-line string
+New line
+"""
+def c = 'A'
+def d = raw"""""""
+A raw string with "quotes" & """Multi-line quotes""" \\ Slashes
+"""""""
+def e = raw"""""""""""
+A raw string with 11 quotes
+"""""""""""
+def f = raw""
+
+==>
+
+Rel(
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(StaticStringLiteral)))))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(StaticMultilineStringLiteral)))))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(CharLiteral)))))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(
+                                    Literal(
+                                        BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(
+                                    Literal(
+                                        BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))),
+    DefinitionDeclaration(
+            Keyword, LhsId(BasicId), Expression(
+                UnionExpression(
+                    JoinExpression(
+                        OverrideExpression(
+                            RestrictExpression(
+                                LogicalExpression(
+                                    BasicExpression(
+                                        Literal(
+                                            BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))))
+
+
+# Relnames
+
+def a = :test
+def b = :[]
+def c = :"A string relname literal"
+
+==>
+
+Rel(
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(RelnameStringLiteral)))))))))))

@@ -1,0 +1,106 @@
+# Single Expression
+
+@inline
+@static(1, :rel)
+{
+    1 + 2;
+    2023-07-01;
+    2023-07-01T00:00:00Z
+}
+
+==>
+
+Rel(
+    Annotation(AnnotationKeyword(BasicId)),
+    Annotation(
+        AnnotationKeyword(BasicId),
+        AnnotationParams(BaseLiteral(IntLiteral), BaseLiteral(RelnameLiteral))
+    ),
+    Expression(
+        UnionExpression(
+            JoinExpression(
+                OverrideExpression(
+                    RestrictExpression(
+                        LogicalExpression(
+                            BasicExpression(
+                                BoundedExpression(
+                                    Expression(
+                                        UnionExpression(
+                                            UnionExpression(
+                                                UnionExpression(
+                                                    JoinExpression(
+                                                        OverrideExpression(
+                                                            RestrictExpression(
+                                                                LogicalExpression(
+                                                                    BasicExpression(
+                                                                        BasicExpression(Literal(BaseLiteral(IntLiteral))),
+                                                                        OperatorKeyword,
+                                                                        BasicExpression(Literal(BaseLiteral(IntLiteral))))))))),
+                                                JoinExpression(
+                                                    OverrideExpression(
+                                                        RestrictExpression(
+                                                            LogicalExpression(
+                                                                BasicExpression(Literal(BaseLiteral(DateLiteral)))))))),
+                                            JoinExpression(
+                                                OverrideExpression(
+                                                    RestrictExpression(
+                                                        LogicalExpression(
+                                                            BasicExpression(Literal(BaseLiteral(DateTimeLiteral))))))))))))))))))
+
+
+# Interpolation
+def output = """
+    %(
+        string_join["\n", {
+            """
+                def n[x] = %(
+                    x + 1
+                )
+            """
+        }]
+    )
+
+"""
+
+def a = "%b"
+
+==>
+
+Rel(
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(Emphasis),
+        Expression(UnionExpression(JoinExpression(OverrideExpression(RestrictExpression(LogicalExpression(
+            BasicExpression(Literal(InterpolationMultilineLiteral(Interpolation(InterpolationExpression(
+                Expression(UnionExpression(JoinExpression(OverrideExpression(RestrictExpression(LogicalExpression(
+                    BasicExpression(PartialApplicationExpression(
+                        BasicExpression(BasicId),
+                        LogicalParam(LogicalExpression(BasicExpression(Literal(BaseLiteral(StaticStringLiteral))))),
+                        LogicalParam(LogicalExpression(BasicExpression(BoundedExpression(
+                            Expression(UnionExpression(JoinExpression(OverrideExpression(RestrictExpression(LogicalExpression(
+                                BasicExpression(Literal(InterpolationMultilineLiteral(Interpolation(InterpolationExpression(
+                                    Expression(UnionExpression(JoinExpression(OverrideExpression(RestrictExpression(LogicalExpression(
+                                        BasicExpression(
+                                            BasicExpression(BasicId),
+                                            OperatorKeyword,
+                                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
+                                ))))
+                            ))))))
+                        ))))
+                    ))
+                ))))))
+            )))))
+        ))))))
+    ),
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(
+                                    Literal(InterpolationLiteral(Interpolation(InterpolationId)))))))))))
+)
