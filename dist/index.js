@@ -219,7 +219,10 @@ const relLanguage = LRLanguage.define({
         ]
     }),
     languageData: {
-        closeBrackets: { brackets: ["(", "[", "{", "'", '"', "`", '"""'] },
+        closeBrackets: {
+            brackets: ["(", "[", "{", "'", '"', "`", '"""'],
+            stringPrefixes: ["doc", "raw"]
+        },
         commentTokens: { line: "//", block: { open: "/*", close: "*/" } },
     }
 });
