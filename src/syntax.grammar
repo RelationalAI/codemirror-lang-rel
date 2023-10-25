@@ -481,7 +481,7 @@ FormalParamsParen { "(" FormalParams? ")" }
     RelnameStringLiteral { ":" StaticStringLiteral }
     RelnameMultilineStringLiteral { ":" StaticMultilineStringLiteral }
 
-    QualifiedNameElem { ":" BasicId | ":(" Operator ")" }
+    QualifiedNameElem { ":" (BasicId | ConstructorId) | ":(" Operator ")" }
     InterpolationId { "%" basicIdentifier }
 
     quote1 { '"' }

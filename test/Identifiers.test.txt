@@ -187,6 +187,7 @@ def test:abc = 2
 def (+):abc = 3
 def ^Constructor:abc = 4
 def module:abc = 5
+def rel:^Constructor = 6
 
 ==>
 
@@ -234,6 +235,16 @@ Rel(
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(QualifiedKeyword(Keyword)),QualifiedNameElem)),
+        Expression(
+            UnionExpression(
+                JoinExpression(
+                    OverrideExpression(
+                        RestrictExpression(
+                            LogicalExpression(
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(QualifiedName(QualifiedNameId(BasicId),QualifiedNameElem)),
         Expression(
             UnionExpression(
                 JoinExpression(
