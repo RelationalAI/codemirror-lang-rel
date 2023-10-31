@@ -4,6 +4,7 @@
 
 @skip { spaces | newLine | LineComment | BlockComment }
 
+//
 @precedence {
     dotJoin @left,
     appl @left,
