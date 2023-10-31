@@ -32,15 +32,15 @@
     annot
 }
 
-declaration[@isGroup=Declaration] {
-    DefinitionDeclaration |
-    BoundDeclaration |
-    ValueTypeDeclaration |
-    EntityTypeDeclaration |
-    ConstraintDeclaration |
-    ModuleDeclaration |
-    WithUseDeclaration
-}
+declaration[@isGroup=Declaration]
+    { DefinitionDeclaration
+    | BoundDeclaration
+    | ValueTypeDeclaration
+    | EntityTypeDeclaration
+    | ConstraintDeclaration
+    | ModuleDeclaration
+    | WithUseDeclaration
+    }
 
 /*
  * Docstring Statement
@@ -53,11 +53,11 @@ declaration[@isGroup=Declaration] {
 // TODO use local tokens for all strings or define an external tokenizer
 // see https://lezer.codemirror.net/docs/guide/#local-token-groups
 
-Docstring {
-    xkw<"doc"> DocstringLiteral |
-    xkw<"doc"> MultilineDocstringLiteral |
-    xkw<"doc"> RawStringSequence
-}
+Docstring
+    { xkw<"doc"> DocstringLiteral
+    | xkw<"doc"> MultilineDocstringLiteral
+    | xkw<"doc"> RawStringSequence
+    }
 
 /*
  * Annotation Statement
@@ -105,63 +105,63 @@ id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
 
 ParenOpId { "(" Operator !parenOp ")" }
 
-LhsId {
-    id |
-    ParenOpId |
-    QualifiedName |
-    emphasisKeyword |
-    kw<"implies"> |
-    kw<"iff"> |
-    kw<"xor">
-}
+LhsId
+    { id
+    | ParenOpId
+    | QualifiedName
+    | emphasisKeyword
+    | kw<"implies">
+    | kw<"iff">
+    | kw<"xor">
+    }
 
 AliasId { ( id | Operator ) }
 
 Alias { ( id | Operator ) ( kw<"as"> AliasId )? }
 
-QualifiedNameId {
-    emphasisKeyword |
-    BasicId ~idConflict |
-    ConstructorId |
-    ParenOpId ~parenOpConflict |
-    QualifiedKeyword
-}
+QualifiedNameId
+    { emphasisKeyword
+    | BasicId ~idConflict
+    | ConstructorId
+    | ParenOpId ~parenOpConflict
+    | QualifiedKeyword
+    }
 
 // Keywords have to be hardcoded here since they are specialized
 // in the grammar to avoid using them as identifiers, except for the case of QualifiedNameId
-QualifiedKeyword {
-    kw<"def"> |
-    kw<"bound"> |
-    kw<"ic"> |
-    kw<"module"> |
-    kw<"end"> |
-    kw<"use"> |
-    kw<"as"> |
-    kw<"then"> |
-    kw<"else"> |
-    kw<"forall"> |
-    kw<"and"> |
-    kw<"or"> |
-    kw<"implies"> |
-    kw<"iff"> |
-    kw<"xor"> |
-    kw<"where"> |
-    kw<"for"> |
-    kw<"from"> |
-    kw<"value"> |
-    kw<"entity"> |
-    kw<"type">
-}
+QualifiedKeyword
+    { kw<"def">
+    | kw<"bound">
+    | kw<"ic">
+    | kw<"module">
+    | kw<"end">
+    | kw<"use">
+    | kw<"as">
+    | kw<"then">
+    | kw<"else">
+    | kw<"forall">
+    | kw<"and">
+    | kw<"or">
+    | kw<"implies">
+    | kw<"iff">
+    | kw<"xor">
+    | kw<"where">
+    | kw<"for">
+    | kw<"from">
+    | kw<"value">
+    | kw<"entity">
+    | kw<"type">
+    }
 
 QualifiedName { QualifiedNameId QualifiedNameElem+ }
 
-emphasisKeyword[@dynamicPrecedence=1] {
-    emp<"output"> |
-    emp<"insert"> |
-    emp<"delete"> |
-    emp<"abort"> |
-    emp<"export">
-}
+emphasisKeyword[@dynamicPrecedence=1]
+    { emp<"output">
+    | emp<"insert">
+    | emp<"delete">
+    | emp<"abort">
+    | emp<"export">
+    }
 
 /*
  * Literals
@@ -175,10 +175,10 @@ RawStringLiteral {
     xkw<"raw"> RawStringSequence
 }
 
-Interpolation {
-    InterpolationId |
-    InterpolationExpression
-}
+Interpolation
+    { InterpolationId
+    | InterpolationExpression
+    }
 
 InterpolationExpression { "%(" Expression ")" }
 
@@ -190,175 +190,174 @@ InterpolationMultilineLiteral {
     quote3 staticMultilineStringPart? Interpolation (staticMultilineStringPart | Interpolation)* quote3
 }
 
-BaseLiteral {
-    IntLiteral |
-    FloatLiteral |
-    RelnameLiteral |
-    RelnameStringLiteral |
-    RelnameMultilineStringLiteral |
-    StaticStringLiteral |
-    StaticMultilineStringLiteral |
-    CharLiteral |
-    DateLiteral |
-    DateTimeLiteral |
-    RawStringLiteral
-}
+BaseLiteral
+    { IntLiteral
+    | FloatLiteral
+    | RelnameLiteral
+    | RelnameStringLiteral
+    | RelnameMultilineStringLiteral
+    | StaticStringLiteral
+    | StaticMultilineStringLiteral
+    | CharLiteral
+    | DateLiteral
+    | DateTimeLiteral
+    | RawStringLiteral
+    }
 
-Literal {
-    BaseLiteral |
-    BooleanLiteral |
-    SpecializeIntLiteral |
-    InterpolationLiteral |
-    InterpolationMultilineLiteral
-}
+Literal
+    { BaseLiteral
+    | BooleanLiteral
+    | SpecializeIntLiteral
+    | InterpolationLiteral
+    | InterpolationMultilineLiteral
+    }
 
 /*
  * Expressions
  */
 
-BasicExpression {
-    // id expressions
-    id "..."? ~idConflict |
-    "_" |
-    QualifiedName |
-    ParenOpId ~parenOpConflict |
+BasicExpression
+    { id "..."? ~idConflict
+    | "_"
+    | QualifiedName
+    | ParenOpId ~parenOpConflict
 
     // literal
-    Literal ~literalConflict |
+    | Literal ~literalConflict
 
     // specialize
-    "#(" Expression ")" |
+    | "#(" Expression ")"
 
-    PartialApplicationExpression |
-    ApplicationExpression |
+    | PartialApplicationExpression
+    | ApplicationExpression
 
     // math expressions
-    BasicExpression !dotJoin op<"."> BasicExpression |
-    BasicExpression !power op<"^"> BasicExpression |
-    !unary op<"-"> BasicExpression |
-    BasicExpression !mul op<"/"> BasicExpression |
-    BasicExpression !mul op<"%"> BasicExpression |
-    BasicExpression !mul op<"*"> BasicExpression |
-    BasicExpression !mul op<"÷"> BasicExpression |
-    BasicExpression !mul op<"×"> BasicExpression |
-    BasicExpression !mul op<"⊗"> BasicExpression |
-    BasicExpression !mul op<"⊙"> BasicExpression |
-    BasicExpression !add op<"+"> BasicExpression |
-    BasicExpression !add op<"-"> BasicExpression |
-    BasicExpression !add op<"∩"> BasicExpression |
-    BasicExpression !add op<"⊕"> BasicExpression |
-    BasicExpression !union op<"∪"> BasicExpression |
-    BasicExpression !add op<"⊓"> BasicExpression |
-    BasicExpression !union op<"⊔"> BasicExpression |
-    BasicExpression !compL op<"="> BasicExpression |
-    BasicExpression !compL op<"!="> BasicExpression |
-    BasicExpression !compL op<"≈"> BasicExpression |
-    BasicExpression !compL op<"∼"> BasicExpression |
-    BasicExpression !compR op<"→"> BasicExpression |
-    BasicExpression !compL op<"←"> BasicExpression |
-    BasicExpression !compL op<"≼"> BasicExpression |
-    BasicExpression !compL op<"≽"> BasicExpression |
-    BasicExpression !compL op<"≺"> BasicExpression |
-    BasicExpression !compL op<"≻"> BasicExpression |
-    BasicExpression !compL op<"≠"> BasicExpression |
-    BasicExpression !compL op<"<"> BasicExpression |
-    BasicExpression !compL op<">"> BasicExpression |
-    BasicExpression !compL op<"<="> BasicExpression |
-    BasicExpression !compL op<"≤"> BasicExpression |
-    BasicExpression !compL op<">="> BasicExpression |
-    BasicExpression !compL op<"≥"> BasicExpression |
-    BasicExpression !compL op<"⊆"> BasicExpression |
-    BasicExpression !compL op<"⊇"> BasicExpression |
-    BasicExpression !compL op<"⊂"> BasicExpression |
-    BasicExpression !compL op<"⊃"> BasicExpression |
+    | BasicExpression !dotJoin op<"."> BasicExpression
+    | BasicExpression !power op<"^"> BasicExpression
+    | !unary op<"-"> BasicExpression
+    | BasicExpression !mul op<"/"> BasicExpression
+    | BasicExpression !mul op<"%"> BasicExpression
+    | BasicExpression !mul op<"*"> BasicExpression
+    | BasicExpression !mul op<"÷"> BasicExpression
+    | BasicExpression !mul op<"×"> BasicExpression
+    | BasicExpression !mul op<"⊗"> BasicExpression
+    | BasicExpression !mul op<"⊙"> BasicExpression
+    | BasicExpression !add op<"+"> BasicExpression
+    | BasicExpression !add op<"-"> BasicExpression
+    | BasicExpression !add op<"∩"> BasicExpression
+    | BasicExpression !add op<"⊕"> BasicExpression
+    | BasicExpression !union op<"∪"> BasicExpression
+    | BasicExpression !add op<"⊓"> BasicExpression
+    | BasicExpression !union op<"⊔"> BasicExpression
+    | BasicExpression !compL op<"="> BasicExpression
+    | BasicExpression !compL op<"!="> BasicExpression
+    | BasicExpression !compL op<"≈"> BasicExpression
+    | BasicExpression !compL op<"∼"> BasicExpression
+    | BasicExpression !compR op<"→"> BasicExpression
+    | BasicExpression !compL op<"←"> BasicExpression
+    | BasicExpression !compL op<"≼"> BasicExpression
+    | BasicExpression !compL op<"≽"> BasicExpression
+    | BasicExpression !compL op<"≺"> BasicExpression
+    | BasicExpression !compL op<"≻"> BasicExpression
+    | BasicExpression !compL op<"≠"> BasicExpression
+    | BasicExpression !compL op<"<"> BasicExpression
+    | BasicExpression !compL op<">"> BasicExpression
+    | BasicExpression !compL op<"<="> BasicExpression
+    | BasicExpression !compL op<"≤"> BasicExpression
+    | BasicExpression !compL op<">="> BasicExpression
+    | BasicExpression !compL op<"≥"> BasicExpression
+    | BasicExpression !compL op<"⊆"> BasicExpression
+    | BasicExpression !compL op<"⊇"> BasicExpression
+    | BasicExpression !compL op<"⊂"> BasicExpression
+    | BasicExpression !compL op<"⊃"> BasicExpression
 
-    kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression kw<"end"> |
-    ( kw<"forall"> | "∀" ) "(" Bindings ":" Expression ")" |
+    | kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression kw<"end">
+    | ( kw<"forall"> | "∀" ) "(" Bindings ":" Expression ")"
 
-    BoundedExpression |
+    | BoundedExpression
 
     // logic expressions
-    !quant (kw<"exists"> | "∃") BasicExpression |
-    !quant (kw<"exists"> | "∃") LogicalAbstractExpression |
-    !not ( kw<"not"> | op<"¬"> ) BasicExpression |
-    BasicExpression !and ( kw<"and"> | op<"∧"> ) BasicExpression |
-    BasicExpression !or ( kw<"or"> | op<"∨"> ) BasicExpression |
-    BasicExpression !impliesR ( kw<"implies"> | op<"⇒"> ) BasicExpression |
-    BasicExpression !impliesL op<"⇐"> BasicExpression |
+    | !quant (kw<"exists"> | "∃") BasicExpression
+    | !quant (kw<"exists"> | "∃") LogicalAbstractExpression
+    | !not ( kw<"not"> | op<"¬"> ) BasicExpression
+    | BasicExpression !and ( kw<"and"> | op<"∧"> ) BasicExpression
+    | BasicExpression !or ( kw<"or"> | op<"∨"> ) BasicExpression
+    | BasicExpression !impliesR ( kw<"implies"> | op<"⇒"> ) BasicExpression
+    | BasicExpression !impliesL op<"⇐"> BasicExpression
 
     // restrict expression
-    BasicExpression !restrict ( op<"<:"> | op<":>"> ) BasicExpression |
+    | BasicExpression !restrict ( op<"<:"> | op<":>"> ) BasicExpression
 
     // override expression
-    BasicExpression !override ( op<"<++"> | op<"++>"> ) BasicExpression
+    | BasicExpression !override ( op<"<++"> | op<"++>"> ) BasicExpression
 }
 
 /* Application expressions are defined explicitly to highlight
  * the BasicId in these expressions.
  */
-PartialApplicationExpression {
-    BasicExpression !appl "[" NocommaParam? "]" |
-    BasicExpression !appl "[" commaSep2<BasicParam> "]"
-}
+PartialApplicationExpression
+    { BasicExpression !appl "[" NocommaParam? "]"
+    | BasicExpression !appl "[" commaSep2<BasicParam> "]"
+    }
 
-ApplicationExpression {
-    BasicExpression !appl "(" NocommaParam? ")" |
-    BasicExpression !appl "(" commaSep2<BasicParam> ")"
-}
+ApplicationExpression
+    { BasicExpression !appl "(" NocommaParam? ")"
+    | BasicExpression !appl "(" commaSep2<BasicParam> ")"
+    }
 
-BoundedExpression {
-    "(" Expression? ")" |
-    "{" Expression? "}" |
-    "(" ( "," | ";" )? ")" |
-    "{" ( "," | ";" )? "}"
-}
+BoundedExpression
+    { "(" Expression? ")"
+    | "{" Expression? "}"
+    | "(" ( "," | ";" )? ")"
+    | "{" ( "," | ";" )? "}"
+    }
 
-Bindings {
-    Formals ( !bind kw<"where"> UnionExpression )? |
-    "(" Bindings ")"
-}
+Bindings
+    { Formals ( !bind kw<"where"> UnionExpression )?
+    | "(" Bindings ")"
+    }
 
-AbstractExpression {
-    Bindings !abstract ":" UnionExpression |
-    Bindings !abstract ":" AbstractExpression |
-    UnionExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings |
-    AbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
-}
+AbstractExpression
+    { Bindings !abstract ":" UnionExpression
+    | Bindings !abstract ":" AbstractExpression
+    | UnionExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+    | AbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+    }
 
-LogicalAbstractExpression {
-    Bindings !abstract ":" BasicExpression |
-    Bindings !abstract ":" LogicalAbstractExpression |
-    BasicExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings |
-    LogicalAbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
-}
+LogicalAbstractExpression
+    { Bindings !abstract ":" BasicExpression
+    | Bindings !abstract ":" LogicalAbstractExpression
+    | BasicExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+    | LogicalAbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+    }
 
-NocommaAbstractExpression {
-    Bindings !abstract ":" NocommaExpression |
-    NocommaExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
-}
+NocommaAbstractExpression
+    { Bindings !abstract ":" NocommaExpression
+    | NocommaExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+    }
 
-ProductExpression {
-    BasicExpression |
-    ProductExpression !product "," BasicExpression?
-}
+ProductExpression
+    { BasicExpression
+    | ProductExpression !product "," BasicExpression?
+    }
 
-UnionExpression {
-    ProductExpression |
-    UnionExpression !union ";" ProductExpression?
-}
+UnionExpression
+    { ProductExpression
+    | UnionExpression !union ";" ProductExpression?
+    }
 
-IffXorExpression {
-    UnionExpression |
-    UnionExpression !iff ( kw<"iff"> | op<"≡"> | op<"⇔"> ) IffXorExpression |
-    UnionExpression !xor ( kw<"xor"> | op<"≢"> | op<"⇎"> | op<"⊻"> ) IffXorExpression
-}
+IffXorExpression
+    { UnionExpression
+    | UnionExpression !iff ( kw<"iff"> | op<"≡"> | op<"⇔"> ) IffXorExpression
+    | UnionExpression !xor ( kw<"xor"> | op<"≢"> | op<"⇎"> | op<"⊻"> ) IffXorExpression
+    }
 
 Expression { IffXorExpression | AbstractExpression }
 
-NocommaUnionExpression {
-    BasicExpression |
-    NocommaUnionExpression !union ";" BasicExpression
-}
+NocommaUnionExpression
+    { BasicExpression
+    | NocommaUnionExpression !union ";" BasicExpression
+    }
 
 NocommaExpression { NocommaUnionExpression | NocommaAbstractExpression }
 
@@ -366,11 +365,11 @@ BasicParam { Operator ~operatorConflict | BasicExpression }
 
 NocommaParam { Operator ~operatorConflict | NocommaExpression }
 
-Formal {
-    Literal ~literalConflict |
-    Operator ~operatorConflict |
-    (id "..."? ~idConflict ) (( kw<"in"> | op<"∈"> ) BasicExpression)?
-}
+Formal
+    { Literal ~literalConflict
+    | Operator ~operatorConflict
+    | (id "..."? ~idConflict ) (( kw<"in"> | op<"∈"> ) BasicExpression)?
+    }
 
 Formals { Formal ( !param "," Formal )* }
 
@@ -395,60 +394,60 @@ FormalsParen { "(" Formals? ")" }
     BasicId { basicIdentifier }
     ConstructorId { "^" basicIdentifier }
 
-    Operator {
-        "." |
-        "^" |
-        "/" |
-        "%" |
-        "*" |
-        "÷" |
-        "×" |
-        "⊗" |
-        "⊙" |
-        "-" |
-        "+" |
-        "⊕" |
-        "∩" |
-        "∪" |
-        "⊔" |
-        "⊓" |
-        "=" |
-        "!=" |
-        "≈" |
-        "∼" |
-        "≠" |
-        "<" |
-        ">" |
-        "<=" |
-        "≤" |
-        ">=" |
-        "≥" |
-        "∈" |
-        "⊆" |
-        "⊇" |
-        "⊂" |
-        "⊃" |
-        "≼" |
-        "≽" |
-        "≺" |
-        "≻" |
-        "¬" |
-        "∧" |
-        "∨" |
-        "→" |
-        "←" |
-        "⇒" |
-        "⇐" |
-        "≡" |
-        "⇔" |
-        "⊻" |
-        "≢" |
-        "⇎" |
-        "<:" |
-        ":>" |
-        "<++" |
-        "++>"
-    }
+    Operator
+        { "."
+        | "^"
+        | "/"
+        | "%"
+        | "*"
+        | "÷"
+        | "×"
+        | "⊗"
+        | "⊙"
+        | "-"
+        | "+"
+        | "⊕"
+        | "∩"
+        | "∪"
+        | "⊔"
+        | "⊓"
+        | "="
+        | "!="
+        | "≈"
+        | "∼"
+        | "≠"
+        | "<"
+        | ">"
+        | "<="
+        | "≤"
+        | ">="
+        | "≥"
+        | "∈"
+        | "⊆"
+        | "⊇"
+        | "⊂"
+        | "⊃"
+        | "≼"
+        | "≽"
+        | "≺"
+        | "≻"
+        | "¬"
+        | "∧"
+        | "∨"
+        | "→"
+        | "←"
+        | "⇒"
+        | "⇐"
+        | "≡"
+        | "⇔"
+        | "⊻"
+        | "≢"
+        | "⇎"
+        | "<:"
+        | ":>"
+        | "<++"
+        | "++>"
+        }
 
     decimalLiteral { $[0-9]+ }
     octalLiteral { "0o" $[0-7]+ }
@@ -470,15 +469,17 @@ FormalsParen { "(" Formals? ")" }
 
     BooleanLiteral { "true" | "false" }
 
-    EscapeChar {
-        '\\' ('\\' | '%' |
-            $['"abefnrtv0-7] |
-            $[0-7]$[0-7] |
-            $[0123]$[0-7]$[0-7] |
-            'x' $[0-9a-fA-F]$[0-9a-fA-F] |
-            'u' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F] |
-            'U' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F])
-    }
+    EscapeChar
+        { '\\' ('\\'
+            | '%'
+            | $['"abefnrtv0-7]
+            | $[0-7]$[0-7]
+            | $[0123]$[0-7]$[0-7]
+            | 'x' $[0-9a-fA-F]$[0-9a-fA-F]
+            | 'u' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]
+            | 'U' $[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]$[0-9a-fA-F]
+            )
+        }
     staticChar { !["\r\n\\%] }
     multiStaticChar { !["\\%] }
 
