@@ -12,45 +12,34 @@ def export = E
 Rel(
     DefinitionDeclaration(
         Keyword, LhsId(Emphasis), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(BasicId)))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(BasicId)))))),
     DefinitionDeclaration(
         Keyword, LhsId(Emphasis), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(BasicId)))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(BasicId)))))),
     DefinitionDeclaration(
         Keyword, LhsId(Emphasis), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(BasicId)))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(BasicId)))))),
     DefinitionDeclaration(
         Keyword, LhsId(Emphasis), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(BasicId)))))))),
-
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(BasicId)))))),
     DefinitionDeclaration(
         Keyword, LhsId(Emphasis), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(BasicId)))))))))
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(BasicId)))))))
 
 # Constructors
 
@@ -63,20 +52,14 @@ Rel(
         Keyword,
         LhsId(ConstructorId),
         Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(
-                                    PartialApplicationExpression(
-                                        BasicExpression(ConstructorId),
-                                        LogicalParam(
-                                            LogicalExpression(
-                                                BasicExpression(Literal(BaseLiteral(IntLiteral))))),
-                                        LogicalParam(
-                                            LogicalExpression(
-                                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))))))
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(
+                            PartialApplicationExpression(
+                                BasicExpression(ConstructorId),
+                                BasicParam(BasicExpression(Literal(BaseLiteral(IntLiteral)))),
+                                BasicParam(BasicExpression(Literal(BaseLiteral(IntLiteral))))))))))))
 
 
 # Extended Keywords
@@ -102,82 +85,66 @@ Rel(
             Keyword,
             LhsId(BasicId),
             Expression(
-                UnionExpression(
-                    JoinExpression(
-                        OverrideExpression(
-                            RestrictExpression(
-                                LogicalExpression(
-                                    BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+                IffXorExpression(
+                    UnionExpression(
+                        ProductExpression(
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
         DefinitionDeclaration(
             Keyword,
             LhsId(Keyword),
             Expression(
-                UnionExpression(
-                    JoinExpression(
-                        OverrideExpression(
-                            RestrictExpression(
-                                LogicalExpression(
-                                    BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+                IffXorExpression(
+                    UnionExpression(
+                        ProductExpression(
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
         DefinitionDeclaration(
             Keyword,
             LhsId(Keyword),
             Expression(
-                UnionExpression(
-                    JoinExpression(
-                        OverrideExpression(
-                            RestrictExpression(
-                                LogicalExpression(
-                                    BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+                IffXorExpression(
+                    UnionExpression(
+                        ProductExpression(
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
         DefinitionDeclaration(
             Keyword,
             LhsId(Keyword),
             Expression(
-                UnionExpression(
-                    JoinExpression(
-                        OverrideExpression(
-                            RestrictExpression(
-                                LogicalExpression(
-                                    BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+                IffXorExpression(
+                    UnionExpression(
+                        ProductExpression(
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
         DefinitionDeclaration(
             Keyword,
             LhsId(BasicId),
             Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+                IffXorExpression(
+                    UnionExpression(
+                        ProductExpression(
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
         DefinitionDeclaration(
-                    Keyword,
-                    LhsId(Keyword),
-                    Expression(
-                        UnionExpression(
-                            JoinExpression(
-                                OverrideExpression(
-                                    RestrictExpression(
-                                        LogicalExpression(
-                                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+            Keyword,
+            LhsId(Keyword),
+            Expression(
+                IffXorExpression(
+                    UnionExpression(
+                        ProductExpression(
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
         DefinitionDeclaration(
-                    Keyword,
-                    LhsId(Keyword),
-                    Expression(
-                        UnionExpression(
-                            JoinExpression(
-                                OverrideExpression(
-                                    RestrictExpression(
-                                        LogicalExpression(
-                                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+            Keyword,
+            LhsId(Keyword),
+            Expression(
+                IffXorExpression(
+                    UnionExpression(
+                        ProductExpression(
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
         DefinitionDeclaration(
-                    Keyword,
-                    LhsId(Keyword),
-                    Expression(
-                        UnionExpression(
-                            JoinExpression(
-                                OverrideExpression(
-                                    RestrictExpression(
-                                        LogicalExpression(
-                                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+            Keyword,
+            LhsId(Keyword),
+            Expression(
+                IffXorExpression(
+                    UnionExpression(
+                        ProductExpression(
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
         Keyword))
 
 # Qualified Names
@@ -196,59 +163,47 @@ Rel(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(Emphasis),QualifiedNameElem)),
         Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(BasicId),QualifiedNameElem)),
         Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(ParenOpId(Operator)),QualifiedNameElem)),
         Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(ConstructorId),QualifiedNameElem)),
         Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(QualifiedKeyword(Keyword)),QualifiedNameElem)),
         Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(BasicId),QualifiedNameElem)),
         Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))

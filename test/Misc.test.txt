@@ -12,10 +12,7 @@ Rel(
     BlockComment,
     DefinitionDeclaration(
         Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))
-
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))
