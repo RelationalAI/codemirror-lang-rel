@@ -293,6 +293,9 @@ BasicExpression {
     BasicExpression !override ( op<"<++"> | op<"++>"> ) BasicExpression
 }
 
+/* Application expressions are defined explicitly to highlight
+ * the BasicId in these expressions.
+ */
 PartialApplicationExpression {
     BasicExpression !appl "[" NocommaParam? "]" |
     BasicExpression !appl "[" commaSep2<BasicParam> "]"
