@@ -2,14 +2,6 @@ name: Grammar Test
 
 on:
   push:
-    paths:
-      - "package.json"
-      - "package-lock.json"
-      - "rollup.config.js"
-      - "test/**"
-      - "src/**"
-      - "dist/**"
-      - ".github/workflows/test.yaml"
 
 jobs:
   grammar-test:
