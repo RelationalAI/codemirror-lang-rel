@@ -8,12 +8,10 @@ Rel(
     ModuleDeclaration(
         Keyword, LhsId(BasicId), DefinitionDeclaration(
             Keyword, LhsId(BasicId), Expression(
-                UnionExpression(
-                    JoinExpression(
-                        OverrideExpression(
-                            RestrictExpression(
-                                LogicalExpression(
-                                    BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))),
+                IffXorExpression(
+                    UnionExpression(
+                        ProductExpression(
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
         Keyword))
 
 # Value-Type Declaration
@@ -25,12 +23,11 @@ value type Distance = Float
 Rel(
     ValueTypeDeclaration(
         Keyword, Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(BasicId)))))))))
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(BasicId)))))))
+
 
 # Entity-Type Declaration
 
@@ -41,17 +38,11 @@ entity type Professional = String, String
 Rel(
     EntityTypeDeclaration(
         Keyword, Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    JoinExpression(
-                        OverrideExpression(
-                            RestrictExpression(
-                                LogicalExpression(
-                                    BasicExpression(BasicId))))),
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(BasicId)))))))))
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        ProductExpression(BasicExpression(BasicId)),
+                        BasicExpression(BasicId)))))))
 
 # Constraint Declaration
 
@@ -64,16 +55,14 @@ ic() {
 
 Rel(
     ConstraintDeclaration(
-        Keyword, FormalParamsParen, Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(
-                                    BasicExpression(BasicId),
-                                    OperatorKeyword,
-                                    BasicExpression(BasicId)))))))),
+        Keyword, FormalsParen, Expression(
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(
+                            BasicExpression(BasicId),
+                            OperatorKeyword,
+                            BasicExpression(BasicId))))))
         LineComment))
 
 # Bound Declaration
@@ -85,12 +74,9 @@ bound R = Int
 Rel(
     BoundDeclaration(
         Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(BasicId)))))))))
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(BasicExpression(BasicId)))))))
 
 
 
@@ -104,11 +90,9 @@ Rel(
     WithUseDeclaration(
         Keyword,
         Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(BasicExpression(BasicId))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(BasicExpression(BasicId))))),
         Keyword,
         Alias(BasicId),
         Alias(BasicId),

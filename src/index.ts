@@ -24,7 +24,7 @@ export const relLanguage = LRLanguage.define({
         "QualifiedKeyword!": tags.definition(tags.variableName),
         "PartialApplicationExpression/BasicExpression/BasicId": tags.variableName,
         "ApplicationExpression/BasicExpression/BasicId": tags.variableName,
-        "LogicalParam/LogicalExpression/BasicExpression/BasicId": tags.attributeName,
+        "BasicParam/BasicExpression/BasicId": tags.attributeName,
         "FormalId/BasicId": tags.attributeName,
         "InterpolationId AliasId/BasicId": tags.labelName,
         "QualifiedNameElem RelnameLiteral RelnameStringLiteral RelnameMultilineStringLiteral ValueTypeLiteral": tags.literal,

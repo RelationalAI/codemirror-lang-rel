@@ -11,32 +11,17 @@ def a = 101,
 Rel(
     DefinitionDeclaration(
         Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    JoinExpression(
-                        JoinExpression(
-                            JoinExpression(
-                                JoinExpression(
-                                    OverrideExpression(
-                                        RestrictExpression(
-                                            LogicalExpression(
-                                                BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
-                                OverrideExpression(
-                                    RestrictExpression(
-                                        LogicalExpression(
-                                            BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
-                            OverrideExpression(
-                                RestrictExpression(
-                                    LogicalExpression(
-                                        BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
-                        OverrideExpression(
-                            RestrictExpression(
-                                LogicalExpression(
-                                    BasicExpression(Literal(BaseLiteral(IntLiteral))))))),
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(FloatLiteral)))))))))))
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        ProductExpression(
+                            ProductExpression(
+                                ProductExpression(
+                                    ProductExpression(BasicExpression(Literal(BaseLiteral(IntLiteral)))),
+                                    BasicExpression(Literal(BaseLiteral(IntLiteral)))),
+                                BasicExpression(Literal(BaseLiteral(IntLiteral)))),
+                            BasicExpression(Literal(BaseLiteral(IntLiteral)))),
+                        BasicExpression(Literal(BaseLiteral(FloatLiteral)))))))))
 
 
 # Booleans
@@ -49,20 +34,16 @@ def b = false
 Rel(
     DefinitionDeclaration(
         Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BooleanLiteral))))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BooleanLiteral))))))),
     DefinitionDeclaration(
         Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BooleanLiteral))))))))))
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BooleanLiteral))))))))
 
 
 # Strings & Char
@@ -86,58 +67,40 @@ def f = raw""
 Rel(
     DefinitionDeclaration(
         Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(StaticStringLiteral)))))))))),
-    DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(StaticMultilineStringLiteral)))))))))),
-    DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(CharLiteral)))))))))),
-    DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(
-                                    Literal(
-                                        BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))),
-    DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(
-                                    Literal(
-                                        BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))),
-    DefinitionDeclaration(
-            Keyword, LhsId(BasicId), Expression(
+            IffXorExpression(
                 UnionExpression(
-                    JoinExpression(
-                        OverrideExpression(
-                            RestrictExpression(
-                                LogicalExpression(
-                                    BasicExpression(
-                                        Literal(
-                                            BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))))
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(StaticStringLiteral)))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(StaticMultilineStringLiteral)))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(CharLiteral)))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))),
+    DefinitionDeclaration(
+        Keyword, LhsId(BasicId), Expression(
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))
 
 
 # Relnames
@@ -151,25 +114,19 @@ def c = :"A string relname literal"
 Rel(
     DefinitionDeclaration(
         Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))),
     DefinitionDeclaration(
         Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))))),
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))),
     DefinitionDeclaration(
         Keyword, LhsId(BasicId), Expression(
-            UnionExpression(
-                JoinExpression(
-                    OverrideExpression(
-                        RestrictExpression(
-                            LogicalExpression(
-                                BasicExpression(Literal(BaseLiteral(RelnameStringLiteral)))))))))))
+            IffXorExpression(
+                UnionExpression(
+                    ProductExpression(
+                        BasicExpression(Literal(BaseLiteral(RelnameStringLiteral)))))))))
