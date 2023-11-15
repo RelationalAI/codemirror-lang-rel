@@ -10,18 +10,17 @@ def a = 101,
 
 Rel(
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
+        Keyword,
+        LhsId(BasicId),
+        ProductExpression(
+            ProductExpression(
+                ProductExpression(
                     ProductExpression(
-                        ProductExpression(
-                            ProductExpression(
-                                ProductExpression(
-                                    ProductExpression(BasicExpression(Literal(BaseLiteral(IntLiteral)))),
-                                    BasicExpression(Literal(BaseLiteral(IntLiteral)))),
-                                BasicExpression(Literal(BaseLiteral(IntLiteral)))),
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))),
-                        BasicExpression(Literal(BaseLiteral(FloatLiteral)))))))))
+                        BasicExpression(IntLiteral),
+                        BasicExpression(IntLiteral)),
+                    BasicExpression(IntLiteral)),
+                BasicExpression(IntLiteral)),
+            BasicExpression(FloatLiteral))))
 
 
 # Booleans
@@ -33,17 +32,13 @@ def b = false
 
 Rel(
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BooleanLiteral))))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(BooleanLiteral)),
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BooleanLiteral))))))))
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(BooleanLiteral)))
 
 
 # Strings & Char
@@ -66,41 +61,29 @@ def f = raw""
 
 Rel(
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(StaticStringLiteral)))))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(StaticStringLiteral)),
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(StaticMultilineStringLiteral)))))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(StaticMultilineStringLiteral)),
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(CharLiteral)))))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(CharLiteral)),
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(RawStringLiteral(Keyword,RawStringSequence))),
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(RawStringLiteral(Keyword,RawStringSequence))),
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(RawStringLiteral(Keyword, RawStringSequence))))))))))
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(RawStringLiteral(Keyword,RawStringSequence))))
 
 
 # Relnames
@@ -113,20 +96,14 @@ def c = :"A string relname literal"
 
 Rel(
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(RelnameLiteral)),
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(RelnameLiteral)))))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(RelnameLiteral)),
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(RelnameStringLiteral)))))))))
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(RelnameStringLiteral)))
