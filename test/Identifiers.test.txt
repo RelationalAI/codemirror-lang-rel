@@ -11,35 +11,25 @@ def export = E
 
 Rel(
     DefinitionDeclaration(
-        Keyword, LhsId(Emphasis), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(BasicId)))))),
+        Keyword,
+        LhsId(Emphasis),
+        BasicExpression(BasicId)),
     DefinitionDeclaration(
-        Keyword, LhsId(Emphasis), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(BasicId)))))),
+        Keyword,
+        LhsId(Emphasis),
+        BasicExpression(BasicId)),
     DefinitionDeclaration(
-        Keyword, LhsId(Emphasis), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(BasicId)))))),
+        Keyword,
+        LhsId(Emphasis),
+        BasicExpression(BasicId)),
     DefinitionDeclaration(
-        Keyword, LhsId(Emphasis), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(BasicId)))))),
+        Keyword,
+        LhsId(Emphasis),
+        BasicExpression(BasicId)),
     DefinitionDeclaration(
-        Keyword, LhsId(Emphasis), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(BasicId)))))))
+        Keyword,
+        LhsId(Emphasis),
+        BasicExpression(BasicId)))
 
 # Constructors
 
@@ -51,15 +41,11 @@ Rel(
     DefinitionDeclaration(
         Keyword,
         LhsId(ConstructorId),
-        Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(
-                            PartialApplicationExpression(
-                                BasicExpression(ConstructorId),
-                                BasicParam(BasicExpression(Literal(BaseLiteral(IntLiteral)))),
-                                BasicParam(BasicExpression(Literal(BaseLiteral(IntLiteral))))))))))))
+        BasicExpression(
+            PartialApplicationExpression(
+                BasicExpression(ConstructorId),
+                BasicParam(BasicExpression(IntLiteral)),
+                BasicParam(BasicExpression(IntLiteral))))))
 
 
 # Extended Keywords
@@ -84,67 +70,35 @@ Rel(
         DefinitionDeclaration(
             Keyword,
             LhsId(BasicId),
-            Expression(
-                IffXorExpression(
-                    UnionExpression(
-                        ProductExpression(
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+            BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
             LhsId(Keyword),
-            Expression(
-                IffXorExpression(
-                    UnionExpression(
-                        ProductExpression(
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+            BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
             LhsId(Keyword),
-            Expression(
-                IffXorExpression(
-                    UnionExpression(
-                        ProductExpression(
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+            BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
             LhsId(Keyword),
-            Expression(
-                IffXorExpression(
-                    UnionExpression(
-                        ProductExpression(
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+            BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
             LhsId(BasicId),
-            Expression(
-                IffXorExpression(
-                    UnionExpression(
-                        ProductExpression(
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+            BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
             LhsId(Keyword),
-            Expression(
-                IffXorExpression(
-                    UnionExpression(
-                        ProductExpression(
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+            BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
             LhsId(Keyword),
-            Expression(
-                IffXorExpression(
-                    UnionExpression(
-                        ProductExpression(
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+            BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
             LhsId(Keyword),
-            Expression(
-                IffXorExpression(
-                    UnionExpression(
-                        ProductExpression(
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+            BasicExpression(IntLiteral)),
         Keyword))
 
 # Qualified Names
@@ -162,48 +116,24 @@ Rel(
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(Emphasis),QualifiedNameElem)),
-        Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+        BasicExpression(IntLiteral)),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(BasicId),QualifiedNameElem)),
-        Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+        BasicExpression(IntLiteral)),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(ParenOpId(Operator)),QualifiedNameElem)),
-        Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+        BasicExpression(IntLiteral)),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(ConstructorId),QualifiedNameElem)),
-        Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+        BasicExpression(IntLiteral)),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(QualifiedKeyword(Keyword)),QualifiedNameElem)),
-        Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+        BasicExpression(IntLiteral)),
     DefinitionDeclaration(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(BasicId),QualifiedNameElem)),
-        Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))
+        BasicExpression(IntLiteral)))

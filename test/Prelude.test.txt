@@ -18,11 +18,7 @@ Rel(
         Annotation(AnnotationKeyword(BasicId)),
         Keyword,
         LhsId(BasicId),
-        Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))
+        BasicExpression(IntLiteral)))
 
 # DocStrings
 
@@ -49,26 +45,22 @@ def a = 1
 
 Rel(
     DefinitionDeclaration(
-        Docstring(Keyword, RawStringSequence), Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+        Docstring(Keyword,RawStringSequence),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(IntLiteral)),
     DefinitionDeclaration(
-        Docstring(Keyword, RawStringSequence), Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+        Docstring(Keyword,RawStringSequence),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(IntLiteral)),
     DefinitionDeclaration(
-        Docstring(Keyword, RawStringSequence), Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+        Docstring(Keyword,RawStringSequence),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(IntLiteral)),
     DefinitionDeclaration(
-        Docstring(Keyword, RawStringSequence), Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))
+        Docstring(Keyword,RawStringSequence),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(IntLiteral)))

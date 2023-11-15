@@ -1,6 +1,6 @@
 @detectDelim
 
-@top Rel { declaration+ | Annotation* Expression }
+@top Rel { declaration+ | Annotation* expression }
 
 @skip { spaces | newLine | LineComment | BlockComment }
 
@@ -65,7 +65,7 @@ Docstring
 
 AnnotationKeyword { "@" BasicId }
 
-AnnotationParams { commaSep1<BaseLiteral> }
+AnnotationParams { commaSep1<baseLiteral> }
 
 Annotation { AnnotationKeyword ( !annot "(" AnnotationParams ")" )? }
 
@@ -74,31 +74,31 @@ Annotation { AnnotationKeyword ( !annot "(" AnnotationParams ")" )? }
  */
 
 DefinitionDeclaration {
-    Docstring? Annotation* kw<"def"> LhsId FormalsBracket* FormalsParen? ( "=" Expression | "{" Expression "}" )
+    Docstring? Annotation* kw<"def"> LhsId formalsBracket* formalsParen? ( "=" expression | "{" expression "}" )
 }
 
 BoundDeclaration {
-    Docstring? Annotation* kw<"bound"> LhsId FormalsBracket* FormalsParen? ( "=" Expression | "{" Expression "}" )?
+    Docstring? Annotation* kw<"bound"> LhsId formalsBracket* formalsParen? ( "=" expression | "{" expression "}" )?
 }
 
 ValueTypeDeclaration {
-    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( FormalsBracket* FormalsParen? ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( formalsBracket* formalsParen? ( "=" expression | "{" expression "}" ) )?
 }
 
 EntityTypeDeclaration {
-    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( FormalsBracket* FormalsParen? ( "=" Expression | "{" Expression "}" ) )?
+    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( formalsBracket* formalsParen? ( "=" expression | "{" expression "}" ) )?
 }
 
 ConstraintDeclaration {
-    Docstring? Annotation* kw<"ic"> LhsId? FormalsBracket* FormalsParen? ( "=" Expression | "{" Expression "}" )
+    Docstring? Annotation* kw<"ic"> LhsId? formalsBracket* formalsParen? ( "=" expression | "{" expression "}" )
 }
 
 ModuleDeclaration {
-    Docstring? Annotation* kw<"module"> LhsId FormalsBracket* declaration* kw<"end">
+    Docstring? Annotation* kw<"module"> LhsId formalsBracket* declaration* kw<"end">
 }
 
 WithUseDeclaration {
-    kw<"with"> Expression kw<"use"> ("..." | commaSep1<Alias>)
+    kw<"with"> expression kw<"use"> ("..." | commaSep1<Alias>)
 }
 
 id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
@@ -175,22 +175,22 @@ RawStringLiteral {
     xkw<"raw"> RawStringSequence
 }
 
-Interpolation
+interpolation
     { InterpolationId
     | InterpolationExpression
     }
 
-InterpolationExpression { "%(" Expression ")" }
+InterpolationExpression { "%(" expression ")" }
 
 InterpolationLiteral {
-    quote1 staticStringPart? Interpolation (staticStringPart | Interpolation)* quote1
+    quote1 staticStringPart? interpolation (staticStringPart | interpolation)* quote1
 }
 
 InterpolationMultilineLiteral {
-    quote3 staticMultilineStringPart? Interpolation (staticMultilineStringPart | Interpolation)* quote3
+    quote3 staticMultilineStringPart? interpolation (staticMultilineStringPart | interpolation)* quote3
 }
 
-BaseLiteral
+baseLiteral
     { IntLiteral
     | FloatLiteral
     | RelnameLiteral
@@ -204,8 +204,8 @@ BaseLiteral
     | RawStringLiteral
     }
 
-Literal
-    { BaseLiteral
+literal
+    { baseLiteral
     | BooleanLiteral
     | SpecializeIntLiteral
     | InterpolationLiteral
@@ -223,10 +223,10 @@ BasicExpression
     | ParenOpId ~parenOpConflict
 
     // literal
-    | Literal ~literalConflict
+    | literal ~literalConflict
 
     // specialize
-    | "#(" Expression ")"
+    | "#(" expression ")"
 
     | PartialApplicationExpression
     | ApplicationExpression
@@ -271,8 +271,8 @@ BasicExpression
     | BasicExpression !compL op<"⊂"> BasicExpression
     | BasicExpression !compL op<"⊃"> BasicExpression
 
-    | kw<"if"> Expression kw<"then"> Expression kw<"else"> Expression kw<"end">
-    | ( kw<"forall"> | "∀" ) "(" Bindings ":" Expression ")"
+    | kw<"if"> expression kw<"then"> expression kw<"else"> expression kw<"end">
+    | ( kw<"forall"> | "∀" ) "(" Bindings ":" expression ")"
 
     | BoundedExpression
 
@@ -306,22 +306,18 @@ ApplicationExpression
     }
 
 BoundedExpression
-    { "(" Expression? ")"
-    | "{" Expression? "}"
-    | "(" ( "," | ";" )? ")"
-    | "{" ( "," | ";" )? "}"
+    { "(" expression? ( "," | ";" )? ")"
+    | "{" expression? ( "," | ";" )? "}"
     }
 
 Bindings
-    { Formals ( !bind kw<"where"> UnionExpression )?
+    { Formals ( !bind kw<"where"> nonAbstractExpression )?
     | "(" Bindings ")"
     }
 
 AbstractExpression
-    { Bindings !abstract ":" UnionExpression
-    | Bindings !abstract ":" AbstractExpression
-    | UnionExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
-    | AbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+    { Bindings !abstract ":" expression
+    | expression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
     }
 
 LogicalAbstractExpression
@@ -331,51 +327,44 @@ LogicalAbstractExpression
     | LogicalAbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
     }
 
-NocommaAbstractExpression
-    { Bindings !abstract ":" NocommaExpression
-    | NocommaExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
-    }
-
-ProductExpression
+nonAbstractExpression
     { BasicExpression
-    | ProductExpression !product "," BasicExpression?
+    | IffXorExpression
+        { expression !iff ( kw<"iff"> | op<"≡"> | op<"⇔"> ) expression
+        | expression !xor ( kw<"xor"> | op<"≢"> | op<"⇎"> | op<"⊻"> ) expression
+        }
+    | UnionExpression { expression !union ";" expression }
+    | ProductExpression { expression !product "," expression }
     }
 
-UnionExpression
-    { ProductExpression
-    | UnionExpression !union ";" ProductExpression?
-    }
+expression
+    { nonAbstractExpression
+    | AbstractExpression }
 
-IffXorExpression
-    { UnionExpression
-    | UnionExpression !iff ( kw<"iff"> | op<"≡"> | op<"⇔"> ) IffXorExpression
-    | UnionExpression !xor ( kw<"xor"> | op<"≢"> | op<"⇎"> | op<"⊻"> ) IffXorExpression
-    }
-
-Expression { IffXorExpression | AbstractExpression }
-
-NocommaUnionExpression
+nocommaExpression
     { BasicExpression
-    | NocommaUnionExpression !union ";" BasicExpression
+    | NocommaUnionExpression { nocommaExpression !union ";" nocommaExpression }
+    | NocommaAbstractExpression
+        { Bindings !abstract ":" nocommaExpression
+        | nocommaExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+        }
     }
-
-NocommaExpression { NocommaUnionExpression | NocommaAbstractExpression }
 
 BasicParam { Operator ~operatorConflict | BasicExpression }
 
-NocommaParam { Operator ~operatorConflict | NocommaExpression }
+NocommaParam { Operator ~operatorConflict | nocommaExpression }
 
 Formal
-    { Literal ~literalConflict
+    { literal ~literalConflict
     | Operator ~operatorConflict
     | (id "..."? ~idConflict ) (( kw<"in"> | op<"∈"> ) BasicExpression)?
     }
 
 Formals { Formal ( !param "," Formal )* }
 
-FormalsBracket { "[" Formals? "]" }
+formalsBracket { "[" Formals? "]" }
 
-FormalsParen { "(" Formals? ")" }
+formalsParen { "(" Formals? ")" }
 
 @tokens {
     spaces[@export] { $[\u0009 \u000b\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]+ }

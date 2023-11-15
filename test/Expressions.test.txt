@@ -14,28 +14,17 @@ Rel(
     Annotation(AnnotationKeyword(BasicId)),
     Annotation(
         AnnotationKeyword(BasicId),
-        AnnotationParams(BaseLiteral(IntLiteral), BaseLiteral(RelnameLiteral))
-    ),
-    Expression(
-        IffXorExpression(
+        AnnotationParams(IntLiteral,RelnameLiteral)),
+    BasicExpression(
+        BoundedExpression(
             UnionExpression(
-                ProductExpression(
+                UnionExpression(
                     BasicExpression(
-                        BoundedExpression(
-                            Expression(
-                                IffXorExpression(
-                                    UnionExpression(
-                                        UnionExpression(
-                                            UnionExpression(
-                                                ProductExpression(
-                                                    BasicExpression(
-                                                        BasicExpression(Literal(BaseLiteral(IntLiteral))),
-                                                        OperatorKeyword,
-                                                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))),
-                                            ProductExpression(
-                                                BasicExpression(Literal(BaseLiteral(DateLiteral))))),
-                                        ProductExpression(
-                                            BasicExpression(Literal(BaseLiteral(DateTimeLiteral))))))))))))))
+                        BasicExpression(IntLiteral),
+                        OperatorKeyword,
+                        BasicExpression(IntLiteral)),
+                    BasicExpression(DateLiteral)),
+                BasicExpression(DateTimeLiteral)))))
 
 
 # Interpolation
@@ -58,33 +47,28 @@ def a = "%b"
 
 Rel(
     DefinitionDeclaration(
-        Keyword,LhsId(Emphasis),Expression(IffXorExpression(UnionExpression(ProductExpression(BasicExpression(Literal(
-            InterpolationMultilineLiteral(Interpolation(InterpolationExpression(
-                Expression(
-                    IffXorExpression(
-                        UnionExpression(
-                            ProductExpression(
-                                BasicExpression(
-                                    PartialApplicationExpression(
-                                        BasicExpression(BasicId),
-                                        BasicParam(BasicExpression(Literal(BaseLiteral(StaticStringLiteral)))),
-                                        BasicParam(BasicExpression(BoundedExpression(
-                                            Expression(IffXorExpression(UnionExpression(ProductExpression(BasicExpression(Literal(
-                                                InterpolationMultilineLiteral(Interpolation(InterpolationExpression(
-                                                    Expression(
-                                                        IffXorExpression(
-                                                            UnionExpression(
-                                                                ProductExpression(
-                                                                    BasicExpression(
-                                                                        BasicExpression(BasicId),
-                                                                        OperatorKeyword,
-                                                                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))))))))))))))))))))))))))))),
+        Keyword,
+        LhsId(Emphasis),
+        BasicExpression(
+            InterpolationMultilineLiteral(
+                InterpolationExpression(
+                    BasicExpression(
+                        PartialApplicationExpression(
+                            BasicExpression(BasicId),
+                            BasicParam(BasicExpression(StaticStringLiteral)),
+                            BasicParam(BasicExpression(
+                                BoundedExpression(
+                                    BasicExpression(
+                                        InterpolationMultilineLiteral(
+                                            InterpolationExpression(
+                                                BasicExpression(
+                                                    BasicExpression(BasicId),
+                                                    OperatorKeyword,
+                                                    BasicExpression(IntLiteral)))))))))))))),
     DefinitionDeclaration(
-        Keyword,LhsId(BasicId),Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(InterpolationLiteral(Interpolation(InterpolationId))))))))))
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(InterpolationLiteral(InterpolationId))))
 
 # Empty Expression
 
@@ -96,23 +80,17 @@ def c = {,}
 
 Rel(
     DefinitionDeclaration(
-        Keyword,LhsId(BasicId),Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(BoundedExpression)))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(BoundedExpression)),
     DefinitionDeclaration(
-        Keyword,LhsId(BasicId),Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(BoundedExpression)))))),
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(BoundedExpression)),
     DefinitionDeclaration(
-        Keyword,LhsId(BasicId),Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(BoundedExpression)))))))
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(BoundedExpression)))
 
 # Expression with Trailing Comma/Semicolon
 
@@ -122,24 +100,22 @@ def G = create_graph[{(:weight, W)}, {(:is_weighted,);}]
 
 Rel(
     DefinitionDeclaration(
-        Keyword,LhsId(BasicId),Expression(IffXorExpression(UnionExpression(ProductExpression(BasicExpression(
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(
             PartialApplicationExpression(
                 BasicExpression(BasicId),
                 BasicParam(
                     BasicExpression(
-                        BoundedExpression(Expression(IffXorExpression(UnionExpression(ProductExpression(
+                        BoundedExpression(
                             BasicExpression(
-                                BoundedExpression(Expression(IffXorExpression(UnionExpression(
+                                BoundedExpression(
                                     ProductExpression(
-                                        ProductExpression(BasicExpression(Literal(BaseLiteral(RelnameLiteral)))),
-                                        BasicExpression(BasicId)))))))))))))),
+                                        BasicExpression(RelnameLiteral),
+                                        BasicExpression(BasicId))))))),
                 BasicParam(
                     BasicExpression(
-                        BoundedExpression(Expression(IffXorExpression(UnionExpression(
-                            UnionExpression(
-                                ProductExpression(
-                                    BasicExpression(
-                                        BoundedExpression(Expression(IffXorExpression(UnionExpression(
-                                            ProductExpression(
-                                                ProductExpression(
-                                                    BasicExpression(Literal(BaseLiteral(RelnameLiteral))))))))))))))))))))))))))
+                        BoundedExpression(
+                            BasicExpression(
+                                BoundedExpression(
+                                    BasicExpression(RelnameLiteral))))))))))

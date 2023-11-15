@@ -6,12 +6,12 @@ module store def a = 1 end
 
 Rel(
     ModuleDeclaration(
-        Keyword, LhsId(BasicId), DefinitionDeclaration(
-            Keyword, LhsId(BasicId), Expression(
-                IffXorExpression(
-                    UnionExpression(
-                        ProductExpression(
-                            BasicExpression(Literal(BaseLiteral(IntLiteral)))))))),
+        Keyword,
+        LhsId(BasicId),
+        DefinitionDeclaration(
+            Keyword,
+            LhsId(BasicId),
+            BasicExpression(IntLiteral)),
         Keyword))
 
 # Value-Type Declaration
@@ -22,12 +22,10 @@ value type Distance = Float
 
 Rel(
     ValueTypeDeclaration(
-        Keyword, Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(BasicId)))))))
-
+        Keyword,
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(BasicId)))
 
 # Entity-Type Declaration
 
@@ -37,12 +35,12 @@ entity type Professional = String, String
 
 Rel(
     EntityTypeDeclaration(
-        Keyword, Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        ProductExpression(BasicExpression(BasicId)),
-                        BasicExpression(BasicId)))))))
+        Keyword,
+        Keyword,
+        LhsId(BasicId),
+        ProductExpression(
+            BasicExpression(BasicId),
+            BasicExpression(BasicId))))
 
 # Constraint Declaration
 
@@ -55,14 +53,11 @@ ic() {
 
 Rel(
     ConstraintDeclaration(
-        Keyword, FormalsParen, Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(
-                            BasicExpression(BasicId),
-                            OperatorKeyword,
-                            BasicExpression(BasicId))))))
+        Keyword,
+        BasicExpression(
+            BasicExpression(BasicId),
+            OperatorKeyword,
+            BasicExpression(BasicId)),
         LineComment))
 
 # Bound Declaration
@@ -73,12 +68,9 @@ bound R = Int
 
 Rel(
     BoundDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(BasicExpression(BasicId)))))))
-
-
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(BasicId)))
 
 # With-Use Declaration
 
@@ -89,10 +81,7 @@ with mod use a, b, c
 Rel(
     WithUseDeclaration(
         Keyword,
-        Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(BasicExpression(BasicId))))),
+        BasicExpression(BasicId),
         Keyword,
         Alias(BasicId),
         Alias(BasicId),

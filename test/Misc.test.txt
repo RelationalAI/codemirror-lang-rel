@@ -11,8 +11,6 @@ Rel(
     LineComment,
     BlockComment,
     DefinitionDeclaration(
-        Keyword, LhsId(BasicId), Expression(
-            IffXorExpression(
-                UnionExpression(
-                    ProductExpression(
-                        BasicExpression(Literal(BaseLiteral(IntLiteral)))))))))
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(IntLiteral)))
