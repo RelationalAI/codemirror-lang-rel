@@ -23,7 +23,7 @@ Rel(
 # DocStrings
 
 
-doc"A single-line docstring"
+doc"A single-line docstring // with a comment"
 def a = 1
 
 doc"""

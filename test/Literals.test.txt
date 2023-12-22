@@ -46,7 +46,7 @@ Rel(
 
 def a = "A string with \"double\" and 'single' quotes"
 def b = """A Multi-line string
-New line
+New line // with a comment in a string
 """
 def c = 'A'
 def d = raw"""""""
