@@ -29,9 +29,14 @@ Rel(
 
 # Interpolation
 def output = """
+    // A single comment
+    /***
+        A block comment
+    ***/
     %(
         string_join["\n", {
             """
+            // Comment in a string
                 def n[x] = %(
                     x + 1
                 )

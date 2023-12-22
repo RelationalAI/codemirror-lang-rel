@@ -500,8 +500,8 @@ formalsParen { "(" Formals? ")" }
     LineComment { "//" ![\n]* }
     BlockComment { "/*" ( ![*] | "*"+ ![/*] )* "*"+ "/" }
 
-    @precedence { spaces newLine BlockComment LineComment DocstringLiteral staticStringPart }
-    @precedence { spaces newLine BlockComment LineComment MultilineDocstringLiteral staticMultilineStringPart }
+    @precedence { spaces newLine staticStringPart BlockComment LineComment DocstringLiteral }
+    @precedence { spaces newLine staticMultilineStringPart BlockComment LineComment MultilineDocstringLiteral }
     @precedence { DateTimeLiteral DateLiteral FloatLiteral IntLiteral }
     @precedence { BooleanLiteral BasicId }
     @precedence { ConstructorId Operator }
