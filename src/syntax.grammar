@@ -39,7 +39,9 @@ declaration[@isGroup=Declaration]
     | EntityTypeDeclaration
     | ConstraintDeclaration
     | ModuleDeclaration
+    | NamespaceDeclaration
     | WithUseDeclaration
+    | ImportDeclaration
     }
 
 /*
@@ -97,8 +99,16 @@ ModuleDeclaration {
     Docstring? Annotation* kw<"module"> LhsId formalsBracket* declaration* kw<"end">
 }
 
+NamespaceDeclaration {
+    Docstring? Annotation* kw<"namespace"> LhsId formalsBracket* declaration* kw<"end">
+}
+
 WithUseDeclaration {
     kw<"with"> expression kw<"use"> ("..." | commaSep1<Alias>)
+}
+
+ImportDeclaration {
+    kw<"from"> LhsId kw<"import"> ("..." | commaSep1<Alias>)
 }
 
 id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
@@ -436,6 +446,7 @@ formalsParen { "(" Formals? ")" }
         | ":>"
         | "<++"
         | "++>"
+        | "++"
         }
 
     decimalLiteral { $[0-9]+ }
@@ -489,7 +500,7 @@ formalsParen { "(" Formals? ")" }
     RelnameStringLiteral { ":" StaticStringLiteral }
     RelnameMultilineStringLiteral { ":" StaticMultilineStringLiteral }
 
-    QualifiedNameElem { ":" (BasicId | ConstructorId) | ":(" Operator ")" }
+    QualifiedNameElem { ":" (BasicId | ConstructorId) | ":(" Operator ")" | "::" (BasicId | ConstructorId) | "::(" Operator ")" }
     InterpolationId { "%" basicIdentifier }
 
     quote1 { '"' }

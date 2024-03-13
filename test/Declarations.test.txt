@@ -14,6 +14,22 @@ Rel(
             BasicExpression(IntLiteral)),
         Keyword))
 
+# Namespace Declaration
+
+namespace store def a = 1 end
+
+==>
+
+Rel(
+    NamespaceDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        DefinitionDeclaration(
+            Keyword,
+            LhsId(BasicId),
+            BasicExpression(IntLiteral)),
+        Keyword))
+
 # Value-Type Declaration
 
 value type Distance = Float
@@ -82,6 +98,21 @@ Rel(
     WithUseDeclaration(
         Keyword,
         BasicExpression(BasicId),
+        Keyword,
+        Alias(BasicId),
+        Alias(BasicId),
+        Alias(BasicId)))
+
+# From-Import Declaration
+
+from ns::subns import a, b, c
+
+==>
+
+Rel(
+    ImportDeclaration(
+        Keyword,
+        LhsId(QualifiedName(QualifiedNameId(BasicId),QualifiedNameElem)),
         Keyword,
         Alias(BasicId),
         Alias(BasicId),
