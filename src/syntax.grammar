@@ -41,6 +41,7 @@ declaration[@isGroup=Declaration]
     | ModuleDeclaration
     | NamespaceDeclaration
     | WithUseDeclaration
+    | ImportDeclaration
     }
 
 /*
