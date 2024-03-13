@@ -112,7 +112,7 @@ from ns::subns import a, b, c
 Rel(
     ImportDeclaration(
         Keyword,
-        LhsId(QualifiedName(BasicId, BasicId)),
+        LhsId(QualifiedName(QualifiedNameId(BasicId),QualifiedNameElem)),
         Keyword,
         Alias(BasicId),
         Alias(BasicId),
