@@ -106,6 +106,10 @@ WithUseDeclaration {
     kw<"with"> expression kw<"use"> ("..." | commaSep1<Alias>)
 }
 
+ImportDeclaration {
+    kw<"from"> LhsId kw<"import"> ("..." | commaSep1<Alias>)
+}
+
 id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
 
 ParenOpId { "(" Operator !parenOp ")" }
@@ -495,7 +499,7 @@ formalsParen { "(" Formals? ")" }
     RelnameStringLiteral { ":" StaticStringLiteral }
     RelnameMultilineStringLiteral { ":" StaticMultilineStringLiteral }
 
-    QualifiedNameElem { ":" (BasicId | ConstructorId) | ":(" Operator ")" }
+    QualifiedNameElem { ":" (BasicId | ConstructorId) | ":(" Operator ")" | "::" (BasicId | ConstructorId) | "::(" Operator ")" }
     InterpolationId { "%" basicIdentifier }
 
     quote1 { '"' }
