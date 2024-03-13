@@ -39,6 +39,7 @@ declaration[@isGroup=Declaration]
     | EntityTypeDeclaration
     | ConstraintDeclaration
     | ModuleDeclaration
+    | NamespaceDeclaration
     | WithUseDeclaration
     }
 
@@ -95,6 +96,10 @@ ConstraintDeclaration {
 
 ModuleDeclaration {
     Docstring? Annotation* kw<"module"> LhsId formalsBracket* declaration* kw<"end">
+}
+
+NamespaceDeclaration {
+    Docstring? Annotation* kw<"namespace"> LhsId formalsBracket* declaration* kw<"end">
 }
 
 WithUseDeclaration {
@@ -436,6 +441,7 @@ formalsParen { "(" Formals? ")" }
         | ":>"
         | "<++"
         | "++>"
+        | "++"
         }
 
     decimalLiteral { $[0-9]+ }
