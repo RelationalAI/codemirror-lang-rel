@@ -102,3 +102,18 @@ Rel(
         Alias(BasicId),
         Alias(BasicId),
         Alias(BasicId)))
+
+# From-Import Declaration
+
+from ns::subns import a, b, c
+
+==>
+
+Rel(
+    ImportDeclaration(
+        Keyword,
+        QualifiedName(BasicId, BasicId),
+        Keyword,
+        Alias(BasicId),
+        Alias(BasicId),
+        Alias(BasicId)))
