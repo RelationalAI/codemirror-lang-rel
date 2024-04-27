@@ -16,7 +16,6 @@
     product @left,
     union @left,
     compL @left,
-    compR @right,
     not,
     quant,
     and @left,
@@ -261,6 +260,7 @@ BasicExpression
         ) BasicExpression
     | BasicExpression !add
         ( op<"+">
+        | op<"++">
         | op<"-">
         | op<"∩">
         | op<"⊕">
@@ -268,28 +268,11 @@ BasicExpression
         ) BasicExpression
     | BasicExpression !union ( op<"∪"> | op<"⊔"> ) BasicExpression
     | BasicExpression !compL
-        ( op<"=">
-        | op<"!=">
-        | op<"≈">
-        | op<"∼">
-        | op<"←">
-        | op<"≼">
-        | op<"≽">
-        | op<"≺">
-        | op<"≻">
-        | op<"≠">
-        | op<"<">
-        | op<">">
-        | op<"<=">
-        | op<"≤">
-        | op<">=">
-        | op<"≥">
-        | op<"⊆">
-        | op<"⊇">
-        | op<"⊂">
-        | op<"⊃">
+        ( op<"="> | op<"!="> | op<"≠"> | op<"≡"> | op<"≢"> | op<"~="> | op<"!~=">
+        | op<"←"> | op<"→">
+        | op<"<"> | op<">"> | op<"<="> | op<"≤"> | op<">="> | op<"≥">
+        | op<"⊆"> | op<"⊇"> | op<"⊂"> | op<"⊃">
         ) BasicExpression
-    | BasicExpression !compR op<"→"> BasicExpression
     | BasicExpression !iffXor ( kw<"iff"> | kw<"xor"> | op<"⇔"> | op<"⇎"> | op<"⊻"> ) BasicExpression
 
     | kw<"if"> v1expression kw<"then"> v1expression kw<"else"> v1expression kw<"end">
@@ -351,7 +334,7 @@ V1LogicalAbstractExpression
 nonAbstractExpression
     { BasicExpression
     | UnionExpression { v1expression !union ";" v1expression }
-    | ProductExpression { v1expression !product "," v1expression }
+    | ProductExpression { v1expression !product "," v1expression | v1expression !product kw<"where"> v1expression }
     | TripleEqualExpression { v1expression !tripleEqual (op<'≡'> | op<'≢'>) v1expression }
     }
 
@@ -432,15 +415,10 @@ v1FormalsParen { "(" Bindings? ")" }
         | "≤"
         | ">="
         | "≥"
-        | "∈"
         | "⊆"
         | "⊇"
         | "⊂"
         | "⊃"
-        | "≼"
-        | "≽"
-        | "≺"
-        | "≻"
         | "¬"
         | "∧"
         | "∨"
@@ -458,6 +436,9 @@ v1FormalsParen { "(" Bindings? ")" }
         | "<++"
         | "++>"
         | "++"
+        | "~="
+        | "!~="
+        | $[\u2200-\u22FF]
         }
 
     decimalLiteral { $[0-9]+ }
@@ -534,7 +515,7 @@ v1FormalsParen { "(" Bindings? ")" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
     @precedence { MultilineDocstringLiteral DocstringLiteral }
-
+    @precedence { "∀" "∃" Operator }
 }
 
 kw<term> { @specialize[@name=Keyword]<BasicId, term> }
