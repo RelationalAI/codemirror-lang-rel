@@ -25,7 +25,7 @@ export const relLanguage = LRLanguage.define({
         "PartialApplicationExpression/BasicExpression/BasicId": tags.variableName,
         "ApplicationExpression/BasicExpression/BasicId": tags.variableName,
         "BasicParam/BasicExpression/BasicId": tags.attributeName,
-        "Formal/BasicId": tags.attributeName,
+        "VarDecl/BasicId": tags.attributeName,
         "InterpolationId AliasId/BasicId": tags.labelName,
         "QualifiedNameElem RelnameLiteral RelnameStringLiteral RelnameMultilineStringLiteral ValueTypeLiteral": tags.literal,
         "DateLiteral DateTimeLiteral": tags.string,

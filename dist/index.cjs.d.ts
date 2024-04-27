@@ -33,8 +33,8 @@ declare namespace relTerms {
     const QualifiedNameId: 35;
     const QualifiedKeyword: 41;
     const QualifiedNameElem: 59;
-    const Formals: 60;
-    const Formal: 61;
+    const Bindings: 60;
+    const VarDecl: 61;
     const BooleanLiteral: 62;
     const SpecializeIntLiteral: 63;
     const InterpolationLiteral: 64;
@@ -43,12 +43,12 @@ declare namespace relTerms {
     const BasicExpression: 67;
     const PartialApplicationExpression: 68;
     const NocommaParam: 69;
-    const Bindings: 72;
+    const V1Bindings: 72;
     const BasicParam: 73;
     const ApplicationExpression: 74;
     const BoundedExpression: 113;
-    const LogicalAbstractExpression: 115;
-    const AbstractExpression: 134;
+    const V1LogicalAbstractExpression: 115;
+    const V1AbstractExpression: 134;
     const InterpolationMultilineLiteral: 135;
     const BoundDeclaration: 138;
     const ValueTypeDeclaration: 139;

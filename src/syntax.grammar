@@ -1,6 +1,6 @@
 @detectDelim
 
-@top Rel { declaration_namespace+ | Annotation* expression }
+@top Rel { declaration_namespace+ | v1TopLevelExpression }
 
 @skip { spaces | newLine | LineComment | BlockComment }
 
@@ -81,31 +81,31 @@ Annotation { AnnotationKeyword ( !annot "(" AnnotationParams ")" )? }
  */
 
 DefinitionDeclaration {
-    Docstring? Annotation* kw<"def"> LhsId formalsBracket* formalsParen? ( "=" expression | "{" expression "}" )
+    Docstring? Annotation* kw<"def"> LhsId v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" )
 }
 
 BoundDeclaration {
-    Docstring? Annotation* kw<"bound"> LhsId formalsBracket* formalsParen? ( "=" expression | "{" expression "}" )?
+    Docstring? Annotation* kw<"bound"> LhsId v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" )?
 }
 
 ValueTypeDeclaration {
-    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( formalsBracket* formalsParen? ( "=" expression | "{" expression "}" ) )?
+    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" ) )?
 }
 
 EntityTypeDeclaration {
-    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( formalsBracket* formalsParen? ( "=" expression | "{" expression "}" ) )?
+    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" ) )?
 }
 
 ConstraintDeclaration {
-    Docstring? Annotation* kw<"ic"> LhsId? formalsBracket* formalsParen? ( "=" expression | "{" expression "}" )
+    Docstring? Annotation* kw<"ic"> LhsId? v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" )
 }
 
 ModuleDeclaration {
-    Docstring? Annotation* kw<"module"> LhsId formalsBracket* declaration* kw<"end">
+    Docstring? Annotation* kw<"module"> LhsId v1FormalsBracket* declaration* kw<"end">
 }
 
 NamespaceDeclaration {
-    Docstring? Annotation* kw<"namespace"> LhsId formalsBracket* declaration_namespace* kw<"end">
+    Docstring? Annotation* kw<"namespace"> LhsId v1FormalsBracket* declaration_namespace* kw<"end">
 }
 
 WithUseDeclaration {
@@ -114,10 +114,6 @@ WithUseDeclaration {
 
 ImportDeclaration {
     kw<"from"> LhsId kw<"import"> ("..." | commaSep1<Alias>)
-}
-
-DeclareBoundDeclaration {
-    Docstring? Annotation* kw<"declare"> LhsId formalsBracket* formalsParen?
 }
 
 id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
@@ -291,13 +287,13 @@ BasicExpression
     | BasicExpression !compL op<"⊃"> BasicExpression
 
     | kw<"if"> expression kw<"then"> expression kw<"else"> expression kw<"end">
-    | ( kw<"forall"> | "∀" ) "(" Bindings ":" expression ")"
+    | ( kw<"forall"> | "∀" ) "(" V1Bindings ":" expression ")"
 
     | BoundedExpression
 
     // logic expressions
     | !quant (kw<"exists"> | "∃") BasicExpression
-    | !quant (kw<"exists"> | "∃") LogicalAbstractExpression
+    | !quant (kw<"exists"> | "∃") V1LogicalAbstractExpression
     | !not ( kw<"not"> | op<"¬"> ) BasicExpression
     | BasicExpression !and ( kw<"and"> | op<"∧"> ) BasicExpression
     | BasicExpression !or ( kw<"or"> | op<"∨"> ) BasicExpression
@@ -329,24 +325,24 @@ BoundedExpression
     | "{" expression? ( "," | ";" )? "}"
     }
 
-Bindings
-    { Formals ( !bind kw<"where"> nonAbstractExpression )?
-    | "(" Bindings ")"
+V1Bindings
+    { Bindings ( !bind kw<"where"> v1NonAbstractExpression )?
+    | "(" V1Bindings ")"
     }
 
-AbstractExpression
-    { Bindings !abstract ":" expression
-    | expression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+V1AbstractExpression
+    { V1Bindings !abstract ":" expression
+    | expression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
     }
 
-LogicalAbstractExpression
-    { Bindings !abstract ":" BasicExpression
-    | Bindings !abstract ":" LogicalAbstractExpression
-    | BasicExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
-    | LogicalAbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+V1LogicalAbstractExpression
+    { V1Bindings !abstract ":" BasicExpression
+    | V1Bindings !abstract ":" V1LogicalAbstractExpression
+    | BasicExpression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
+    | V1LogicalAbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
     }
 
-nonAbstractExpression
+v1NonAbstractExpression
     { BasicExpression
     | IffXorExpression
         { expression !iff ( kw<"iff"> | op<"≡"> | op<"⇔"> ) expression
@@ -357,15 +353,16 @@ nonAbstractExpression
     }
 
 expression
-    { nonAbstractExpression
-    | AbstractExpression }
+    { v1NonAbstractExpression
+    | V1AbstractExpression
+    }
 
 nocommaExpression
     { BasicExpression
     | NocommaUnionExpression { nocommaExpression !union ";" nocommaExpression }
-    | NocommaAbstractExpression
-        { Bindings !abstract ":" nocommaExpression
-        | nocommaExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+    | V1NocommaAbstractExpression
+        { V1Bindings !abstract ":" nocommaExpression
+        | nocommaExpression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
         }
     }
 
@@ -373,17 +370,19 @@ BasicParam { Operator ~operatorConflict | BasicExpression }
 
 NocommaParam { Operator ~operatorConflict | nocommaExpression }
 
-Formal
+v1TopLevelExpression { Annotation* expression }
+
+VarDecl
     { literal ~literalConflict
     | Operator ~operatorConflict
     | (id "..."? ~idConflict ) (( kw<"in"> | op<"∈"> ) BasicExpression)?
     }
 
-Formals { Formal ( !param "," Formal )* }
+Bindings { VarDecl ( !param "," VarDecl )* }
 
-formalsBracket { "[" Formals? "]" }
+v1FormalsBracket { "[" Bindings? "]" }
 
-formalsParen { "(" Formals? ")" }
+v1FormalsParen { "(" Bindings? ")" }
 
 @tokens {
     spaces[@export] { $[\u0009 \u000b\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]+ }
