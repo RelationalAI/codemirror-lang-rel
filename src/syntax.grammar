@@ -81,23 +81,23 @@ Annotation { AnnotationKeyword ( !annot "(" AnnotationParams ")" )? }
  */
 
 DefinitionDeclaration {
-    Docstring? Annotation* kw<"def"> LhsId v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" )
+    Docstring? Annotation* kw<"def"> LhsId v1FormalsBracket* v1FormalsParen? ( "=" v1expression | "{" v1expression "}" )
 }
 
 BoundDeclaration {
-    Docstring? Annotation* kw<"bound"> LhsId v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" )?
+    Docstring? Annotation* kw<"bound"> LhsId v1FormalsBracket* v1FormalsParen? ( "=" v1expression | "{" v1expression "}" )?
 }
 
 ValueTypeDeclaration {
-    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" ) )?
+    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( v1FormalsBracket* v1FormalsParen? ( "=" v1expression | "{" v1expression "}" ) )?
 }
 
 EntityTypeDeclaration {
-    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" ) )?
+    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( v1FormalsBracket* v1FormalsParen? ( "=" v1expression | "{" v1expression "}" ) )?
 }
 
 ConstraintDeclaration {
-    Docstring? Annotation* kw<"ic"> LhsId? v1FormalsBracket* v1FormalsParen? ( "=" expression | "{" expression "}" )
+    Docstring? Annotation* kw<"ic"> LhsId? v1FormalsBracket* v1FormalsParen? ( "=" v1expression | "{" v1expression "}" )
 }
 
 ModuleDeclaration {
@@ -109,7 +109,7 @@ NamespaceDeclaration {
 }
 
 WithUseDeclaration {
-    kw<"with"> expression kw<"use"> ("..." | commaSep1<Alias>)
+    kw<"with"> v1expression kw<"use"> ("..." | commaSep1<Alias>)
 }
 
 ImportDeclaration {
@@ -195,7 +195,7 @@ interpolation
     | InterpolationExpression
     }
 
-InterpolationExpression { "%(" expression ")" }
+InterpolationExpression { "%(" v1expression ")" }
 
 InterpolationLiteral {
     quote1 staticStringPart? interpolation (staticStringPart | interpolation)* quote1
@@ -241,7 +241,7 @@ BasicExpression
     | literal ~literalConflict
 
     // specialize
-    | "#(" expression ")"
+    | "#(" v1expression ")"
 
     | PartialApplicationExpression
     | ApplicationExpression
@@ -292,8 +292,8 @@ BasicExpression
     | BasicExpression !compR op<"→"> BasicExpression
     | BasicExpression !iffXor ( kw<"iff"> | kw<"xor"> | op<"⇔"> | op<"⇎"> | op<"⊻"> ) BasicExpression
 
-    | kw<"if"> expression kw<"then"> expression kw<"else"> expression kw<"end">
-    | ( kw<"forall"> | "∀" ) "(" V1Bindings ":" expression ")"
+    | kw<"if"> v1expression kw<"then"> v1expression kw<"else"> v1expression kw<"end">
+    | ( kw<"forall"> | "∀" ) "(" V1Bindings ":" v1expression ")"
 
     | BoundedExpression
 
@@ -327,8 +327,8 @@ ApplicationExpression
     }
 
 BoundedExpression
-    { "(" expression? ( "," | ";" )? ")"
-    | "{" expression? ( "," | ";" )? "}"
+    { "(" v1expression? ( "," | ";" )? ")"
+    | "{" v1expression? ( "," | ";" )? "}"
     }
 
 V1Bindings
@@ -337,8 +337,8 @@ V1Bindings
     }
 
 V1AbstractExpression
-    { V1Bindings !abstract ":" expression
-    | expression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
+    { V1Bindings !abstract ":" v1expression
+    | v1expression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
     }
 
 V1LogicalAbstractExpression
@@ -350,12 +350,12 @@ V1LogicalAbstractExpression
 
 nonAbstractExpression
     { BasicExpression
-    | UnionExpression { expression !union ";" expression }
-    | ProductExpression { expression !product "," expression }
-    | TripleEqualExpression { expression !tripleEqual (op<'≡'> | op<'≢'>) expression }
+    | UnionExpression { v1expression !union ";" v1expression }
+    | ProductExpression { v1expression !product "," v1expression }
+    | TripleEqualExpression { v1expression !tripleEqual (op<'≡'> | op<'≢'>) v1expression }
     }
 
-expression
+v1expression
     { nonAbstractExpression
     | V1AbstractExpression
     }
@@ -373,7 +373,7 @@ BasicParam { Operator ~operatorConflict | BasicExpression }
 
 NocommaParam { Operator ~operatorConflict | nocommaExpression }
 
-v1TopLevelExpression { Annotation* expression }
+v1TopLevelExpression { Annotation* v1expression }
 
 VarDecl
     { literal ~literalConflict
