@@ -34,6 +34,7 @@
 declaration[@isGroup=Declaration]
     { DefinitionDeclaration
     | BoundDeclaration
+    | DeclareBoundDeclaration
     | ValueTypeDeclaration
     | EntityTypeDeclaration
     | ConstraintDeclaration
@@ -80,11 +81,15 @@ Annotation { AnnotationKeyword ( !annot "(" AnnotationParams ")" )? }
  */
 
 DefinitionDeclaration {
-    Docstring? Annotation* kw<"def"> LhsId v1FormalsBracket* v1FormalsParen? ( "=" v1expression | "{" v1expression "}" )
+    Docstring? Annotation* kw<"def"> extraLhsId v1FormalsBracket* v1FormalsParen? ( "=" v1expression | "{" v1expression "}" )
 }
 
 BoundDeclaration {
-    Docstring? Annotation* kw<"bound"> LhsId v1FormalsBracket* v1FormalsParen? ( "=" v1expression | "{" v1expression "}" )?
+    Docstring? Annotation* kw<"bound"> extraLhsId v1FormalsBracket* v1FormalsParen? ( "=" v1expression | "{" v1expression "}" )?
+}
+
+DeclareBoundDeclaration {
+    Docstring? Annotation* kw<"declare"> extraLhsId ( "(" Bindings ")" kw<"requires"> v1expression )?
 }
 
 ValueTypeDeclaration {
@@ -112,7 +117,7 @@ WithUseDeclaration {
 }
 
 ImportDeclaration {
-    kw<"from"> LhsId kw<"import"> ("..." | commaSep1<Alias>)
+    Docstring? Annotation* kw<"from"> LhsId kw<"import"> ("..." | commaSep1<Alias>)
 }
 
 id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
@@ -121,9 +126,13 @@ ParenOpId { "(" Operator !parenOp ")" }
 
 LhsId
     { id
-    | ParenOpId
     | QualifiedName
     | emphasisKeyword
+    }
+
+extraLhsId
+    { LhsId
+    | ParenOpId
     | kw<"implies">
     | kw<"iff">
     | kw<"xor">
@@ -277,10 +286,13 @@ BasicExpression
 
     | kw<"if"> v1expression kw<"then"> v1expression kw<"else"> v1expression kw<"end">
     | ( kw<"forall"> | "∀" ) "(" V1Bindings ":" v1expression ")"
+    | kw<"forall"> "(" "(" Bindings !bind ")" "|" v1expression ")"
 
     | BoundedExpression
 
     // logic expressions
+    | !quant kw<"exists"> "(" "(" Bindings !bind ")" "|" v1expression ")"
+    | !quant (kw<"exists"> | "∃") "(" V1Bindings ":" v1expression ")"
     | !quant (kw<"exists"> | "∃") BasicExpression
     | !quant (kw<"exists"> | "∃") V1LogicalAbstractExpression
     | !not ( kw<"not"> | op<"¬"> ) BasicExpression

@@ -165,3 +165,28 @@ Rel(
                 BasicExpression(IntLiteral)),
             Keyword),
         Keyword))
+
+# Declare Bound Declaration
+
+declare foo (x...) requires {(:hi, FilePos, String)}(x...)
+
+==>
+
+Rel(
+    DeclareBoundDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        Bindings(VarDecl(BasicId)),
+        Keyword,
+        BasicExpression(
+            ApplicationExpression(
+                BasicExpression(
+                    BoundedExpression(
+                        BasicExpression(
+                            BoundedExpression(
+                                ProductExpression(
+                                    ProductExpression(
+                                        BasicExpression(RelnameLiteral),
+                                        BasicExpression(BasicId)),
+                                    BasicExpression(BasicId)))))),
+                V1NocommaActual(BasicExpression(BasicId))))))

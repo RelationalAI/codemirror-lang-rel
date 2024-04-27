@@ -89,15 +89,15 @@ Rel(
             BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
-            LhsId(Keyword),
+            Keyword,
             BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
-            LhsId(Keyword),
+            Keyword,
             BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
-            LhsId(Keyword),
+            Keyword,
             BasicExpression(IntLiteral)),
         Keyword))
 
