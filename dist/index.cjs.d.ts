@@ -46,8 +46,8 @@ declare namespace relTerms {
     const V1Bindings: 72;
     const BasicParam: 73;
     const ApplicationExpression: 74;
-    const BoundedExpression: 113;
-    const V1LogicalAbstractExpression: 115;
+    const BoundedExpression: 116;
+    const V1LogicalAbstractExpression: 118;
     const V1AbstractExpression: 134;
     const InterpolationMultilineLiteral: 135;
     const BoundDeclaration: 138;
