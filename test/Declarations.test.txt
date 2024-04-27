@@ -117,3 +117,51 @@ Rel(
         Alias(BasicId),
         Alias(BasicId),
         Alias(BasicId)))
+
+# Nested-Module Declaration
+
+module mod
+    module submod
+        def a = 1
+    end
+end
+
+==>
+
+Rel(
+    ModuleDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        ModuleDeclaration(
+            Keyword,
+            LhsId(BasicId),
+            DefinitionDeclaration(
+                Keyword,
+                LhsId(BasicId),
+                BasicExpression(IntLiteral)),
+            Keyword),
+        Keyword))
+
+# Nested-Namespace Declaration
+
+namespace ns
+    namespace subns
+        def a = 1
+    end
+end
+
+==>
+
+Rel(
+    NamespaceDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        NamespaceDeclaration(
+            Keyword,
+            LhsId(BasicId),
+            DefinitionDeclaration(
+                Keyword,
+                LhsId(BasicId),
+                BasicExpression(IntLiteral)),
+            Keyword),
+        Keyword))

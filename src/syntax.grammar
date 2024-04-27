@@ -1,6 +1,6 @@
 @detectDelim
 
-@top Rel { declaration+ | Annotation* expression }
+@top Rel { declaration_namespace+ | Annotation* expression }
 
 @skip { spaces | newLine | LineComment | BlockComment }
 
@@ -39,10 +39,15 @@ declaration[@isGroup=Declaration]
     | EntityTypeDeclaration
     | ConstraintDeclaration
     | ModuleDeclaration
-    | NamespaceDeclaration
     | WithUseDeclaration
     | ImportDeclaration
     }
+
+declaration_namespace
+    { declaration
+    | NamespaceDeclaration
+    }
+
 
 /*
  * Docstring Statement
@@ -100,7 +105,7 @@ ModuleDeclaration {
 }
 
 NamespaceDeclaration {
-    Docstring? Annotation* kw<"namespace"> LhsId formalsBracket* declaration* kw<"end">
+    Docstring? Annotation* kw<"namespace"> LhsId formalsBracket* declaration_namespace* kw<"end">
 }
 
 WithUseDeclaration {
@@ -109,6 +114,10 @@ WithUseDeclaration {
 
 ImportDeclaration {
     kw<"from"> LhsId kw<"import"> ("..." | commaSep1<Alias>)
+}
+
+DeclareBoundDeclaration {
+    Docstring? Annotation* kw<"declare"> LhsId formalsBracket* formalsParen?
 }
 
 id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
