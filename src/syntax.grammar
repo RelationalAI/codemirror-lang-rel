@@ -317,13 +317,13 @@ BasicExpression
  * the BasicId in these expressions.
  */
 PartialApplicationExpression
-    { BasicExpression !appl "[" NocommaParam? "]"
-    | BasicExpression !appl "[" commaSep2<BasicParam> "]"
+    { BasicExpression !appl "[" V1NocommaActual? "]"
+    | BasicExpression !appl "[" commaSep2<V1BasicActual> "]"
     }
 
 ApplicationExpression
-    { BasicExpression !appl "(" NocommaParam? ")"
-    | BasicExpression !appl "(" commaSep2<BasicParam> ")"
+    { BasicExpression !appl "(" V1NocommaActual? ")"
+    | BasicExpression !appl "(" commaSep2<V1BasicActual> ")"
     }
 
 BoundedExpression
@@ -369,9 +369,9 @@ nocommaExpression
         }
     }
 
-BasicParam { Operator ~operatorConflict | BasicExpression }
+V1BasicActual { Operator ~operatorConflict | BasicExpression | "_..." | "_…" }
 
-NocommaParam { Operator ~operatorConflict | nocommaExpression }
+V1NocommaActual { Operator ~operatorConflict | nocommaExpression | "_..." | "_…" }
 
 v1TopLevelExpression { Annotation* v1expression }
 

@@ -42,9 +42,9 @@ declare namespace relTerms {
     const InterpolationExpression: 66;
     const BasicExpression: 67;
     const PartialApplicationExpression: 68;
-    const NocommaParam: 69;
+    const V1NocommaActual: 69;
     const V1Bindings: 72;
-    const BasicParam: 73;
+    const V1BasicActual: 73;
     const ApplicationExpression: 74;
     const BoundedExpression: 116;
     const V1LogicalAbstractExpression: 118;

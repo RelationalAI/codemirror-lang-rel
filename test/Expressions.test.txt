@@ -60,8 +60,8 @@ Rel(
                     BasicExpression(
                         PartialApplicationExpression(
                             BasicExpression(BasicId),
-                            BasicParam(BasicExpression(StaticStringLiteral)),
-                            BasicParam(BasicExpression(
+                            V1BasicActual(BasicExpression(StaticStringLiteral)),
+                            V1BasicActual(BasicExpression(
                                 BoundedExpression(
                                     BasicExpression(
                                         InterpolationMultilineLiteral(
@@ -110,7 +110,7 @@ Rel(
         BasicExpression(
             PartialApplicationExpression(
                 BasicExpression(BasicId),
-                BasicParam(
+                V1BasicActual(
                     BasicExpression(
                         BoundedExpression(
                             BasicExpression(
@@ -118,7 +118,7 @@ Rel(
                                     ProductExpression(
                                         BasicExpression(RelnameLiteral),
                                         BasicExpression(BasicId))))))),
-                BasicParam(
+                V1BasicActual(
                     BasicExpression(
                         BoundedExpression(
                             BasicExpression(
