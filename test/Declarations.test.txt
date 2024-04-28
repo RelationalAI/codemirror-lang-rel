@@ -65,6 +65,8 @@ ic() {
     // Can also be written as `subset(student, person)`.
 }
 
+ic my_ic(x) requires { foo(x) implies x > 0 }
+
 ==>
 
 Rel(
@@ -74,7 +76,22 @@ Rel(
             BasicExpression(BasicId),
             OperatorKeyword,
             BasicExpression(BasicId)),
-        LineComment))
+        LineComment),
+    ConstraintDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        Bindings(VarDecl(BasicId)),
+        Keyword,
+        BasicExpression(
+            BasicExpression(
+                ApplicationExpression(
+                    BasicExpression(BasicId),
+                    V1NocommaActual(BasicExpression(BasicId)))),
+            Keyword,
+            BasicExpression(
+                BasicExpression(BasicId),
+                OperatorKeyword,
+                BasicExpression(IntLiteral)))))
 
 # Bound Declaration
 
@@ -114,9 +131,9 @@ Rel(
         Keyword,
         LhsId(QualifiedName(QualifiedNameId(BasicId),QualifiedNameElem)),
         Keyword,
-        Alias(BasicId),
-        Alias(BasicId),
-        Alias(BasicId)))
+        ImportAlias(BasicId),
+        ImportAlias(BasicId),
+        ImportAlias(BasicId)))
 
 # Nested-Module Declaration
 
@@ -190,3 +207,79 @@ Rel(
                                         BasicExpression(BasicId)),
                                     BasicExpression(BasicId)))))),
                 V1NocommaActual(BasicExpression(BasicId))))))
+
+# CoreRel Definition
+
+def foo { 100 }
+def bar[] : 200
+def baz(x, y) : x > y
+def fred[x, y] : x + y
+
+==>
+
+Rel(
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(IntLiteral)),
+        DefinitionDeclaration(
+            Keyword,
+            LhsId(BasicId),
+            BasicExpression(IntLiteral)),
+        DefinitionDeclaration(
+            Keyword,
+            LhsId(BasicId),
+            Bindings(VarDecl(BasicId),VarDecl(BasicId)),
+            BasicExpression(
+                BasicExpression(BasicId),
+                OperatorKeyword,
+                BasicExpression(BasicId))),
+        DefinitionDeclaration(
+            Keyword,
+            LhsId(BasicId),
+            Bindings(VarDecl(BasicId),VarDecl(BasicId)),
+            BasicExpression(
+                BasicExpression(BasicId),
+                OperatorKeyword,
+                BasicExpression(BasicId))))
+
+# CoreRel Value-Type Declaration
+
+value type Interval (x, y) : Int(x) and Int(y) and x < y
+value type RGB { (Int, Int, Int) }
+
+==>
+
+Rel(
+    ValueTypeDeclaration(
+        Keyword,
+        Keyword,
+        LhsId(BasicId),
+        Bindings(VarDecl(BasicId),VarDecl(BasicId)),
+        BasicExpression(
+            BasicExpression(
+                BasicExpression(
+                    ApplicationExpression(
+                        BasicExpression(BasicId),
+                        V1NocommaActual(BasicExpression(BasicId)))),
+                Keyword,
+                BasicExpression(
+                    ApplicationExpression(
+                        BasicExpression(BasicId),
+                        V1NocommaActual(BasicExpression(BasicId))))),
+                Keyword,
+                    BasicExpression(
+                        BasicExpression(BasicId),
+                        OperatorKeyword,
+                        BasicExpression(BasicId)))),
+    ValueTypeDeclaration(
+        Keyword,
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(
+            BoundedExpression(
+                ProductExpression(
+                    ProductExpression(
+                        BasicExpression(BasicId),
+                        BasicExpression(BasicId)),
+                    BasicExpression(BasicId))))))

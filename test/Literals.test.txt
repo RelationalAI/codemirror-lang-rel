@@ -27,6 +27,8 @@ Rel(
 
 def a = true
 def b = false
+def c = { }
+def d = { ( ) }
 
 ==>
 
@@ -38,7 +40,15 @@ Rel(
     DefinitionDeclaration(
         Keyword,
         LhsId(BasicId),
-        BasicExpression(BooleanLiteral)))
+        BasicExpression(BooleanLiteral)),
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(BoundedExpression)),
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(BoundedExpression)))
 
 
 # Strings & Char

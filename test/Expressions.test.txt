@@ -15,16 +15,14 @@ Rel(
     Annotation(
         AnnotationKeyword(BasicId),
         AnnotationParams(IntLiteral,RelnameLiteral)),
-    BasicExpression(
-        BoundedExpression(
-            UnionExpression(
-                UnionExpression(
-                    BasicExpression(
-                        BasicExpression(IntLiteral),
-                        OperatorKeyword,
-                        BasicExpression(IntLiteral)),
-                    BasicExpression(DateLiteral)),
-                BasicExpression(DateTimeLiteral)))))
+    UnionExpression(
+        UnionExpression(
+            BasicExpression(
+                BasicExpression(IntLiteral),
+                OperatorKeyword,
+                BasicExpression(IntLiteral)),
+            BasicExpression(DateLiteral)),
+        BasicExpression(DateTimeLiteral)))
 
 
 # Interpolation
@@ -121,6 +119,90 @@ Rel(
                 V1BasicActual(
                     BasicExpression(
                         BoundedExpression(
-                            BasicExpression(
-                                BoundedExpression(
-                                    BasicExpression(RelnameLiteral))))))))))
+                            UnionExpression(
+                                BasicExpression(
+                                    BoundedExpression(
+                                        ProductExpression(BasicExpression(RelnameLiteral))))))))))))
+
+# Specialize
+
+def a = #("test")
+
+==>
+
+Rel(
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(SpecializeExpression(BasicExpression(StaticStringLiteral)))))
+
+# Operators
+
+def output { my_higher_order[{+}, 1, 2] }
+def output { {+}[1, 2] }
+
+==>
+
+Rel(
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(Emphasis),
+        BasicExpression(
+            PartialApplicationExpression(
+                BasicExpression(BasicId),
+                V1BasicActual(
+                    BasicExpression(CurlyOpId(Operator))),
+                V1BasicActual(
+                    BasicExpression(IntLiteral)),
+                V1BasicActual(BasicExpression(IntLiteral))))),
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(Emphasis),
+        BasicExpression(
+            PartialApplicationExpression(
+                BasicExpression(CurlyOpId(Operator)),
+                V1BasicActual(BasicExpression(IntLiteral)),
+                V1BasicActual(BasicExpression(IntLiteral))))))
+
+# Exists/Forall
+
+def a { exists( (x, y) | foo(x, y) and x > y ) }
+def b { forall( (x, y) | foo(x, y) implies x > y ) }
+
+==>
+
+Rel(
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(
+            Keyword,
+            Bindings(VarDecl(BasicId),VarDecl(BasicId)),
+            BasicExpression(
+                BasicExpression(
+                    ApplicationExpression(
+                        BasicExpression(BasicId),
+                        V1BasicActual(BasicExpression(BasicId)),
+                        V1BasicActual(BasicExpression(BasicId)))),
+                Keyword,
+                BasicExpression(
+                    BasicExpression(BasicId),
+                    OperatorKeyword,
+                    BasicExpression(BasicId))))),
+    DefinitionDeclaration(
+        Keyword,
+        LhsId(BasicId),
+        BasicExpression(
+            Keyword,
+            Bindings(VarDecl(BasicId),VarDecl(BasicId)),
+            BasicExpression(
+                BasicExpression(
+                    ApplicationExpression(
+                        BasicExpression(BasicId),
+                        V1BasicActual(BasicExpression(BasicId)),
+                        V1BasicActual(BasicExpression(BasicId)))),
+                Keyword,
+                BasicExpression(
+                    BasicExpression(BasicId),
+                    OperatorKeyword,
+                    BasicExpression(BasicId))))))
