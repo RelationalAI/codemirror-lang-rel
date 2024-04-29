@@ -1,6 +1,6 @@
 @detectDelim
 
-@top Rel { declaration+ | Annotation* expression }
+@top Rel { declaration_namespace+ | v1TopLevelExpression }
 
 @skip { spaces | newLine | LineComment | BlockComment }
 
@@ -12,10 +12,10 @@
     param @left,
     mul @left,
     add @left,
+    tripleEqual @left,
     product @left,
     union @left,
     compL @left,
-    compR @right,
     not,
     quant,
     and @left,
@@ -24,8 +24,7 @@
     impliesL @left,
     restrict @left,
     override @left,
-    iff @right,
-    xor @right,
+    iffXor @right,
     bind @left,
     abstract @left,
     parenOp,
@@ -35,14 +34,20 @@
 declaration[@isGroup=Declaration]
     { DefinitionDeclaration
     | BoundDeclaration
+    | DeclareBoundDeclaration
     | ValueTypeDeclaration
     | EntityTypeDeclaration
     | ConstraintDeclaration
     | ModuleDeclaration
-    | NamespaceDeclaration
     | WithUseDeclaration
     | ImportDeclaration
     }
+
+declaration_namespace
+    { declaration
+    | NamespaceDeclaration
+    }
+
 
 /*
  * Docstring Statement
@@ -76,50 +81,60 @@ Annotation { AnnotationKeyword ( !annot "(" AnnotationParams ")" )? }
  */
 
 DefinitionDeclaration {
-    Docstring? Annotation* kw<"def"> LhsId formalsBracket* formalsParen? ( "=" expression | "{" expression "}" )
+    Docstring? Annotation* kw<"def"> extraLhsId (relAbs | v1FormalsBracket* v1FormalsParen? v1Body)
 }
 
 BoundDeclaration {
-    Docstring? Annotation* kw<"bound"> LhsId formalsBracket* formalsParen? ( "=" expression | "{" expression "}" )?
+    Docstring? Annotation* kw<"bound"> extraLhsId v1FormalsBracket* v1FormalsParen? v1Body?
+}
+
+DeclareBoundDeclaration {
+    Docstring? Annotation* kw<"declare"> extraLhsId ( "(" Bindings ")" kw<"requires"> expression )?
 }
 
 ValueTypeDeclaration {
-    Docstring? Annotation* kw<"value"> kw<"type"> LhsId ( formalsBracket* formalsParen? ( "=" expression | "{" expression "}" ) )?
+    Docstring? Annotation* kw<"value"> kw<"type"> LhsId (relAbs | v1FormalsBracket* v1FormalsParen? v1Body )?
 }
 
 EntityTypeDeclaration {
-    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( formalsBracket* formalsParen? ( "=" expression | "{" expression "}" ) )?
+    Docstring? Annotation* kw<"entity"> kw<"type"> LhsId ( v1FormalsBracket* v1FormalsParen? v1Body )?
 }
 
 ConstraintDeclaration {
-    Docstring? Annotation* kw<"ic"> LhsId? formalsBracket* formalsParen? ( "=" expression | "{" expression "}" )
+    Docstring? Annotation* kw<"ic"> LhsId? ( "(" Bindings? ")" kw<"requires"> expression | v1FormalsBracket* v1FormalsParen? v1Body)
 }
 
 ModuleDeclaration {
-    Docstring? Annotation* kw<"module"> LhsId formalsBracket* declaration* kw<"end">
+    Docstring? Annotation* kw<"module"> LhsId v1FormalsBracket* declaration* kw<"end">
 }
 
 NamespaceDeclaration {
-    Docstring? Annotation* kw<"namespace"> LhsId formalsBracket* declaration* kw<"end">
+    Docstring? Annotation* kw<"namespace"> LhsId v1FormalsBracket* declaration_namespace* kw<"end">
 }
 
+// TODO: Add support for nested declarations in WithUseDeclaration
 WithUseDeclaration {
-    kw<"with"> expression kw<"use"> ("..." | commaSep1<Alias>)
+    kw<"with"> expression kw<"use"> commaSep1<Alias>
 }
 
 ImportDeclaration {
-    kw<"from"> LhsId kw<"import"> ("..." | commaSep1<Alias>)
+    Docstring? Annotation* kw<"from"> LhsId kw<"import"> commaSep1<ImportAlias>
 }
 
 id { BasicId | ConstructorId | kw<"value"> | kw<"entity"> | kw<"type"> }
 
 ParenOpId { "(" Operator !parenOp ")" }
+CurlyOpId { "{" Operator "}" }
 
 LhsId
     { id
-    | ParenOpId
     | QualifiedName
     | emphasisKeyword
+    }
+
+extraLhsId
+    { LhsId
+    | ParenOpId
     | kw<"implies">
     | kw<"iff">
     | kw<"xor">
@@ -128,6 +143,8 @@ LhsId
 AliasId { ( id | Operator ) }
 
 Alias { ( id | Operator ) ( kw<"as"> AliasId )? }
+
+ImportAlias { ( id | Operator ) ( kw<"as"> AliasId )? | "..." }
 
 QualifiedNameId
     { emphasisKeyword
@@ -163,7 +180,10 @@ QualifiedKeyword
     | kw<"type">
     }
 
-QualifiedName { QualifiedNameId QualifiedNameElem+ }
+QualifiedName
+    { QualifiedNameId QualifiedNameElem+
+    | "::" QualifiedNameId QualifiedNameElem*
+    }
 
 emphasisKeyword[@dynamicPrecedence=1]
     { emp<"output">
@@ -190,7 +210,7 @@ interpolation
     | InterpolationExpression
     }
 
-InterpolationExpression { "%(" expression ")" }
+InterpolationExpression { "%(" v1expression ")" }
 
 InterpolationLiteral {
     quote1 staticStringPart? interpolation (staticStringPart | interpolation)* quote1
@@ -227,16 +247,17 @@ literal
  */
 
 BasicExpression
-    { id "..."? ~idConflict
+    { id ("..." | "…")? ~idConflict
     | "_"
     | QualifiedName
     | ParenOpId ~parenOpConflict
+    | CurlyOpId
 
     // literal
     | literal ~literalConflict
 
     // specialize
-    | "#(" expression ")"
+    | SpecializeExpression
 
     | PartialApplicationExpression
     | ApplicationExpression
@@ -245,50 +266,43 @@ BasicExpression
     | BasicExpression !dotJoin op<"."> BasicExpression
     | BasicExpression !power op<"^"> BasicExpression
     | !unary op<"-"> BasicExpression
-    | BasicExpression !mul op<"/"> BasicExpression
-    | BasicExpression !mul op<"%"> BasicExpression
-    | BasicExpression !mul op<"*"> BasicExpression
-    | BasicExpression !mul op<"÷"> BasicExpression
-    | BasicExpression !mul op<"×"> BasicExpression
-    | BasicExpression !mul op<"⊗"> BasicExpression
-    | BasicExpression !mul op<"⊙"> BasicExpression
-    | BasicExpression !add op<"+"> BasicExpression
-    | BasicExpression !add op<"-"> BasicExpression
-    | BasicExpression !add op<"∩"> BasicExpression
-    | BasicExpression !add op<"⊕"> BasicExpression
-    | BasicExpression !union op<"∪"> BasicExpression
-    | BasicExpression !add op<"⊓"> BasicExpression
-    | BasicExpression !union op<"⊔"> BasicExpression
-    | BasicExpression !compL op<"="> BasicExpression
-    | BasicExpression !compL op<"!="> BasicExpression
-    | BasicExpression !compL op<"≈"> BasicExpression
-    | BasicExpression !compL op<"∼"> BasicExpression
-    | BasicExpression !compR op<"→"> BasicExpression
-    | BasicExpression !compL op<"←"> BasicExpression
-    | BasicExpression !compL op<"≼"> BasicExpression
-    | BasicExpression !compL op<"≽"> BasicExpression
-    | BasicExpression !compL op<"≺"> BasicExpression
-    | BasicExpression !compL op<"≻"> BasicExpression
-    | BasicExpression !compL op<"≠"> BasicExpression
-    | BasicExpression !compL op<"<"> BasicExpression
-    | BasicExpression !compL op<">"> BasicExpression
-    | BasicExpression !compL op<"<="> BasicExpression
-    | BasicExpression !compL op<"≤"> BasicExpression
-    | BasicExpression !compL op<">="> BasicExpression
-    | BasicExpression !compL op<"≥"> BasicExpression
-    | BasicExpression !compL op<"⊆"> BasicExpression
-    | BasicExpression !compL op<"⊇"> BasicExpression
-    | BasicExpression !compL op<"⊂"> BasicExpression
-    | BasicExpression !compL op<"⊃"> BasicExpression
+    | BasicExpression !mul
+        ( op<"/">
+        | op<"%">
+        | op<"*">
+        | op<"÷">
+        | op<"×">
+        | op<"⊗">
+        | op<"⊙">
+        ) BasicExpression
+    | BasicExpression !add
+        ( op<"+">
+        | op<"++">
+        | op<"-">
+        | op<"∩">
+        | op<"⊕">
+        | op<"⊓">
+        ) BasicExpression
+    | BasicExpression !union ( op<"∪"> | op<"⊔"> ) BasicExpression
+    | BasicExpression !compL
+        ( op<"="> | op<"!="> | op<"≠"> | op<"≡"> | op<"≢"> | op<"~="> | op<"!~=">
+        | op<"←"> | op<"→">
+        | op<"<"> | op<">"> | op<"<="> | op<"≤"> | op<">="> | op<"≥">
+        | op<"⊆"> | op<"⊇"> | op<"⊂"> | op<"⊃">
+        ) BasicExpression
+    | BasicExpression !iffXor ( kw<"iff"> | kw<"xor"> | op<"⇔"> | op<"⇎"> | op<"⊻"> ) BasicExpression
 
     | kw<"if"> expression kw<"then"> expression kw<"else"> expression kw<"end">
-    | ( kw<"forall"> | "∀" ) "(" Bindings ":" expression ")"
+    | ( kw<"forall"> | "∀" ) "(" V1Bindings ":" expression ")"
+    | kw<"forall"> "(" "(" Bindings !bind ")" "|" expression ")"
 
     | BoundedExpression
 
     // logic expressions
+    | !quant kw<"exists"> "(" "(" Bindings !bind ")" "|" expression ")"
+    | !quant (kw<"exists"> | "∃") "(" V1Bindings ":" expression ")"
     | !quant (kw<"exists"> | "∃") BasicExpression
-    | !quant (kw<"exists"> | "∃") LogicalAbstractExpression
+    | !quant (kw<"exists"> | "∃") V1LogicalAbstractExpression
     | !not ( kw<"not"> | op<"¬"> ) BasicExpression
     | BasicExpression !and ( kw<"and"> | op<"∧"> ) BasicExpression
     | BasicExpression !or ( kw<"or"> | op<"∨"> ) BasicExpression
@@ -302,79 +316,98 @@ BasicExpression
     | BasicExpression !override ( op<"<++"> | op<"++>"> ) BasicExpression
 }
 
+SpecializeExpression { "#" "(" expression ")" }
+
 /* Application expressions are defined explicitly to highlight
  * the BasicId in these expressions.
  */
 PartialApplicationExpression
-    { BasicExpression !appl "[" NocommaParam? "]"
-    | BasicExpression !appl "[" commaSep2<BasicParam> "]"
+    { BasicExpression !appl "[" V1NocommaActual? "]"
+    | BasicExpression !appl "[" commaSep2<V1BasicActual> "]"
     }
 
 ApplicationExpression
-    { BasicExpression !appl "(" NocommaParam? ")"
-    | BasicExpression !appl "(" commaSep2<BasicParam> ")"
+    { BasicExpression !appl "(" V1NocommaActual? ")"
+    | BasicExpression !appl "(" commaSep2<V1BasicActual> ")"
     }
 
 BoundedExpression
     { "(" expression? ( "," | ";" )? ")"
-    | "{" expression? ( "," | ";" )? "}"
+    | "{" expression? ( "," | ";" )? "}" ~relConflict
     }
 
-Bindings
-    { Formals ( !bind kw<"where"> nonAbstractExpression )?
-    | "(" Bindings ")"
+V1Bindings
+    { Bindings ( !bind kw<"where"> nonAbstractExpression )?
+    | "(" V1Bindings ")"
     }
 
-AbstractExpression
-    { Bindings !abstract ":" expression
-    | expression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+V1AbstractExpression
+    { V1Bindings !abstract ":" v1expression
+    | v1expression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
     }
 
-LogicalAbstractExpression
-    { Bindings !abstract ":" BasicExpression
-    | Bindings !abstract ":" LogicalAbstractExpression
-    | BasicExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
-    | LogicalAbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
+V1LogicalAbstractExpression
+    { V1Bindings !abstract ":" BasicExpression
+    | V1Bindings !abstract ":" V1LogicalAbstractExpression
+    | BasicExpression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
+    | V1LogicalAbstractExpression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
     }
 
+// In UnionExpression and ProductExpression, the second expression is optional
+// as a workaround to support trailing commas/semicolons in expressions
 nonAbstractExpression
     { BasicExpression
-    | IffXorExpression
-        { expression !iff ( kw<"iff"> | op<"≡"> | op<"⇔"> ) expression
-        | expression !xor ( kw<"xor"> | op<"≢"> | op<"⇎"> | op<"⊻"> ) expression
+    | UnionExpression { nonAbstractExpression !union ";" nonAbstractExpression? }
+    | ProductExpression { nonAbstractExpression !product "," nonAbstractExpression? | nonAbstractExpression !product kw<"where"> nonAbstractExpression }
+    | TripleEqualExpression { nonAbstractExpression !tripleEqual (op<'≡'> | op<'≢'>) nonAbstractExpression }
+    }
+
+v1expression
+    { nonAbstractExpression
+    | V1AbstractExpression
+    }
+
+nocommaExpression
+    { relAbs
+    | BasicExpression
+    | NocommaUnionExpression { nocommaExpression !union ";" nocommaExpression }
+    | V1NocommaAbstractExpression
+        { V1Bindings !abstract ":" nocommaExpression
+        | nocommaExpression !abstract ( kw<"for"> | "|" | kw<"from">) V1Bindings
         }
-    | UnionExpression { expression !union ";" expression }
-    | ProductExpression { expression !product "," expression }
+    }
+
+V1BasicActual { Operator ~operatorConflict | BasicExpression | "_..." | "_…" }
+
+V1NocommaActual { Operator ~operatorConflict | nocommaExpression | "_..." | "_…" }
+
+v1TopLevelExpression { Annotation* expression }
+
+relAbs
+    { "[" Bindings? "]" ":" expression
+    | "(" Bindings? !bind ")" ":" expression
+    | "{" expression ";"? "}" ~relConflict
     }
 
 expression
-    { nonAbstractExpression
-    | AbstractExpression }
-
-nocommaExpression
-    { BasicExpression
-    | NocommaUnionExpression { nocommaExpression !union ";" nocommaExpression }
-    | NocommaAbstractExpression
-        { Bindings !abstract ":" nocommaExpression
-        | nocommaExpression !abstract ( kw<"for"> | "|" | kw<"from">) Bindings
-        }
+    { relAbs
+    | v1expression
     }
 
-BasicParam { Operator ~operatorConflict | BasicExpression }
-
-NocommaParam { Operator ~operatorConflict | nocommaExpression }
-
-Formal
+VarDecl
     { literal ~literalConflict
     | Operator ~operatorConflict
+    | "{" id !param "}"
     | (id "..."? ~idConflict ) (( kw<"in"> | op<"∈"> ) BasicExpression)?
     }
 
-Formals { Formal ( !param "," Formal )* }
+Bindings { VarDecl ( !param "," VarDecl )* }
 
-formalsBracket { "[" Formals? "]" }
+v1FormalsBracket { "[" Bindings? "]" }
 
-formalsParen { "(" Formals? ")" }
+v1FormalsParen { "(" Bindings? ")" }
+
+v1Body { "=" expression | "{" expression? "}" ~relConflict }
 
 @tokens {
     spaces[@export] { $[\u0009 \u000b\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]+ }
@@ -421,15 +454,10 @@ formalsParen { "(" Formals? ")" }
         | "≤"
         | ">="
         | "≥"
-        | "∈"
         | "⊆"
         | "⊇"
         | "⊂"
         | "⊃"
-        | "≼"
-        | "≽"
-        | "≺"
-        | "≻"
         | "¬"
         | "∧"
         | "∨"
@@ -447,6 +475,9 @@ formalsParen { "(" Formals? ")" }
         | "<++"
         | "++>"
         | "++"
+        | "~="
+        | "!~="
+        | $[\u2200-\u22FF]
         }
 
     decimalLiteral { $[0-9]+ }
@@ -517,13 +548,15 @@ formalsParen { "(" Formals? ")" }
     @precedence { BooleanLiteral BasicId }
     @precedence { ConstructorId Operator }
     @precedence { FloatLiteral Operator }
+    @precedence { SpecializeIntLiteral "#" }
     @precedence { "..." Operator ":" }
     @precedence { QualifiedNameElem ":" }
     @precedence { RelnameLiteral ":" }
     @precedence { BasicId "_" }
     @precedence { LineComment Operator }
     @precedence { MultilineDocstringLiteral DocstringLiteral }
-
+    @precedence { "∀" "∃" Operator }
+    @precedence { QualifiedNameElem "::" }
 }
 
 kw<term> { @specialize[@name=Keyword]<BasicId, term> }

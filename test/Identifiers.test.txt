@@ -44,8 +44,8 @@ Rel(
         BasicExpression(
             PartialApplicationExpression(
                 BasicExpression(ConstructorId),
-                BasicParam(BasicExpression(IntLiteral)),
-                BasicParam(BasicExpression(IntLiteral))))))
+                V1BasicActual(BasicExpression(IntLiteral)),
+                V1BasicActual(BasicExpression(IntLiteral))))))
 
 
 # Extended Keywords
@@ -89,15 +89,15 @@ Rel(
             BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
-            LhsId(Keyword),
+            Keyword,
             BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
-            LhsId(Keyword),
+            Keyword,
             BasicExpression(IntLiteral)),
         DefinitionDeclaration(
             Keyword,
-            LhsId(Keyword),
+            Keyword,
             BasicExpression(IntLiteral)),
         Keyword))
 
